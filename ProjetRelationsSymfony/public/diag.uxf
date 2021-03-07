@@ -1,0 +1,14 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>40</x><y>150</y><w>210</w><h>70</h></coordinates><panel_attributes>PersonneMMA
+--
+nom
+prenom</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>670</x><y>150</y><w>210</w><h>70</h></coordinates><panel_attributes>SupervisionMMA
+--
+evaluation</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>140</y><w>450</w><h>50</h></coordinates><panel_attributes>est superviseur
+m2=1..*
+m1=1 
+r1=superviseur
+r2=supervisionSuperviseur</panel_attributes><additional_attributes>10;20;430;20</additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>190</y><w>450</w><h>50</h></coordinates><panel_attributes>est supervisée
+m2=1..* 
+m1=1
+r1=supervisée
+r2=supervisionSupervisée</panel_attributes><additional_attributes>10;20;430;20</additional_attributes></element></diagram>
