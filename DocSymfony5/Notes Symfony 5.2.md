@@ -76,8 +76,9 @@
     - [12.2.2. UPDATE](#1222-update)
     - [12.2.3. DELETE](#1223-delete)
 - [13. Le modèle : Persistance](#13-le-modèle--persistance)
-- [DOC TILL HERE: STOP](#doc-till-here-stop)
-- [14: Le Modèle : Transitivité en Cascade](#14-le-modèle--transitivité-en-cascade)
+- [14. Le Modèle : Transitivité en Cascade](#14-le-modèle--transitivité-en-cascade)
+- [15. Le Modèle : Encapsulation](#15-le-modèle--encapsulation)
+- [TILL HERE OK](#till-here-ok)
 
 <br>
 
@@ -3477,14 +3478,14 @@ public function exempleClear()
 
 <br>
 
-# DOC TILL HERE: STOP
+# 14. Le Modèle : Transitivité en Cascade 
 
-# 14: Le Modèle : Transitivité en Cascade 
-
-<br>
 Quand nous avons des associations entre les entités, nous avons la possibilité d'indiquer à Symfony **de propager l'opération réalisé sur une entité en cascade sur les entités associées**.
 
 **Exemple** : on efface un livre et on provoque l'effacement de tous ses exemplaires en cascade
+
+On travaillera sur un nouveau controller: **ExempleCascadeController**.
+
 
 Nous avons plusieurs possibilités :
 
@@ -3498,15 +3499,14 @@ Si l'entité n'a pas eu un **persist**, elle n'est pas effacée de la BD mais se
 
 Si on a enlevé l'entité de l'unité de travail (clear), remove enverra une exception.
 
-**cascade-detach:** le détachement se transmet en cascade
-
-**cascade-merge:** pareil que la précédente mais pour **merge**
-
 **cascade-refresh** : pareil que la précédente mais pour **refresh**
+
 
 **cascade-all** : Implique toutes les opérations précédentes. Peut
 dégrader la performance.
 
+
+<br>
 
 **Exemple** : Réalisation d'un INSERT des objets d'une relation One-to-Many sans cascade-persist
 
@@ -3597,8 +3597,93 @@ jour dans la méthode **addExemplaire** :
 
 1.  Effacez un livre et provoquez que les exemplaires soient effacés automatiquement. Modifiez la configuration de cascade pour que l'opération soit réalisée correctement (exerciceCascadeRemove)
 
-2.  Créez une méthode qui rajoute deux clients et une adresse. Faites bien attention au sens de cette association (côté Many et côté One). Modifiez les attributs de cascade pour pouvoir faire le persist
+2.  Créez une méthode qui rajoute deux clients et une adresse. Faites bien attention au sens de cette association (côté Many et côté One). Modifiez les attributs de cascade dans l'entité nécessaire pour pouvoir exécuter le persist
 
 3.  Créez une méthode qui cherche un client dans la BD et puis l'efface, y incluses toutes ses adresses
+
+
+
+# 15. Le Modèle : Encapsulation 
+
+
+Le code de l'exemple précédant crée un Livre, puis crée deux
+exemplaires et pour finir stocke le tout dans la BD.
+
+**La méthode utilisée fonctionne mais on peut l'améliorer** :
+
+Pour le moment on doit toujours créer les objets Livre et Exemplaire dans l'action principale. On doit alors **connaitre l'existence et importer toutes ces classes dans le controller !**
+
+On peut aller plus loin en utilisant le concept d'**encapsulation**. L'encapsulation es un principe de la programmation orienté objet qui, entre autre, propose de **cacher la visibilité des objets ou des parties d'un objet**. Dans ce cas on veut permettre au développeur de rajouter des exemplaires sans que le controller aie besoin de connaitre l'existence de la classe Exemplaire.
+
+Le mécanisme est très simple : **au lieu de créer l'objet** exemplaire **dans l'action du controller et l'envoyer à la méthode qui le rajoute** **au livre** (addExemplaire dans Livre), **on créera** l'exemplaire **à l'intérieur d'une nouvelle méthode de Livre**. Cette méthode du livre sera **appelée depuis l'action, qui l'enverra les données nécessaires pour créer l'objet** exemplaire **mais pas l'objet en soi**. Voici un exemple, observez les différences avec l'exemple précédant :
+
+Nouvelle méthode dans Livre.php :
+# TILL HERE OK
+
+```php
+dos partes
+
+```
+// rajouté pour permettre l'encapsulation
+
+public function addExemplaireNoClass ($etat){
+
+$exemplaire = new AppEntityExemplaire();
+
+$exemplaire->setEtat($etat);
+
+$this->addExemplaire($exemplaire);
+
+}
+
+Nous n'avons plus besoin de la classe Exemplaire dans l'action principale et en plus son code sera simplifié :
+
+/**
+
+*
+@Route("/exemples/encapsulation/rajouter/livre/exemplaires/encapsulation")]
+
+public function rajouterLivreExemplairesEncapsulation (){
+
+$em = $this->getDoctrine()->getManager();
+
+// on crée un livre
+
+$livre = new Livre();
+
+$livre->setTitre("Currucucu Paloma");
+
+$livre->setPrix (20);
+
+$livre->setDescription("Roman");
+
+$livre->setDatePublication(new DateTime("1968:10:10
+00:00:00"));
+
+// on ne crée pas ici les exemplaires. On envoie les données
+
+// necessaires pour créer les objets Exemplaire à la nouvelle méthode
+
+// de l'entité Livre
+
+// Cette méthode mettra à jour les deux côtés de la relation
+
+// car elle fait appel à addExemplaire
+
+$livre->addExemplaireNoClass("tache de chocolat", "15A");
+
+$livre->addExemplaireNoClass("très vieux", "13B");
+
+$em->persist($livre);
+
+$em->**flush**();
+
+return $this->render
+("exemples_encapsulation/rajouter_livre_exemplaires_encapsulation.html.twig");
+
+}
+
+Comparez ce code avec celui de "rajouterSansEncapsulation"...
+
 
 

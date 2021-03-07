@@ -58,7 +58,7 @@ class Livre
     private $isbn;
 
     /**
-     * @ORM\OneToMany(targetEntity=Exemplaire::class, mappedBy="livre",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Exemplaire::class, mappedBy="livre",cascade={"persist","remove"})
      */
     private $exemplaires;
 
