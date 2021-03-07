@@ -119,6 +119,7 @@
     - [{#section-4 .ListParagraph}](#section-4-listparagraph)
   - [Rendu du formulaire dans la vue](#rendu-du-formulaire-dans-la-vue)
   - [Résumé : création et personnalisation de base d'un formulaire](#résumé--création-et-personnalisation-de-base-dun-formulaire)
+- [TILL HERE](#till-here)
   - [Traitement des données du formulaire (explication de base)](#traitement-des-données-du-formulaire-explication-de-base)
       - [Exercices : traitez toutes les données du formulaire que vous avez créés dans l'exercice précédant](#exercices--traitez-toutes-les-données-du-formulaire-que-vous-avez-créés-dans-lexercice-précédant)
   - [Bonnes pratiques pour créer de formulaires en Symfony](#bonnes-pratiques-pour-créer-de-formulaires-en-symfony)
@@ -5662,6 +5663,8 @@ Pour créer un formulaire et le traiter :
 
 **
 **
+
+# TILL HERE
 
 Traitement des données du formulaire (explication de base)
 ----------------------------------------------------------

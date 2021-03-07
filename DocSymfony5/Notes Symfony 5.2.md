@@ -79,6 +79,34 @@
 - [14. Le Modèle : Transitivité en Cascade](#14-le-modèle--transitivité-en-cascade)
 - [15. Le Modèle : Encapsulation](#15-le-modèle--encapsulation)
 - [TILL HERE OK](#till-here-ok)
+- [Héritage de classes et implémentation dans la BD](#héritage-de-classes-et-implémentation-dans-la-bd)
+  - [Single Table Inheritance](#single-table-inheritance)
+  - [Class Table Inheritance](#class-table-inheritance)
+- [Accès à la BD avec DQL](#accès-à-la-bd-avec-dql)
+  - [SELECT](#select)
+    - [Requête qui renvoi un array d'arrays](#requête-qui-renvoi-un-array-darrays)
+    - [Requête qui renvoi un array d'objets](#requête-qui-renvoi-un-array-dobjets)
+    - [Regular Joins et Fetch Joins](#regular-joins-et-fetch-joins)
+    - [Fonctions Year, Month et Day](#fonctions-year-month-et-day)
+  - [UPDATE](#update)
+  - [Exercices DQL](#exercices-dql)
+- [Accès à la BD avec DQL en utilisant les classes Repositoires](#accès-à-la-bd-avec-dql-en-utilisant-les-classes-repositoires)
+      - [Exercices :](#exercices-)
+- [Accès à la BD avec Query Builder](#accès-à-la-bd-avec-query-builder)
+      - [](#)
+- [Formulaires en Symfony](#formulaires-en-symfony)
+  - [Création d'un formulaire indépendant](#création-dun-formulaire-indépendant)
+  - [Création une classe de formulaire](#création-une-classe-de-formulaire)
+  - [Création d'un formulaire associé à une entité existante](#création-dun-formulaire-associé-à-une-entité-existante)
+  - [Types des champs du formulaire](#types-des-champs-du-formulaire)
+      - [Exercice : créez l'action et la vue nécessaires pour afficher ce formulaire!](#exercice--créez-laction-et-la-vue-nécessaires-pour-afficher-ce-formulaire)
+  - [Propriétés des champs du formulaire](#propriétés-des-champs-du-formulaire)
+  - [Méthode et Action](#méthode-et-action)
+  - [Boutons dans les formulaires (bonnes pratiques)](#boutons-dans-les-formulaires-bonnes-pratiques)
+      - [Exercice : Créez des boutons de submit dans les vues qui rendent les formulaires des exemples précédents](#exercice--créez-des-boutons-de-submit-dans-les-vues-qui-rendent-les-formulaires-des-exemples-précédents)
+    - [{#section-4 .ListParagraph}](#section-4-listparagraph)
+  - [Rendu du formulaire dans la vue](#rendu-du-formulaire-dans-la-vue)
+  - [Résumé : création et personnalisation de base d'un formulaire](#résumé--création-et-personnalisation-de-base-dun-formulaire)
 
 <br>
 
@@ -3686,4 +3714,1449 @@ return $this->render
 Comparez ce code avec celui de "rajouterSansEncapsulation"...
 
 
+Héritage de classes et implémentation dans la BD
+================================================
+
+**Exemple** : Les clients et les auteurs d'une application sont tous de personnes. Implementons ce modèle en code et dans la BD
+
+![](media/image24.png){width="3.058333333333333in"
+height="2.7319499125109363in"}
+
+Note : cr
+
+Nous pouvons approcher ce problème de deux formes différentes :
+
+1.  **Single Table Inheritance** : On crée un seul tableau contenant les
+    propriétés des trois entités. Dans le code il y a trois entités mais
+    dans la BD il y a qu'une. Pour savoir si une ligne dans le tableau
+    correspond à une entité ou une autre on rajoutera une colonne
+    "discriminatrice" qui indiquera le type de la ligne. Simple,
+    rapide et sans jointures.
+
+2.  **Class Table Inheritance** : On crée un tableau pour chaque entité.
+    Plus lourd, pas toujours stable. Chaque query, même les très
+    simples, demanderont la réalisation d'une jointure.
+
+Single Table Inheritance
+------------------------
+
+L'héritage de table unique (Single Table inheritance) est une stratégie
+de mappage d'héritage dans laquelle toutes les classes d'une
+hiérarchie sont mappées vers une seule table de base de données. Afin de
+distinguer quelle ligne du tableau représente quel type dans la
+hiérarchie, une colonne dite "discriminator" est utilisée.
+
+1)  **Créez les entités** enfants et parent : ClientH, AuteurH et
+    PersonneH
+
+2)  Rajoutez extends *PersonneH* dans les définitions des classes
+    filles pour indiquer à Doctrine la présence d'un héritage
+
+3)  **Rajoutez les annotations** **InheritanceType,
+    DiscriminatorColumn** et **DiscriminatorMap** à la classe **parent**
+
+> **InheritanceType** indique le type d'héritage. Ici c'est Single
+> Table
+>
+> **DiscriminatorColumn** indique le nom de la colonne qui contiendra la
+> valeur qui nous indique à quelle classe fille correspond la ligne (ici
+> "auteurH" ou "clientH")
+>
+> **DiscriminatorMap** indique les valeurs concretes de la colonne
+> indiquée dans DiscriminatorColumn
+
+/**
+
+*
+@ORMEntity(repositoryClass="AppRepositoryPersonneHRepository")
+
+* @**InheritanceType**("SINGLE_TABLE")
+
+* @**DiscriminatorColumn**(name="discr",type="string")
+
+*
+@**DiscriminatorMap**({"personneH"="PersonneH","auteurH"="AuteurH","clientH"="ClientH"})]
+
+class PersonneH
+
+{
+
+.
+
+.
+
+.
+
+}
+
+4)  **Migrez la BD** et observez le résultat dans PHPMyAdmin
+
+> ![](media/image25.png){width="3.591666666666667in"
+> height="0.2952055993000875in"}
+
+Bien que nous avons trois entités au total, la méthode de Single Table
+crée une seule table contenant une colonne (discr) qui indiquera a
+quelle classe fille correspond la ligne (dans notre cas le colonne
+contient "auteurH" ou "personneH")
+
+Les **régles** à suivre sont :
+
+-   @InheritanceType et @DiscriminatorColumn doivent être spécifiés
+    dans la classe la plus haute appartenant à la hiérarchie des entités
+    mappées
+
+-   @DiscriminatorMap indique le type d'une ligne. Ici, une valeur de
+    "personneH" identifie une ligne comme étant de type PersonneH et
+    "auteurH" identifie une ligne comme étant de type AuteurH.
+
+On peut maintenant faire le CRUD de nos entités ...
+
+**Exemple** : insérer un Client et un Auteur dans la base de de données
+
+class ExemplesHeritageController extends AbstractController
+
+{
+
+#[Route("/exemples/heritage/inserer/client/auteur")]
+
+public function insererClientAuteur(){
+
+$em = $this->getDoctrine()->getManager();
+
+// créer l'objet
+
+$client = new ClientH();
+
+$client->setNom("López");
+
+$client->setPrenom("Jean");
+
+$client->setEmail ("jean.lopez@lala.de");
+
+$client->setNumero(200);
+
+$auteur = new AuteurH();
+
+$auteur->setNom("Lucas");
+
+$auteur->setPrenom("George");
+
+$auteur->setNationalite("USA");
+
+// lier les objets avec la BD
+
+$em->persist($client);
+
+$em->persist($auteur);
+
+// écrire les objets dans la BD
+
+$em->**flush**();
+
+return new Response ("Ok, objets insérés");
+
+}
+
+}
+
+Nous devons uniquement créer un Client et l'insérer, Doctrine remplira
+tant le tableau parent avec la colonne discriminateur ! Les valeurs qui
+ne concernent pas chaque entité respective seront *NULL* bien évidemment
+
+![](media/image26.png){width="6.383333333333334in"
+height="0.5444444444444444in"}
+
+Class Table Inheritance
+-----------------------
+
+> Nous n'allons pas developper cette méthode maintenant mais vous avez
+> la documentation ici :
+
+<https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/inheritance-mapping.html#class-table-inheritance>
+
+Accès à la BD avec DQL
+======================
+
+Nous avons vu comment réaliser de requêtes CRUD simples, mais dans un
+projet réel nous allons devoir lancer de requêtes assez plus complexes,
+tels que de regroupements (GROUP BY), de jointures de tableaux (JOIN) ou
+même de sous-requêtes.
+
+Pour ce faire, on peut utiliser :
+
+1.  Du **SQL pur en PHP** (tel qu'on a fait jusqu'à maintenant)
+
+2.  **DQL**: Doctrine Query Language, similaire à SQL
+
+3.  **QueryBuilder**: une API qui nous permet de créer la requête en
+    utilisant uniquement la POO
+
+On va nous concentrer sur les méthodes 2 et 3. Dans cette section
+concrètement on va étudier la méthode numéro 2: DQL.
+
+**Documentation de DQL:**
+
+<http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/dql-doctrine-query-language.html>
+
+Exemples : projetDQLSymfony
+
+**DQL utilise des objets, pas de tableaux**. Nos requêtes doivent être
+basées sur notre modèle de classes. Ça implique qu'on ne peut pas, par
+exemple, faire une jointure de deux tableaux qui n'ont pas de relation
+dans le modèle de classes.
+
+Nous pouvons réaliser des requêtes de SELECT, UPDATE et DELETE. Pour les
+INSERTS on doit utiliser la méthode déjà expliquée de persistance (créer
+l'objet, le rendre persistant et le stocker dans la BD en lançant
+flush).
+
+Passons aux exemples d'utilisation pour mieux comprendre.
+
+SELECT
+------
+
+### Requête qui renvoi un array d'arrays
+
+// Exemple de SELECT uniquement des titres des livres
+
+// qui coutent plus de 15 euros en DQL,
+
+// on obtient un array de strings, pas d'objets
+
+#[Route ("/exemples/dql/exemple/select/array/arrays")]
+
+public function exempleSelectArrayArrays (){
+
+$em = $this->getDoctrine()->getManager();
+
+$query = $em->createQuery ("SELECT livre.titre, livre.prix FROM
+AppEntityLivre livre WHERE livre.prix>15");
+
+$resultat = $query->getResult();
+
+$vars = ['livres'=> $resultat];
+
+return $this->render
+("exemples_dql/exemple_select_array_arrays.html.twig", $vars);
+
+}
+
+-   "livre" est un **alias** pour la classe Livre. Toutes **les
+    entités de cette classe qui satisfont la requête seront incluses**
+    dans le résultat de la requête.
+
+-   **FROM est toujours suivi d'une classe** d'entitée (chemin
+    complet)
+
+-   **L'expression** "livre.titre" est juste un "chemin" qui
+    **permet d'atteindre des objets et de propriétés** dans la requête
+
+/![](media/image27.png){width="2.642195975503062in"
+height="3.752083333333333in"}
+
+### Requête qui renvoi un array d'objets
+
+// SELECT des Livres complets en DQL,
+
+// on obtient un array d'objets!
+
+#[Route ("/exemples/d/q/l/exemple/select/array/objets")]
+
+public function exempleSelectArrayObjets (){
+
+$em = $this->getDoctrine()->getManager();
+
+// avec cette requête on obtient un array d'objets
+
+$query = $em->createQuery ('SELECT livre FROM AppEntityLivre
+livre WHERE livre.prix >15');
+
+$resultat = $query->getResult();
+
+$vars = ['livres'=> $resultat];
+
+return $this->render
+("exemples_dql/exemple_select_array_arrays.html.twig", $vars);
+
+}
+
+![](media/image28.png){width="3.1060608048993874in"
+height="1.2401268591426071in"}
+
+### Regular Joins et Fetch Joins
+
+> Nous pouvons naviguer dans la hiérarchie d'objets de Doctrine tel
+> qu'on l'a fait jusqu'à maintenant...
+
+**Exemple** : obtenir un entité Livre de la BD et, une fois on l'a dans
+une variable, obtenir les Exemplaires de ce Livre pour après obtenir les
+Emprunts.
+
+Tel qu'on a déjà vérifié, Doctrine utilise une technique qui porte le
+nom de **lazy-loading**. Pour résumer son fonctionnement : **si une
+entité** (ex. : Livre) **est associée à d'entités d'une autre classe**
+(ex. : Exemplaires dans Livre), **Doctrine réalisera les requêtes à la
+BD uniquement quand on accédera au contenu de ces dernières entités en
+PHP** (accéder aux exemplaires du Livre pour les afficher, par exemple).
+Autrement l'objet (ou liste d'objets) contenu dans l'entité (ex. :
+Exemplaires dans Livre) apparaitra vide (ou contenant un id, mais jamais
+complet)
+
+Ce comportement est très logique car si à chaque fois qu'on accède à
+une entité on doit charger toutes ses entités associés la surcharge du
+système peut être énorme (ex. : obtenir un Livre et devoir charger tous
+ses Exemplaires, Emprunts, Clients etc...)
+
+Quand on utilise du DQL contenant de jointures nous allons avoir deux
+possibilités : faire la requête pour qu'elle utilise le lazy-loading ou
+forcer la charge des entités associées.
+
+Voyons les deux cas de figure :
+
+**Regular Join (collection d'Exemplaires vide) :**
+
+// Regular Join
+
+#[Route ("/exemples/d/q/l/exemple/regular/join")]
+
+public function exempleRegularJoin(){
+
+$em = $this->getDoctrine()->getManager();
+
+$query = $em->createQuery ('SELECT livre FROM AppEntityLivre
+livre JOIN livre.exemplaires exemplaires');
+
+// observez que les exemplaires sont vides
+
+$resultat = $query->getResult();
+
+// observez que les exemplaires sont remplis dans le dump de la vue
+
+$vars = ['livres'=> $resultat];
+
+return $this->render
+("exemples_dql/exemple_regular_join.html.twig", $vars);
+
+}
+
+![](media/image29.png){width="3.1917115048118987in"
+height="2.8833333333333333in"}
+
+**Fetch Join (collection d'Exemplaires remplie) :**
+
+// Fetch Join
+
+#[Route ("/exemples/d/q/l/exemple/fetch/join")]
+
+public function exempleFetchJoin(){
+
+$em = $this->getDoctrine()->getManager();
+
+// si on indique juste "SELECT livre" on obtient les objets de cette
+entité
+
+$query = $em->createQuery ('SELECT livre, exemplaires FROM
+AppEntityLivre livre JOIN livre.exemplaires exemplaires');
+
+$resultat = $query->getResult();
+
+// observez que les exemplaires sont remplis dans le dump de la vue
+
+$vars = ['livres'=> $resultat];
+
+return $this->render
+("exemples_dql/exemple_fetch_join.html.twig", $vars);
+
+}
+
+![](media/image30.png){width="3.6in" height="3.623077427821522in"}
+
+### Fonctions Year, Month et Day
+
+> Ces fonctions n'existent pas par défaut dans DQL. La meilleure
+> solution est de rajouter un bundle
+
+<https://github.com/beberlei/DoctrineExtensions>
+
+Lancez **composer require beberlei/DoctrineExtensions**
+
+Il faut rajouter les fonctions dans la config de doctrine
+**config/packages/doctrine.yaml :**
+
+        dql:
+
+            string_functions:
+
+                MONTH: DoctrineExtensionsQueryMysqlMonth
+
+                YEAR: DoctrineExtensionsQueryMysqlYear
+
+Pour l'utiliser c'est très simple :
+
+$em->createQuery("SELECT MONTH(c.dateConcours) AS mois, 
+
+YEAR(c.dateConcours) AS annee FROM AppEntityConcours c");
+
+UPDATE
+------
+
+Exemple de UPDATE en DQL : réduire le prix d'un livre
+
+// UPDATE
+
+#[Route ("/exemples/d/q/l/exemple/update")]
+
+public function exempleUpdate (){
+
+$em = $this->getDoctrine()->getManager();
+
+$query = $em->createQuery ('UPDATE AppEntityLivre l SET l.prix =
+l.prix - :montant WHERE l.titre = :titre');
+
+// pour simplifier on fixe de valeurs pour le montant à déduire et le
+livre à changer (ISBN)
+
+$montant = 0.5;
+
+$ISBN = "The Aleph";
+
+$query->setParameter ('montant',$montant);
+
+$query->setParameter ('titre',$ISBN);
+
+$query->execute(); // pas getResult!
+
+return $this->render
+("exemples_dql/exemple_update.html.twig");
+
+}
+
+**Important :** Les instructions DQL UPDATE sont portées directement
+dans une simple instruction UPDATE de la BD. Ça implique que les entités
+qui sont déjà chargées dans le contexte de persistance ne seront PAS
+synchronisées avec le nouvel état de la base de données mise à jour.
+Dans certains cas, quand vous utilisez du DQL il est recommandé
+d'appeler la méthode **clear** du EntityManager pour d'extraire les
+nouvelles instances de toute entité affectée.
+
+Exercices DQL
+-------------
+
+En utilisant DQL :
+
+1)  Obtenez les clients
+
+2)  Obtenez les emprunts (isolés)
+
+3)  Obtenez les emprunts de tous les clients (seulement le nom du client
+    et les dates de retour)
+
+4)  Obtenez l'état de tous les emprunts de tous les clients (affichez
+    le nom, prénom du client ainsi que l'état de l'exemplaire)
+
+5)  Obtenez la liste de livres empruntés par tous les clients : nom du
+    client, prénom du client et titre du livre
+
+6)  Obtenez la liste des livres empruntés par un client de votre choix :
+    nom du client, prénom du client et titre du livre
+
+7)  Obtenez la liste de livres qui coutent plus qu'une valeur reçue en
+    paramètre dans l'URL
+
+8)  Obtenez tous les livres qui contient un texte dans le titre reçu
+    comme paramètre dans l'URL
+
+9)  Obtenez tous les emprunts réalisés pendant la prémiere quinzaine de
+    février en utilisant DQL. On veut afficher le titre du livre, la
+    date de l'emprunt et le nom et le prénom du client
+
+    **Note** : Les fonctions DAY, MONTH et YEAR ne sont pas acceptées
+    par défaut dans DQL pour pouvoir garder le langage independant du
+    type de BD. Vous allez avoir besoin d'enregistrer de fonctions de
+    date dans symfony en rajoutant des extensions de doctrine. Essayez
+    de suivre par vous-mêmes la documentation !
+
+    <https://github.com/oroinc/doctrine-extensions>
+
+10) **Exercez-vous** en réalisant toute sorte de requêtes, essayez les
+    possibilités de Doctrine :
+
+<https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/dql-doctrine-query-language.html>
+
+11) **Extra** : Créez de vues pour afficher convenablement tous ces
+    résultats. Vous allez mieux apprendre coment parcourir les
+    structures de données
+
+Accès à la BD avec DQL en utilisant les classes Repositoires
+============================================================
+
+Tel qu'on a déjà mentionné dans la section "Selection", quand on crée
+une entité sa classe Repository est créée aussi. Cette classe contient
+les méthodes par défaut qu'on a déjà utilisés (find, findBy, findOneBy,
+etc...). On va maintenant rajouter **de méthodes faits par nous capables
+de réaliser de requêtes plus complexes**.
+
+Le but est de simplifier les actions du controller qui, au lieu de
+devoir contenir la logique de requêtes complexes, appelleront aux
+actions des repositoires.
+
+**Exemple** : Créez une méthode dans la classe Repository de Livre et l'utiliser depuis une action du controller (au lieu d'utiliser DQL depuis le controller lui-même)
+
+1.  **Créez la méthode du repository pour nous faciliter la tâche**
+
+Observez que :
+
+-   La méthode renvoie le résultat de la requête, pas de vue bien
+    évidemment
+
+-   **Pour obtenir l'Entity Manager dans les classes Repository** on
+    utilise
+
+    **$this->getEntityManager()**. Nous ne sommes pas dans le
+    controller !
+
+// obtenir les livres entre deux prix
+
+public function livresEntreDeuxPrixDQL ($pmin, $pmax){
+
+$em = $this->getEntityManager();
+
+// avec cette requête on obtient un array
+
+$query = $em->createQuery ('SELECT livre FROM AppEntityLivre
+livre WHERE livre.prix >= :pmin AND '.
+
+'livre.prix <= :pmax');
+
+$query->setParameter ('pmin', $pmin);
+
+$query->setParameter ('pmax', $pmax);
+
+$resultat = $query->getResult();
+
+// cette méthode renvoie le résultat de la requête
+
+return $resultat;
+
+}
+
+**
+**
+
+2.  **Utilisez la méthode depuis le controller**
+
+Observez qu'il n'y a pratiquement rien à faire dans l'action...
+
+#[Route
+("/exemples/d/q/l/repositories/utilise/repo/livres/entre/deux/prix/{prixMin}/{prixMax}")]
+
+function utiliseRepoLivresEntreDeuxPrix (Request $req){
+
+$prixMin = $req->get("prixMin");
+
+$prixMax = $req->get("prixMax");
+
+$em = $this->getDoctrine()->getManager();
+
+$livresRepo = $em->getRepository(Livre::class);
+
+$livres = $livresRepo->livresEntreDeuxPrixDQL($prixMin, $prixMax);
+
+dump ($livres);
+
+**die**();
+
+// return new Response .....
+
+}
+
+#### Exercices : 
+
+1.  Faites une action où vous créez une adresse et plusieurs clients. Le
+    tout sera stocké dans la BD
+
+2.  Rajoutez une adresse à un client existant
+
+3.  Créez une méthode qui utilise DQL dans la classe Repository de
+    l'entité Adresse pour vous faciliter la tâche d'obtenir les
+    adresses d'une certaine ville
+
+Accès à la BD avec Query Builder
+================================
+
+**Query Builder est une API qui permet de générer des requêtes de
+séléction complexes qui renvoient des objets** (requêtes de
+regroupement, jointures, sous-requêtes...) et pas juste des arrays. En
+fait Query Builder est un générateur de DQL pour faciliter la création
+de requêtes, mais DQL est préféré.
+
+On pourra réaliser les fonctions de DQL mais en utilisant une notation
+complètement orientée objet (avec ses avantages et ses inconvénients)
+
+Un Objet **QueryBuilder est accéssible depuis une classe**
+**Repository**.
+
+QueryBuilder fournit les méthodes suivantes qu'on combinera selon nos
+besoins concrètes :
+
+![](media/image31.png){width="3.3375in" height="1.5400721784776903in"}
+
+La documentation de QueryBuilder se trouve ici :
+
+[http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html#](http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html)
+
+<https://www.doctrine-project.org/projects/doctrine-orm/en/2.7/reference/query-builder.html>
+
+À continuation on va réaliser un exemple pratique, on commencera par une
+requête simple.
+
+Commencez par la création d'un controller portant le nom
+UtiliseQueryBuilderController
+
+**Exemple** : utiliser QueryBuilder pour construire une requête capable d'obtenir le nombre de Livres dont le prix se trouve entre un minimum et un maximum
+
+1.  **Créez la méthode du repositoire** (LivreRepository.php) **capable
+    de realiser la requête avec Query Builder**
+
+// QUERYBUILDER: obtenir les livres entre deux prix
+
+// obtenir les livres entre deux prix, version QueryBuilder
+
+public function getEntreDeuxPrix ($min, $max){
+
+$qb = $this->createQueryBuilder("u"); // u est un nom générique
+
+$query = $qb->select('u')
+
+->where('u.prix >= :min')
+
+->andWhere('u.prix <= :max')
+
+->setParameter('min', $min)
+
+->setParameter('max', $max)
+
+->getQuery();
+
+$res = $query->getResult();
+
+//var_dump ($res);
+
+return $res;
+
+}
+
+Notez que l'API nous permet de réaliser l'ensemble de la requête sans
+utiliser ni du SQL pur ni du DQL. Sachez quand-même que QueryBuilder
+utilise le langage DQL comme langage sous-jacent.
+
+2.  **Créez une action dans le controller qu'utilise cette méthode** et
+    envoyez la réponse au client (new Response) pour qu'il l'affiche
+
+#[Route
+("/exemples/query/builder/utilise/repo/livres/entre/deux/prix/{prixMin}/{prixMax}")]
+
+function utiliseRepoLivresEntreDeuxPrix (Request $req){
+
+$prixMin = $req->get("prixMin");
+
+$prixMax = $req->get("prixMax");
+
+$em = $this->getDoctrine()->getManager();
+
+$livresRepo = $em->getRepository(Livre::class);
+
+$livres = $livresRepo->livresEntreDeuxPrixDQL($prixMin, $prixMax);
+
+dump ($livres);
+
+**die**();
+
+// return new Response .....
+
+}
+
+####  
+
+**Exemple** : obtenir un Client dont on connait l'email de la BD avec QueryBuilder
+
+1.  **Créez des données dans la BD**
+
+-   Créez une nouvelle Personne dans la BD. Pour la
+    "discrimination-column", tapez "client"
+
+-   Créez un nouveau Client qui sera cette Personne (utilisez l'id de
+    la Personne qui vous venez d'encoder)
+
+-   Créez la méthode getByEmail dans le repositoire de l'entité Client
+    (ClientRepository.php) :
+
+2.  **Créez la méthode du repositoire capable de realiser la requête
+    avec Query Builder**
+
+// QUERYBUILDER: obtenir les clients par mail, version QueryBuilder
+
+public function getParEmail ($email){
+
+$qb = $this->createQueryBuilder("u");
+
+$query = $qb->select('u')
+
+->where ('u.email = :email')
+
+->setParameter('email', $email)
+
+->getQuery();
+
+$resultat = $query->getSingleResult();
+
+return $resultat;
+
+}
+
+3.  **Créez une action dans le controller qu'utilise cette méthode** et
+    envoyez la réponse au client (new Response) pour qu'il l'affiche
+
+#[Route ("/exemples/query/builder/trouver/client/par/mail/{email}")]
+
+public function trouverClientParMail(Request $req){
+
+$em = $this->getDoctrine()->getManager();
+
+$rep = $em->getRepository(Client::class);
+
+// on fait appel à la méthode du Repository
+
+$objetClient = $rep->getParEmail($req->get ("email"));
+
+// on affiche les données du Client, on a obtenu un objet
+
+dump ($objetClient);
+
+**die** ();
+
+// return new Response .....
+
+}
+
+**Note** : vous pouvez toujours afficher le SQL crée par queryBuilder en
+utilisant de méthodes de cette classe. Par exemple :
+
+dd ($repo->createQueryBuilder('g')->getQuery()->getSql())
+
+ou
+
+$qb = $this->createQueryBuilder("u");
+
+$query = $qb->select('u')
+
+->where ('u.email = :email')
+
+->setParameter('email', $email)
+
+->getQuery();
+
+dd($query->getSql());
+
+Formulaires en Symfony
+======================
+
+Un formulaire est un ensemble d'éléments HTML dont leur contenu est
+envoyé au serveur (**action**) en exécutant un **submit**. Le serveur
+reçoit une requête **POST** qui contient les contenus des éléments du
+formulaire. En PHP, ces contenus sont accessibles à partir de la
+variable $_POST.
+
+En Symfony nous avons deux options pour créer un formulaire :
+
+1.  Créer un formulaire HTML indépendant et obtenir les données dans une
+    action du controller avec l'objet Request
+
+2.  Créer un formulaire qui est associé à une classe du modèle. Quand on
+    fait submit on obtient une entité dans le controller
+
+    Exemple : Si on crée un formulaire pour insérer un Client, il sera
+    associé à l'entité Client
+
+On va mieux comprendre avec des exemple pratique.
+
+Création d'un formulaire indépendant
+------------------------------------
+
+Vous pouvez créer un formulaire HTML dans votre twig sans aucun
+problème. Pour obtenir les données du formulaire dans une action vous
+allez utiliser l'objet **Request**.
+
+Pour accéder au contenu du form vous allez utiliser l'objet Request :
+
+<https://symfony.com/doc/current/components/http_foundation.html#accessing-request-data>
+
+Vous avez des exemples dans le projet ProjetFormulairesSymfony5,
+controller ExemplesFormulaireController.
+
+Création une classe de formulaire 
+----------------------------------
+
+Si vous voulez que vos formulaires aient une correspondance directe avec
+vos entités (ex : un formulaire Evenement que dans le controller est
+directement transformé en objet Evenement, sans passer par **query** ni
+**request**), vous devez créer une classe qui represente ce formulaire.
+
+Si on a une classe formulaire pour une entité, quand on fait submit on
+obtient une entité dans le controller qu'on pourra, par exemple, insérer
+directement dans une BD
+
+Nous allons faire un exemple :
+
+Créez d'abord un **nouveau projet** (ex : projetFormulaires) contenant
+un controller (ex : **FormulairesController**). Rajoutez une entité
+Aeroport (nom, code) et créez la BD (ex: formulairesbd) et saisissez
+quelques données.
+
+**Exemple** : création d'une classe de formulaire 
+
+On va créer un formulaire pour l'entité Aeroport qui contiendra deux
+champs de texte (nom et code). Le bouton de submit sera rajouté à
+posteriori.
+
+1.  Rajoutez les **classes** qui gèrent les **formulaires** en Symfony
+    **dans le projet** (cette action doit se faire une seule fois para
+    projet!)
+
+    composer require symfony/form
+
+2.  **Créez le dossier src/Form et un fichier qui contiendra la classe
+    qui définira le formulaire** (pour l'entité Aeroport on crée le
+    fichier Aeroport**Type**.php)
+
+Cette définition est une classe, une représentation abstraite de notre
+formulaire, mais il n'y a pas du HTML à l'intérieur.
+
+Voici le code :
+
+<?php
+
+namespace AppForm;
+
+use SymfonyComponentFormAbstractType;
+
+use SymfonyComponentFormFormBuilderInterface;
+
+use SymfonyComponentFormExtensionCoreTypeTextType;
+
+class AeroportType extends AbstractType {
+
+public function buildForm (FormBuilderInterface $builder,
+**array** $options){
+
+$builder->add ('nom', TextType::class)
+
+->add ('code', TextType::class);
+
+}
+
+}
+
+La classe qui représente le formulaire doit hériter de **AbstractType**,
+et possède une méthode **buildForm** qui est en charge de générer
+l'objet formulaire. Cette méthode reçoit un objet qui implémente la
+classe FormBuilderInterface (il est injecté par Symfony, nous ne créons
+pas cet objet par nous-mêmes), en plus d'un array d'options qui nous
+permettrait de personnaliser le formulaire.
+
+En général, vous allez utiliser la méthode **add** de cet objet pour
+rajouter les champs du formulaire. Vous devez, pour chaque champ,
+indiquer le **name** (premier paramètre) ainsi que le **type**. Symfony
+possède un vaste nombre de types déjà définis qui correspondent aux type
+HTML, mais on peut en plus définir nos propres types pour atteindre un
+niveau de complexité assez élevé.
+
+Voici la liste de types inclus dans Symfony :
+
+<https://symfony.com/doc/current/reference/forms/types.html>
+
+Étudiez par vous-mêmes les types et son fonctionnement, dans ce cours
+c'est impossible de les parcourir tous vu le temps dont on dispose.
+
+3.  **Dans une nouvelle action, créez une instance du formulaire** en
+    utilisant la méthode **createForm** du controller.
+
+Dans cette action on utilisera la méthode **createForm** pour créer une
+instance du formulaire (on indique le type qu'on vient de définir).
+Puis on utilise la méthode **createView** pour générer le code HTML qui
+sera envoyé à la vue. Voici le code :
+
+namespace AppController;
+
+use
+SymfonyBundleFrameworkBundleControllerAbstractController;
+
+use SymfonyComponentRoutingAnnotationRoute;
+
+// la classe du Formulaire
+
+use AppFormAeroportType;
+
+class ExemplesFormulairesController extends AbstractController
+
+{
+
+#[Route ("/exemples/formulaires/exemple/aeroport");]
+
+public function exempleAeroport (){
+
+// on crée le formulaire du type souhaité
+
+$formulaireAeroport = $this->createForm (AeroportType::class);
+
+// on envoie un objet FormView à la vue pour qu'elle puisse
+
+// faire le rendu, pas le formulaire en soi
+
+$vars = ['unFormulaire'=>$formulaireAeroport->createView()];
+
+return $this->render
+('/exemples_formulaires/exemple_aeroport.html.twig',$vars);
+
+}
+
+}
+
+4.  **Créez la vue et appelez la fonction** **form** **de twig** en lui
+    envoyant l'objet **FormView** qu'on vient de recevoir du
+    controller
+
+Il y a plusieurs manières de rendre le formulaire :
+
+<https://symfony.com/doc/current/forms.html#rendering-the-form>
+
+On peut rendre le formulaire complète ou par parties, en utilisant un
+thème (Bootstrap, Foundation, etc...) ou pas.
+
+{{ form_start (unFormulaire) }}
+
+{{ form_widget (unFormulaire) }}
+
+{{ form_end (unFormulaire)}}
+
+form_start et form_end générent les balises du début et fin du
+formulaire et form_widget génère tous les contrôles.
+
+Création d'un formulaire associé à une entité existante
+--------------------------------------------------------
+
+Vous pouvez créer un formulaire pré-rempli avec les données d'une
+entité. Pour ce faire, il suffit de créer l'entité avant et l'envoyer
+comme deuxième paramètre à la méthode **createForm**. Voici un exemple :
+
+#[Route ("/exemples/formulaires/exemple/aeroport/rempli");]
+
+public function exempleAeroportRempli (){
+
+$unAeroport = new Aeroport ();
+
+$unAeroport->setNom("Sevilla Santa Justa");
+
+$unAeroport->setCode("SVQ");
+
+// etc....
+
+// on crée le formulaire du type souhaité
+
+$formulaireAeroport = $this->createForm (AeroportType::class,
+**$unAeroport**);
+
+// on envoie un objet FormView à la vue pour qu'elle puisse
+
+// faire le rendu, pas le formulaire en soi
+
+$vars = ['unFormulaire' => $formulaireAeroport->createView()];
+
+return $this->render
+('/exemples_formulaires/exemple_aeroport.html.twig',$vars);
+
+}
+
+Types des champs du formulaire
+------------------------------
+
+On va modifier le formulaire en rajoutant le type de chaque widget.
+Rajoutez les proprietés **dateMiseEnService, heureMiseEnService** et
+**description** dans l'entité et dans le formulaire (n'oubliez pas les
+use). Faites aussi la migration !
+
+public function buildForm(FormBuilderInterface $builder,
+**array** $options)
+
+{
+
+$builder->add('code', TextType::class)
+
+->add('nom', TextType::class)
+
+->add('dateMiseEnService', DateType::class)
+
+->add('heureMiseEnService', TimeType::class)
+
+->add('description', TextareaType::class)
+
+}
+
+Nous n'allons pas rajouter un bouton de submit dans la classe du
+formulaire **car ce n'est pas une bonne pratique.**
+
+Affichez à nouveau la vue et observez le résultat :
+
+![](media/image32.png){width="2.201388888888889in"
+height="1.6921128608923885in"}
+
+#### Exercice : créez l'action et la vue nécessaires pour afficher ce formulaire! 
+
+Propriétés des champs du formulaire
+-----------------------------------
+
+Chaque type de données correspond à une classe qui hérite de la classe
+**FormType**. Chaque champ d'un formulaire à un **objet (widget)
+associé qui générera son code HTML (selon son type).** Chaque champ a
+**un ensemble de propriétés HTML héritées de ses parents** (ex:
+"label" ou "placeholder") **ainsi qu'un ensemble d'options**
+**propres** (ex: "preferred_choices" pour le type LanguageType).
+
+**Exemple** : rajout des options dans les champs du formulaire 
+
+On va créer un formulaire plus personnalisé que le précédent pour
+l'entité Livre. Rajoutez les entités Exemplaire et Livre (vous pouvez
+les copier d'un autre projet, mais effacez les relations avec les
+autres entités tel que Categorie). Pour Livre, rajoutez les champs
+**nombrePages**, **langue** et **format**
+
+**Créez un formulaire** basé sur Livre (prenez comme exemple celui de
+l'entité Aeroport) et **rajoutez les types pour chaque champ** qui
+puissent vous convenir le plus.
+
+**Toutes les informations nécessaires sur les types se trouvent ici :**
+
+<https://symfony.com/doc/current/reference/forms/types.html>
+
+Voici le code d'exemple:
+
+public function buildForm(FormBuilderInterface $builder,
+**array** $options)
+
+{
+
+$builder->add('ISBN', TextType::class)
+
+->add('titre', TextareaType::class)
+
+->add('prix', MoneyType::class)
+
+->add('description', TextareaType::class)
+
+->add('datePublication', DateType::class,[
+
+'label' => 'Date de publication'
+
+])
+
+->add('nombrePages', IntegerType::class, [
+
+'label' => 'Nombre de pages',
+
+'required' => **false**
+
+])
+
+->add('langue', LanguageType::class, [
+
+'label' => 'Langue du livre',
+
+'preferred_choices' => ['es','fr','it']
+
+])
+
+->add ('format', ChoiceType::class, [
+
+'choices' => [
+
+'eBook' => 'ebook',
+
+'papier' => 'papier'
+
+],
+
+// les combinaisons de ces paramètres détermineront le type de
+
+// liste de choix : liste, liste déroulante, checkbox ou
+
+// radiobuttons
+
+'expanded' => **false**,
+
+'multiple' => **true**
+
+]);
+
+}
+
+Avant de créer une action pour générer ce formulaire on va rajouter la
+méthode et l'action dans la section suivante.
+
+Méthode et Action
+-----------------
+
+Pour finir le formulaire, on peut spécifier l'action à réaliser pour le
+submit (même avant créer le bouton) ainsi que la méthode (GET ou POST).
+Nous avons deux possibilités :
+
+1)  Définir l'action **dans la classe du formulaire**. C'est facile
+    mais on ne pourra utiliser le formulaire pour exécuter d'autres
+    actions !
+
+    **Important :** Cette méthode est à éviter mais elle facilite la
+    compréhension des bonnes pratiques
+
+public function buildForm(FormBuilderInterface $builder,
+**array** $options)
+
+{
+
+$builder->add('ISBN', TextType::class)
+
+->add('titre', TextareaType::class)
+
+->add('prix', MoneyType::class)
+
+->add('description', TextareaType::class)
+
+->add('datePublication', DateType::class,[
+
+'label' => 'Date de publication'
+
+])
+
+->add('nombrePages', IntegerType::class, [
+
+'label' => 'Nombre de pages',
+
+'required' => **false**
+
+])
+
+->add('langue', LanguageType::class, [
+
+'label' => 'Langue du livre',
+
+'preferred_choices' => ['es','fr','it']
+
+])
+
+->add ('format', ChoiceType::class, [
+
+'choices' => [
+
+'eBook' => 'ebook',
+
+'papier' => 'papier'
+
+],
+
+// les combinaisons de ces paramètres détermineront le type de
+
+// liste de choix : liste, liste déroulante, checkbox ou
+
+// radiobuttons
+
+'expanded' => **false**,
+
+'multiple' => **false**
+
+])
+
+**->setMethod('POST')**
+
+**->setAction('traitementFormulaireLivre');;**
+
+}
+
+**
+**
+
+2)  **Définir l'action et la méthode dans le controller** lors de la
+    création de l'objet formulaire. Cette option est **plus souple**
+    car elle nous permet de réutiliser le formulaire pour lancer
+    d'autres actions :
+
+**Dans la classe du formulaire il n'y a pas d'action ni de méthode :**
+
+class LivreType extends AbstractType {
+
+public function buildForm(FormBuilderInterface $builder,
+**array** $options)
+
+{
+
+$builder->add('ISBN', TextType::class)
+
+->add('titre', TextareaType::class)
+
+->add('prix', MoneyType::class)
+
+->add('description', TextareaType::class)
+
+->add('datePublication', DateType::class,[
+
+'label' => 'Date de publication'
+
+])
+
+->add('nombrePages', IntegerType::class, [
+
+'label' => 'Nombre de pages',
+
+'required' => **false**
+
+])
+
+->add('langue', LanguageType::class, [
+
+'label' => 'Langue du livre',
+
+'preferred_choices' => ['es','fr','it']
+
+])
+
+->add ('format', ChoiceType::class, [
+
+'choices' => [
+
+'eBook' => 'ebook',
+
+'papier' => 'papier'
+
+],
+
+'expanded' => **false**,
+
+'multiple' => **true**
+
+])
+
+}
+
+}
+
+#[Route ("/exemples/formulaires/exemple/livre");]
+
+public function exempleLivre (){
+
+$livre = new Livre();
+
+$formulaireLivre = $this->createForm (LivreType::class, $livre,
+**array**(
+
+**'action' => $this->generateUrl("rajouter_livre"), // name de
+la route!**
+
+// si on n'utilise pas le name d'une route
+
+// 'action' => "/exemples/formulaires/livre/rajouter",
+
+**'method' => 'POST'**
+
+));
+
+$vars = ['unFormulaire'=>$formulaireLivre->createView()];
+
+return $this->render
+('/exemples_formulaires/exemple_livre.html.twig',$vars);
+
+}
+
+Nous utiliserons un array de paramètres et la méthode **generateUrl**
+pour générer le code HTML qui correspond à une route qui porte un
+"name". Si la route n'a pas de "name" on peut juste mettre un path,
+mais c'est moins souple car la modification d'un path dans le routing
+impliquera modifier une par une toutes les appels à cette action.
+
+Voici le code complet du controller, ici on a une route avec "name"
+(rajouter_livre) :
+
+<?php
+
+namespace AppController;
+
+use
+SymfonyBundleFrameworkBundleControllerAbstractController;
+
+use SymfonyComponentRoutingAnnotationRoute;
+
+// les entités de base
+
+use AppEntityAeroport;
+
+use AppEntityLivre;
+
+// les classes des Formulaires
+
+use AppFormAeroportType;
+
+use AppFormLivreType;
+
+class ExemplesFormulairesController extends AbstractController
+
+{
+
+#[Route ("/exemples/formulaires/exemple/aeroport");]
+
+public function exempleAeroport (){
+
+// on crée le formulaire du type souhaité
+
+$formulaireAeroport = $this->createForm (AeroportType::class);
+
+// on envoie un objet FormView à la vue pour qu'elle puisse
+
+// faire le rendu, pas le formulaire en soi
+
+$vars = ['unFormulaire'=>$formulaireAeroport->createView()];
+
+return $this->render
+('/exemples_formulaires/exemple_aeroport.html.twig',$vars);
+
+}
+
+#[Route ("/exemples/formulaires/exemple/livre");]
+
+public function exempleLivre (){
+
+$livre = new Livre();
+
+$formulaireLivre = $this->createForm (LivreType::class, $livre,
+**array**(
+
+'action' => $this->generateUrl("rajouter_livre"), // name de la
+route!
+
+// si on n'utilise pas le name d'une route
+
+// 'action' => "/exemples/formulaires/livre/rajouter",
+
+'method' => 'POST'
+
+));
+
+$vars = ['unFormulaire'=>$formulaireLivre->createView()];
+
+return $this->render
+('/exemples_formulaires/exemple_livre.html.twig',$vars);
+
+}
+
+}
+
+Boutons dans les formulaires (bonnes pratiques)
+-----------------------------------------------
+
+Si on veut reutiliser un même formulaire pour réaliser plusieurs actions
+(ex : mettre à jour un livre ou rajouter un livre) on ne doit pas créer
+les boutons dans la classe du formulaire mais dans la vue
+correspondante. Si on le crée dans la classe on sera coincés car
+l'étiquette du bouton sera fixée (on casse le principe de réutilisation
+du code!).
+
+On ne doit pas non plus rajouter le bouton dans le controller car on
+serait en train de mélanger présentation (ex : la classe du bouton) avec
+la logique (on casse le principe de "separation of concerns"!).
+
+La **meilleure option est de créer le bouton de submit en HTML dans la
+vue**. Voici un exemple :
+
+{{ form_start (formulaireLivre) }}
+
+{{ form_widget (formulaireLivre) }}
+
+<input type="submit" class="btn" value="Envoyer" />
+
+{{ form_end (formulaireLivre) }}
+
+Cette méthode nous permet de reutiliser le formulaire pour plein
+d'actions, on devra juste créer les boutons dans chaque vue.
+
+#### Exercice : Créez des boutons de submit dans les vues qui rendent les formulaires des exemples précédents
+
+###   {#section-4 .ListParagraph}
+
+Rendu du formulaire dans la vue
+-------------------------------
+
+Au moment de générer un formulaire dans un fichier twig on peut utiliser
+:
+
+**{{ form (formulaireAeroport) }}**
+
+Pour rendre la totalité du formulaire d'un coup. Mais on peut
+controller plus la génération du formulaire en utilisant :
+
+**{{ form_start (nomDuFormulaire) }}**
+
+Rend la balise de début du formulaire, y compris l'attribut enctype
+correct lors de l'utilisation des téléchargements de fichiers.
+
+**{{ form_widget (nomChampFormulaire) }}**
+
+Rend un champ, ce qui inclut l'élément du champ lui-même, une étiquette
+et tous les messages d'erreur de validation pour le champ (si on a
+défini de validations)
+
+**{{ form_end (nomDuFormulaire) }}**
+
+Rend l'étiquette de fin du formulaire et tous les champs qui n'ont pas
+encore été rendus, dans le cas où vous avez rendu chaque champ
+vous-même. Ceci est utile pour ne pas devoir rendre à la main les champs
+cachés.
+
+**Exemple :**
+
+{{ form_start (formulaireAeroport) }}
+
+{{ form_widget (formulaireAeroport.nom) }}
+
+{{ form_widget (formulaireAeroport.description) }}
+
+{{ form_end (formulaireAeroport) }}
+
+**Si vous ne voulez pas afficher un champ d'un formulaire c'est
+simple** : effacez la ligne **form_widget** qui correspond à ce champ
+
+{{ form_end(form, **{'render_rest': false}**) }}
+
+. Le controller recevra alors une valeur **null** pour ce champ de
+l'entité associée.
+
+Par défaut Symfony rend les champs qui ne sont pas spécifies Pour éviter
+le rendu automatique du reste de champs il faut rajouter :
+
+Résumé : création et personnalisation de base d'un formulaire
+--------------------------------------------------------------
+
+Pour créer un formulaire et le traiter :
+
+1.  Créez le **squelette** du formulaire (la **classe**)
+
+2.  Dans cette classe, **rajoutez les champs ("widgets") et leurs
+    types** selon vos besoins (TextType, ChoiceType, etc...).
+    Personnalisez le widget avec des **propriétés** (taille, required,
+    etc...)
+
+3.  **Rajouter les boutons de submit dans la vue qui affiche ce
+    formulaire**
+
+4.  **Définissez le nom de l'action qui affichera et traitera ce
+    formulaire, ainsi que la méthode (GET, POST)**
+
+5.  Créez une **action qui génère et traite le formulaire**
+
+**
+**
 
