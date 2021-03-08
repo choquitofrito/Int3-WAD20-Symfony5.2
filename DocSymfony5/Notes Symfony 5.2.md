@@ -3344,7 +3344,7 @@ Pour accéder à un objet dans la vue, utilisez la syntaxe "."
 
 #### Exercices : utilisation du CRUD (select)
 
-1) Obtenez les données du premier livre et affichez-les dans une vue
+1) Obtenez les données d'un livre en utilisant findOneBy et affichez-les dans une vue
 
 2)  Créez une méthode qui obtient la liste de tous les clients
     (remplissez la BD d'abord ;))
