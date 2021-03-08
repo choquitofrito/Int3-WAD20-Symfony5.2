@@ -127,6 +127,7 @@
   - [Rendu du formulaire dans la vue](#rendu-du-formulaire-dans-la-vue)
   - [Résumé : création et personnalisation de base d'un formulaire](#résumé--création-et-personnalisation-de-base-dun-formulaire)
 
+<br>
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
 
