@@ -23,7 +23,7 @@ class Livre
             }
         }
     }
-    
+
 
     /**
      * @ORM\Id
@@ -68,7 +68,6 @@ class Livre
         $this->exemplaires = new ArrayCollection();
         // appel au hydrate
         $this->hydrate($arrayInit);
-    
     }
 
     public function getId(): ?int
@@ -164,5 +163,13 @@ class Livre
         }
 
         return $this;
+    }
+
+    // rajouté pour permettre l'encapsulation (section dans le notes)
+    public function addExemplaireNoClass($etat, $emplacement)
+    {
+        $exemplaire = new \App\Entity\Exemplaire();
+        $exemplaire->setEtat($etat);
+        $this->addExemplaire($exemplaire);
     }
 }

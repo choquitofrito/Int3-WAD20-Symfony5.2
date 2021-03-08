@@ -97,8 +97,8 @@
 - [14. Le Modèle : Transitivité en Cascade](#14-le-modèle--transitivité-en-cascade)
       - [Exercices : actions en cascade](#exercices--actions-en-cascade)
 - [15. Le Modèle : Encapsulation](#15-le-modèle--encapsulation)
-- [TILL HERE OK](#till-here-ok)
-- [Héritage de classes et implémentation dans la BD](#héritage-de-classes-et-implémentation-dans-la-bd)
+- [16. Le Modèle : Héritage de classes et implémentation dans la BD](#16-le-modèle--héritage-de-classes-et-implémentation-dans-la-bd)
+- [TILL HERE](#till-here)
   - [Single Table Inheritance](#single-table-inheritance)
   - [Class Table Inheritance](#class-table-inheritance)
 - [Accès à la BD avec DQL](#accès-à-la-bd-avec-dql)
@@ -2860,6 +2860,7 @@ Considérons ce schéma Merise (MCD - base de données relationnelles) :
 ![](./images/many-to-many%20Merise.png)
 
 Qui équivaut à ce schéma UML (POO) :
+
 ![](./images/many-to-many%20UML.png)
 
 Nous sommes dans une association de plusieurs à plusieurs qui contient
@@ -3221,7 +3222,7 @@ Sur les associations récursives :
 <http://www.tomjewett.com/dbdesign/dbdesign.php?page=recursive.php>
 
 
-
+<br>
 
 
 # 12. Le modèle : accès à la BD avec Doctrine
@@ -3337,21 +3338,20 @@ public function exempleFindAll()
 }
 ```
 
-Créez de vues qui reçoivent ces objets en sachant que pour accéder aux
-propriétés des objets depuis la vue vous pouvez utiliser la notation
-d'objet (.)
+Pour accéder à un objet dans la vue, utilisez la syntaxe "."
 
 **{{ livre.titre }}**
 
 #### Exercices : utilisation du CRUD (select)
 
-1)  Créez une méthode qui obtient la liste de tous les clients
+1) Obtenez les données du premier livre et affichez-les dans une vue
+
+2)  Créez une méthode qui obtient la liste de tous les clients
     (remplissez la BD d'abord ;))
 
-2)  Créez une méthode qui obtient tous les clients qui s'appellent
-    Marie Dupont
+3)  Créez une méthode qui obtient tous les clients qui s'appellent Marie Dupont
 
-3)  Créez une méthode qui obtient le client qui porte l'id numéro 3
+4)  Créez une méthode qui obtient le client qui porte l'id numéro 3
     dans la BD
 
 <br>
@@ -3575,7 +3575,7 @@ dégrader la performance.
 
 <br>
 
-**Exemple** : Réalisation d'un INSERT des objets d'une relation One-to-Many sans cascade-persist
+**Exemple** : Réalisation d'un **INSERT** des objets d'une relation One-to-Many sans cascade-persist
 
 Observez cet exemple où on crée un Livre et plusieurs Exemplaires, et on stocke le tout dans la BD (créez un nouveau controller *ExemplesCascadeController* et importez les classes Livre et Exemplaires) :
 
@@ -3668,7 +3668,7 @@ jour dans la méthode **addExemplaire** :
 
 3.  Créez une méthode qui cherche un client dans la BD et puis l'efface, y incluses toutes ses adresses
 
-
+<br>
 
 # 15. Le Modèle : Encapsulation 
 
@@ -3684,79 +3684,62 @@ On peut aller plus loin en utilisant le concept d'**encapsulation**. L'encapsula
 
 Le mécanisme est très simple : **au lieu de créer l'objet** exemplaire **dans l'action du controller et l'envoyer à la méthode qui le rajoute** **au livre** (addExemplaire dans Livre), **on créera** l'exemplaire **à l'intérieur d'une nouvelle méthode de Livre**. Cette méthode du livre sera **appelée depuis l'action, qui l'enverra les données nécessaires pour créer l'objet** exemplaire **mais pas l'objet en soi**. Voici un exemple, observez les différences avec l'exemple précédant :
 
-Nouvelle méthode dans Livre.php :
-# TILL HERE OK
+Nouvelle méthode **dans Livre.php** :
 
 ```php
-dos partes
-
-```
-// rajouté pour permettre l'encapsulation
-
-public function addExemplaireNoClass ($etat){
-
-$exemplaire = new AppEntityExemplaire();
-
-$exemplaire->setEtat($etat);
-
-$this->addExemplaire($exemplaire);
-
+// rajouté pour permettre l'encapsulation (section dans le notes)
+public function addExemplaireNoClass($etat, $emplacement)
+{
+    $exemplaire = new \App\Entity\Exemplaire();
+    $exemplaire->setEtat($etat);
+    $this->addExemplaire($exemplaire);
 }
-
+```
 Nous n'avons plus besoin de la classe Exemplaire dans l'action principale et en plus son code sera simplifié :
 
-/**
 
-*
-@Route("/exemples/encapsulation/rajouter/livre/exemplaires/encapsulation")]
+```php
+class ExemplesEncapsulationController extends AbstractController
+{
+    /**
+     * @Route("/exemples/encapsulation/rajouter/livre/exemplaires/encapsulation")
+     */
+    public function rajouterLivreExemplairesEncapsulation()
+    {
+        $em = $this->getDoctrine()->getManager();
+        // on crée un livre
+        $livre = new Livre();
+        $livre->setTitre("Currucucu Paloma");
+        $livre->setPrix(20);
+        $livre->setDescription("Roman");
+        $livre->setDatePublication(new \DateTime("1968:10:10 00:00:00"));
+        $livre->setIsbn("321423142134");
 
-public function rajouterLivreExemplairesEncapsulation (){
+        // on ne crée pas ici les exemplaires. On envoie les données 
+        // necessaires pour créer les objets Exemplaire à la nouvelle méthode
+        // de l'entité Livre
+        // Cette méthode mettra à jour les deux côtés de la relation
+        // car elle fait appel à addExemplaire
+        $livre->addExemplaireNoClass("tache de chocolat", "15A");
+        $livre->addExemplaireNoClass("très vieux", "13B");
 
-$em = $this->getDoctrine()->getManager();
-
-// on crée un livre
-
-$livre = new Livre();
-
-$livre->setTitre("Currucucu Paloma");
-
-$livre->setPrix (20);
-
-$livre->setDescription("Roman");
-
-$livre->setDatePublication(new DateTime("1968:10:10
-00:00:00"));
-
-// on ne crée pas ici les exemplaires. On envoie les données
-
-// necessaires pour créer les objets Exemplaire à la nouvelle méthode
-
-// de l'entité Livre
-
-// Cette méthode mettra à jour les deux côtés de la relation
-
-// car elle fait appel à addExemplaire
-
-$livre->addExemplaireNoClass("tache de chocolat", "15A");
-
-$livre->addExemplaireNoClass("très vieux", "13B");
-
-$em->persist($livre);
-
-$em->**flush**();
-
-return $this->render
-("exemples_encapsulation/rajouter_livre_exemplaires_encapsulation.html.twig");
-
+        $em->persist($livre);
+        $em->flush();
+        return $this->render("exemples_encapsulation/rajouter_livre_exemplaires_encapsulation.html.twig");
+    }
 }
-
+```
 Comparez ce code avec celui de "rajouterSansEncapsulation"...
 
+<br>
 
-Héritage de classes et implémentation dans la BD
-================================================
+# 16. Le Modèle : Héritage de classes et implémentation dans la BD
+
+<br>
 
 **Exemple** : Les clients et les auteurs d'une application sont tous de personnes. Implementons ce modèle en code et dans la BD
+
+# TILL HERE
 
 ![](media/image24.png){width="3.058333333333333in"
 height="2.7319499125109363in"}
