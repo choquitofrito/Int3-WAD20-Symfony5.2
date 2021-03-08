@@ -1,41 +1,52 @@
-# Notes Symfony 5.2
-
-- [Notes Symfony 5.2](#notes-symfony-52)
 - [1. Configuration de base : Composer, Git, XDebug, Visual Studio](#1-configuration-de-base--composer-git-xdebug-visual-studio)
 - [2. Installation des outils de base de Symfony](#2-installation-des-outils-de-base-de-symfony)
 - [3. Création d'un projet de base (squelette)](#3-création-dun-projet-de-base-squelette)
 - [4. Routing](#4-routing)
   - [4.1. Les bases du routing](#41-les-bases-du-routing)
   - [4.2. Création d'un controller de base et des routes](#42-création-dun-controller-de-base-et-des-routes)
+      - [Exercices : création des actions](#exercices--création-des-actions)
     - [4.2.1. Les routes contenant de paramètres](#421-les-routes-contenant-de-paramètres)
+      - [Exercices : création d'actions contenant de paramètres](#exercices--création-dactions-contenant-de-paramètres)
     - [4.2.2. Les contraintes dans les routes](#422-les-contraintes-dans-les-routes)
+      - [Exercices : création de contraintes dans les paramètres des routes](#exercices--création-de-contraintes-dans-les-paramètres-des-routes)
     - [4.2.3. Les valeurs par défaut](#423-les-valeurs-par-défaut)
+      - [Exercices : utilisation de valeurs par défaut](#exercices--utilisation-de-valeurs-par-défaut)
     - [4.2.4. Paramètres optionnels](#424-paramètres-optionnels)
     - [4.2.5. Les valeurs alternatives pour les paramètres](#425-les-valeurs-alternatives-pour-les-paramètres)
 - [5. Controllers](#5-controllers)
   - [5.1. Création d'un controller sans assistant](#51-création-dun-controller-sans-assistant)
+      - [Exercices : Création de Controllers](#exercices--création-de-controllers)
   - [5.2. Création d'un controller avec l'assistant](#52-création-dun-controller-avec-lassistant)
+      - [Exercices : Créez un controller **Exercice2Controller**. Créez deux actions pour ce controller. Utilisez de paramètres dans au moins une des actions](#exercices--créez-un-controller-exercice2controller-créez-deux-actions-pour-ce-controller-utilisez-de-paramètres-dans-au-moins-une-des-actions)
   - [5.3. L'objet Response](#53-lobjet-response)
   - [5.4. L'objet Request](#54-lobjet-request)
   - [5.5. Types de réponses d'un controller: render, redirect, redirectToRoute et forward](#55-types-de-réponses-dun-controller-render-redirect-redirecttoroute-et-forward)
     - [5.5.1. Redirect](#551-redirect)
-      - [**Exemple :** redirection vers une autre adresse avec de paramètres](#exemple--redirection-vers-une-autre-adresse-avec-de-paramètres)
     - [5.5.2. RedirectToRoute](#552-redirecttoroute)
     - [5.5.3. Forward](#553-forward)
     - [5.5.4. Render](#554-render)
 - [6. Les Vues. Le moteur de templates TWIG](#6-les-vues-le-moteur-de-templates-twig)
   - [6.1. Création d'un template Twig](#61-création-dun-template-twig)
+      - [Exercices : Création d'une action et un template](#exercices--création-dune-action-et-un-template)
   - [6.2. Les variables TWIG](#62-les-variables-twig)
+      - [Exercices :](#exercices-)
   - [6.3. Les conditions](#63-les-conditions)
+      - [Exercices : Conditions IF dans Twig](#exercices--conditions-if-dans-twig)
   - [6.4. Les boucles](#64-les-boucles)
+      - [Exercices : communication Controller-Vue](#exercices--communication-controller-vue)
   - [6.5. Les filtres](#65-les-filtres)
   - [6.6. Héritage de templates en TWIG (I)](#66-héritage-de-templates-en-twig-i)
+      - [Exercices : codez une nouvelle 'vue' (template) qui hérite de la master page précédente. Cette nouvelle vue reçoit un array contenant les infos d'un livre et les affiche dans la section "contenuPrincipal"](#exercices--codez-une-nouvelle-vue-template-qui-hérite-de-la-master-page-précédente-cette-nouvelle-vue-reçoit-un-array-contenant-les-infos-dun-livre-et-les-affiche-dans-la-section-contenuprincipal)
   - [6.7. Héritage de Templates en TWIG (II)](#67-héritage-de-templates-en-twig-ii)
+      - [Exercices : créez une master page en utilisant twig. La master page contiendra une barre de navigation contenant trois liens. Chaque lien appelle une action d'un controller](#exercices--créez-une-master-page-en-utilisant-twig-la-master-page-contiendra-une-barre-de-navigation-contenant-trois-liens-chaque-lien-appelle-une-action-dun-controller)
   - [6.8. Vider un bloc hérité d'un template](#68-vider-un-bloc-hérité-dun-template)
   - [6.9. Incruster le rendu d'une autre action du controller une vue ('vue partielle')](#69-incruster-le-rendu-dune-autre-action-du-controller-une-vue-vue-partielle)
+      - [Exercices :](#exercices--1)
   - [6.10. Faire appel à une action depuis la vue](#610-faire-appel-à-une-action-depuis-la-vue)
+      - [Exercices: Créez un template qui contient une mini-nav avec trois liens href. Chaque lien fera appel à une action du controller.](#exercices-créez-un-template-qui-contient-une-mini-nav-avec-trois-liens-href-chaque-lien-fera-appel-à-une-action-du-controller)
 - [7. Gestion basique d'erreurs dans la réponse du serveur](#7-gestion-basique-derreurs-dans-la-réponse-du-serveur)
   - [7.1. Créer une vue pour chaque erreur à gérer en utilisant les conventions de Symfony](#71-créer-une-vue-pour-chaque-erreur-à-gérer-en-utilisant-les-conventions-de-symfony)
+      - [Exercices : traitez l'erreur 404 en utilisant ce système](#exercices--traitez-lerreur-404-en-utilisant-ce-système)
   - [7.2. Modifier la réponse http du serveur](#72-modifier-la-réponse-http-du-serveur)
   - [7.3. Lancer une exception](#73-lancer-une-exception)
 - [8. Les environnements de développement et production](#8-les-environnements-de-développement-et-production)
@@ -46,7 +57,9 @@
 - [10. Les Services](#10-les-services)
   - [10.1. Concept de Service](#101-concept-de-service)
   - [10.2. Utilisations des services inclus dans Symfony](#102-utilisations-des-services-inclus-dans-symfony)
+      - [Exercices :](#exercices--2)
   - [10.3. Création de nos propres services](#103-création-de-nos-propres-services)
+      - [Exercices : Créez à partir de zéro un service qui dit Bonjour. Le service portera le nom *BonjourSimple*. Créez une action pour montrer son fonctionnement](#exercices--créez-à-partir-de-zéro-un-service-qui-dit-bonjour-le-service-portera-le-nom-bonjoursimple-créez-une-action-pour-montrer-son-fonctionnement)
   - [10.4. Injecter les services dans le controller](#104-injecter-les-services-dans-le-controller)
   - [10.5. Injection de paramètres dans le service (I)](#105-injection-de-paramètres-dans-le-service-i)
   - [10.6. Utiliser un service dans un autre service](#106-utiliser-un-service-dans-un-autre-service)
@@ -57,10 +70,13 @@
   - [11.3. Installation de Doctrine. Création de la BD](#113-installation-de-doctrine-création-de-la-bd)
   - [11.4. Création des entités et mise à jour de la BD](#114-création-des-entités-et-mise-à-jour-de-la-bd)
   - [11.5. Rajouter/effacer des propriétés d'une entité](#115-rajoutereffacer-des-propriétés-dune-entité)
+      - [Exercices :](#exercices--3)
   - [11.6. Le modèle : les relations](#116-le-modèle--les-relations)
     - [11.6.1. Relation Many-To-One](#1161-relation-many-to-one)
     - [11.6.2. Explication du code généré par l'assistant](#1162-explication-du-code-généré-par-lassistant)
+      - [Exercices :](#exercices--4)
     - [11.6.3. Relation Many-To-Many](#1163-relation-many-to-many)
+      - [Exercices : implémentez vous-même ce modèle dans **ProjetModeleSymfony** pour avoir la relation entre les Clients et les Exemplaires !](#exercices--implémentez-vous-même-ce-modèle-dans-projetmodelesymfony-pour-avoir-la-relation-entre-les-clients-et-les-exemplaires-)
     - [11.6.4. Relation One-To-One](#1164-relation-one-to-one)
     - [11.6.5. Relation reflexive (self-association)](#1165-relation-reflexive-self-association)
       - [a) Relation reflexive d'un à plusieurs](#a-relation-reflexive-dun-à-plusieurs)
@@ -77,6 +93,7 @@
     - [12.2.3. DELETE](#1223-delete)
 - [13. Le modèle : Persistance](#13-le-modèle--persistance)
 - [14. Le Modèle : Transitivité en Cascade](#14-le-modèle--transitivité-en-cascade)
+      - [Exercices :](#exercices--5)
 - [15. Le Modèle : Encapsulation](#15-le-modèle--encapsulation)
 - [TILL HERE OK](#till-here-ok)
 - [Héritage de classes et implémentation dans la BD](#héritage-de-classes-et-implémentation-dans-la-bd)
@@ -91,7 +108,7 @@
   - [UPDATE](#update)
   - [Exercices DQL](#exercices-dql)
 - [Accès à la BD avec DQL en utilisant les classes Repositoires](#accès-à-la-bd-avec-dql-en-utilisant-les-classes-repositoires)
-      - [Exercices :](#exercices-)
+      - [Exercices :](#exercices--6)
 - [Accès à la BD avec Query Builder](#accès-à-la-bd-avec-query-builder)
       - [](#)
 - [Formulaires en Symfony](#formulaires-en-symfony)
@@ -108,7 +125,6 @@
   - [Rendu du formulaire dans la vue](#rendu-du-formulaire-dans-la-vue)
   - [Résumé : création et personnalisation de base d'un formulaire](#résumé--création-et-personnalisation-de-base-dun-formulaire)
 
-<br>
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
 
@@ -341,9 +357,8 @@ seront expliqués aussi plus tard, il faut juste savoir que Response nous
 sert à envoyer une réponse directement au navigateur **sans passer par
 une vue**.
 
-<br>
 
-**Exercices**
+#### Exercices : création des actions
 
 1.  Créez une nouvelle action monAction1 qui affiche le message "Ce controller est en charge du répertoire de l'application et je suis juste une action à l'intérieur"
 
@@ -432,7 +447,7 @@ directement au client en utilisant l'objet Response
 
 <br>
 
-**Exercices** : création d'actions contenant de paramètres
+#### Exercices : création d'actions contenant de paramètres
 
 1.  Créez une nouvelle action afficheTVAC qui reçoit un prix et affiche le prix TVAC 
 
@@ -483,7 +498,7 @@ introuvable**. Pour le moment nous sommes en mode de **développement
 Quand on changera au mode **production (prod)** on verra juste un simple
 message d'erreur 404 -- page introuvable.
 
-**Exercices** : création de contraintes dans les paramètres des routes
+#### Exercices : création de contraintes dans les paramètres des routes
 
 En utilisant la documentation sur les expressions régulières :
 
@@ -516,7 +531,7 @@ public function affichePrixDefautTvac(Request $objetRequest)
 }  
 ```
 
-**Exercice** : utilisation de valeurs par défaut
+#### Exercices : utilisation de valeurs par défaut
 
 Créez une action "afficheMessage" qui affiche un message un certain
 nombre de fois à l'utilisateur. Le message est reçu dans l'url, ainsi
@@ -668,7 +683,9 @@ class ContactsController extends AbstractController
 }
 ```
 
-**Exercice** : Créez un controller **Exercice1Controller**. Créez deux actions pour ce controller. Utilisez de paramètres dans au moins une des actions
+#### Exercices : Création de Controllers
+
+Créez un controller **Exercice1Controller**. Créez deux actions pour ce controller. Utilisez de paramètres dans au moins une des actions
 
 <br>
 
@@ -684,7 +701,7 @@ php bin/console make:controller <nom du nouveau controller>
 
 pour générer automatiquement le squelette d'un controller. Symfony génère le fichier du controller, une action route ainsi qu'une vue associée. Testez-le par vous-mêmes.
 
-**Exercice** : Créez un controller **Exercice2Controller**. Créez deux actions pour ce controller. Utilisez de paramètres dans au moins une des actions
+#### Exercices : Créez un controller **Exercice2Controller**. Créez deux actions pour ce controller. Utilisez de paramètres dans au moins une des actions
 
 <br>
 
@@ -800,7 +817,7 @@ des actions dans un nouveau controller ExemplesReponsesController
 La méthode redirect nous permet d'appeler une autre action dans un
 autre controller ou rediriger vers une autre adresse web
 
-#### **Exemple :** redirection vers une autre adresse avec de paramètres
+**Exemple :** redirection vers une autre adresse avec de paramètres
 
 ```php
 // cette action reçoit un titre de film et réalise une redirection vers imdb
@@ -996,7 +1013,10 @@ Bonjour! je suis un template!
 
 Conservez cette structure de blocs dans vos twigs et remplissez à chaque fois le contenu du block body. On étudiera plus tard comment utiliser les blocs pour enrichir la structure d'un template twig. Lancez la page juste pour tester si tout est en ordre, puis continuez la lecture.
 
-**Exercice** : Créez une deuxième action affichePays et un template qui affiche "vive la Belgique"
+#### Exercices : Création d'une action et un template
+
+Créez une deuxième action affichePays et un template qui affiche "vive la Belgique"
+
 <br>
 
 ## 6.2. Les variables TWIG
@@ -1093,7 +1113,7 @@ Pour les objets **c'est exactement la même chose mais on utilisera la
 notation de "."** dans le fichier twig pour pouvoir accéder ses
 propriétés (pas la flèche de PHP!)
 
-**Exercices** :
+#### Exercices :
 
 1.  Créez une nouvelle action afficheTvacTwig qui reçoit une valeur d'un prix dans l'URL et une valeur de TVA et calcule le prix Tvac. Créez un twig qui affiche "Le prix TVAC est xxx"
 
@@ -1131,7 +1151,7 @@ Voici la documentation pour avoir plus de détails :
 
 <https://twig.symfony.com/doc/2.x/tags/if.html>
 
-**Exercices** :
+#### Exercices : Conditions IF dans Twig
 
 1)  Créez une action qui reçoit un prix dans l'URL. Créez une action qui reçoit le prix et le multiplie fois deux. Vérifiez dans la vue (pas dans le controller) que le prix ne dépasse pas 100 euros en utilisant une condition
 
@@ -1229,7 +1249,7 @@ class Film
 
 ```
 
-**Exercices** :
+#### Exercices : communication Controller-Vue
 
 1)  Créez une nouvelle action contenant un array d'objets (Films).
     Envoyez-le à la vue et affichez le contenu de chaque Film dans un
@@ -1414,7 +1434,7 @@ public function contenu2MasterPage1()
 
 **Important** : **extends** doit être **la première balise** d'un template
 
-**Exercice** : codez une nouvelle 'vue' (template) qui hérite de la master page précédente. Cette nouvelle vue reçoit un array contenant les infos d'un livre et les affiche dans la section "contenuPrincipal"
+#### Exercices : codez une nouvelle 'vue' (template) qui hérite de la master page précédente. Cette nouvelle vue reçoit un array contenant les infos d'un livre et les affiche dans la section "contenuPrincipal"
 
 <br>
 
@@ -1485,7 +1505,7 @@ public function contenu2MasterPage2()
 
 Notez que les includes ne doivent pas servir uniquement à la création d'une master page. Nous pouvons utiliser cet outil dans n'importe quelle fichier twig. Cela nous permet d'inclure des fragments de la page qui se trouvent dans d'autres fichiers et qui deviennent ainsi partageables par toutes les vues (ex: vues partielles)
 
-**Exercice** : créez une master page en utilisant twig. La master page contiendra une barre de navigation contenant trois liens. Chaque lien appelle une action d'un controller
+#### Exercices : créez une master page en utilisant twig. La master page contiendra une barre de navigation contenant trois liens. Chaque lien appelle une action d'un controller
 
 Aidez-vous de cette documentation :
 
@@ -1552,7 +1572,7 @@ Observez que si on utilise la syntaxe "\\", on doit échapper les back slash. On
 
 Vous avez un exemple fonctionnel et commenté dans **ExempleControllerDansVueEmbedController.php** et les templates associés.
 
-**Exercice** :
+#### Exercices :
 
 Créez un nouveau controller.
 
@@ -1604,7 +1624,7 @@ Le fonctionnement est simple :
 <a href="{{ path ('action2_recoit_params',{nom: 'Luca',ville: 'Rome'}) }}">lien vers action 2 avec params</a>
 ```
 
-**Exercice**: Créez un template qui contient une mini-nav avec trois liens href. Chaque lien fera appel à une action du controller.
+#### Exercices: Créez un template qui contient une mini-nav avec trois liens href. Chaque lien fera appel à une action du controller.
 
 
 <br>
@@ -1628,7 +1648,8 @@ Cette méthode s'applique dans l'environnement de **prod**, car dans l'environne
 
 1.  Créez cette **structure de dossiers** dans le dossier **templates**
 
-<img src="./images/i003.png" width='35%'>
+
+![](./images/i003.png)
 
 
 1.  Créez **une vue pour chaque erreur à gérer** (.html.twig) suivant la convention **errorXXX.html.twig dans le dossier Exception** (ex: error500.html.twig)
@@ -1660,7 +1681,7 @@ Créez alors un fichier **erreur500.html.twig** dans le dossier
 php bin/console cache:clear
 ```
 
-**Exercice** : traitez l'erreur 404 en utilisant ce système
+#### Exercices : traitez l'erreur 404 en utilisant ce système
 
 <br>
 
@@ -1749,7 +1770,7 @@ nous-mêmes dont la configuration change selon nous soyons dans le mode
 
 <br>
 
-<img src='./images/i004.png' width="50%">
+![](./images/i004.png)
 
 <br>
 <br>
@@ -1818,7 +1839,7 @@ Si vous voulez mettre un projet en production, créez un fichier
 
 Comme nous avons mentionné ci-dessus, le **web profiler est un outil de debugging** de Symfony. Si vous activez le mode **dev** et vous chargez une page, la barre du debugger du **web** **profiler** sera affichée **en bas de la fenêtre du navigateur** :
 
-<img src="./images/i005.png">
+![](./images/i005.png)
 
 <br>
 <br>
@@ -1840,7 +1861,7 @@ Exemple :
 Cette fonction affiche le contenu complet de la variable d'une façon très complète. Utilisez-la au lieu de **var_dump** à partir de
 maintenant.
 
-<img src="./images/i006.png" width="35%">
+![](/images/i006.png)
 
 
 <br>
@@ -1943,7 +1964,7 @@ Si vous avez besoin de réaliser du logging dans votre application, vous avez pl
 
 <https://symfony.com/doc/current/logging.html>
 
-**Exercice** :
+#### Exercices :
 
 Symfony contient un service qui nous permet de gérer la session, **SessionInterface**. Appliquez la même procédure que dans l'exemple précédant pour l'obtenir. Dans votre action, créez une variable de
 session et affichez sa valeur. Le mécanisme de base de la session est simple : pour créer une variable de session on utilise la méthode **set (clé, valeur)** et pour la lire on utilise la méthode **get (clé)** de
@@ -2024,7 +2045,7 @@ class ExemplesPropreServiceController extends AbstractController
     }
 }
 ```
-**Exercice** : Créez à partir de zéro un service qui dit Bonjour. Le service portera le nom *BonjourSimple*. Créez une action pour montrer son fonctionnement
+#### Exercices : Créez à partir de zéro un service qui dit Bonjour. Le service portera le nom *BonjourSimple*. Créez une action pour montrer son fonctionnement
 
 <br>
 
@@ -2314,7 +2335,7 @@ class StatistiquesLogMail {
 mais **cette solution ne suffit pas**. Inclure le paramètre parmi les
 paramètres du constructeur provoque cette erreur :
 
-<img src="./images/i007.png">
+![](./images/i007.png)
 
 <br><br>
 
@@ -2584,7 +2605,7 @@ propriétés!
 
 <br>
 
-**Exercices** :
+#### Exercices :
 
 1)  Créez une nouvelle propriété *isbn* et migrez la BD
 
@@ -2615,10 +2636,13 @@ Documentation:
 
 Considérons ce schéma Merise (MCD - base de données relationnelles) :
 
-![](/images/many-to-one%20Merise.png)
+![](./images/many-to-one%20Merise.png)
+
+![](./images/many-to-one%20UML.png)
 
 Qui équivaut à ce schéma UML (POO) :
-![](/images/many-to-one%20UML.png)
+
+<br>
 
 La transformation de ce modèle nous donne, si on la réalise à la main :
 
@@ -2802,7 +2826,7 @@ pas mettre une collection d'exemplaires dans une BD relationnelle ! ;)
 
 <br>
 
-**Exercices** :
+#### Exercices :
 
 1)  On va considérer qu'un Client de la bibliothèque a une Adresse (rue, numero, codePostal, ville, pays) et qu'une adresse peut correspondre à plusieurs clients (ex: co-habitants dans un appart) 
 
@@ -2810,7 +2834,7 @@ Créez la classe Client pour représenter les clients et la classe Adresse pour 
 
 2)  Implementez ce diagramme si vous êtes brave!
 
-![](/images/diagramme-relations1.png)
+![](./images/diagramme-relations1.png)
 
 1)  Prenez des exemples du cours d'UML et implémentez les entités avec Doctrine dans un nouveau projet. Si vous êtes en train de planifier un projet pour vous, prenez plusieurs entités de votre schéma et implémentez-les avec Doctrine. Implementez les associations aussi
 
@@ -2820,10 +2844,10 @@ Créez la classe Client pour représenter les clients et la classe Adresse pour 
 
 Considérons ce schéma Merise (MCD - base de données relationnelles) :
 
-![](/images/many-to-many%20Merise.png)
+![](./images/many-to-many%20Merise.png)
 
 Qui équivaut à ce schéma UML (POO) :
-![](/images/many-to-many%20UML.png)
+![](./images/many-to-many%20UML.png)
 
 Nous sommes dans une association de plusieurs à plusieurs qui contient
 d'attributs d'association. Symfony a son propre mécanisme pour
@@ -2834,7 +2858,7 @@ deux associations de one-to-many :
 
 ![](/images/many-to-many-transform.png)
 
-**Exercice** : implémentez vous-même ce modèle dans **ProjetModeleSymfony** pour avoir la relation entre les Clients et les Exemplaires !
+#### Exercices : implémentez vous-même ce modèle dans **ProjetModeleSymfony** pour avoir la relation entre les Clients et les Exemplaires !
 
 Si vous êtes toujours intéressé à implémenter une association de plusieurs à plusieurs **sans attributs**, suivez les exemples de la documentation de Doctrine :
 
@@ -3621,7 +3645,7 @@ jour dans la méthode **addExemplaire** :
 
 <br>
 
-**Exercices** :
+#### Exercices :
 
 1.  Effacez un livre et provoquez que les exemplaires soient effacés automatiquement. Modifiez la configuration de cascade pour que l'opération soit réalisée correctement (exerciceCascadeRemove)
 
