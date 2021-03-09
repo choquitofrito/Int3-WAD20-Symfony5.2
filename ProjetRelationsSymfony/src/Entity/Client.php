@@ -40,6 +40,7 @@ class Client
     private $emprunts;
 
     
+    
     public function __construct()
     {
         $this->emprunts = new ArrayCollection();
@@ -109,5 +110,7 @@ class Client
 
         return $this;
     }
+
+
 
 }

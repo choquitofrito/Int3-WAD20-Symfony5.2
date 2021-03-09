@@ -97,22 +97,23 @@
 - [14. Le Modèle : Transitivité en Cascade](#14-le-modèle--transitivité-en-cascade)
       - [Exercices : actions en cascade](#exercices--actions-en-cascade)
 - [15. Le Modèle : Encapsulation](#15-le-modèle--encapsulation)
-- [16. Le Modèle : Héritage de classes et implémentation dans la BD](#16-le-modèle--héritage-de-classes-et-implémentation-dans-la-bd)
-- [TILL HERE](#till-here)
-  - [Single Table Inheritance](#single-table-inheritance)
-  - [Class Table Inheritance](#class-table-inheritance)
-- [Accès à la BD avec DQL](#accès-à-la-bd-avec-dql)
-  - [SELECT](#select)
-    - [Requête qui renvoi un array d'arrays](#requête-qui-renvoi-un-array-darrays)
-    - [Requête qui renvoi un array d'objets](#requête-qui-renvoi-un-array-dobjets)
-    - [Regular Joins et Fetch Joins](#regular-joins-et-fetch-joins)
-    - [Fonctions Year, Month et Day](#fonctions-year-month-et-day)
-  - [UPDATE](#update)
-  - [Exercices DQL](#exercices-dql)
-- [Accès à la BD avec DQL en utilisant les classes Repositoires](#accès-à-la-bd-avec-dql-en-utilisant-les-classes-repositoires)
+- [16. Le Modèle : Héritage de classes](#16-le-modèle--héritage-de-classes)
+  - [16.1. Single Table Inheritance](#161-single-table-inheritance)
+  - [16.2. Class Table Inheritance](#162-class-table-inheritance)
+- [17. Accès à la BD avec DQL](#17-accès-à-la-bd-avec-dql)
+  - [17.1. SELECT](#171-select)
+    - [17.1.1. Requête qui renvoi un array d'arrays](#1711-requête-qui-renvoi-un-array-darrays)
+    - [17.1.2. Requête qui renvoi un array d'objets](#1712-requête-qui-renvoi-un-array-dobjets)
+  - [17.2. Regular Joins et Fetch Joins](#172-regular-joins-et-fetch-joins)
+    - [17.2.1. Regular Join](#1721-regular-join)
+    - [17.2.2. Fetch Join](#1722-fetch-join)
+    - [17.3. Fonctions Year, Month et Day](#173-fonctions-year-month-et-day)
+  - [17.4. UPDATE](#174-update)
+      - [Exercices DQL](#exercices-dql)
+- [18. Accès à la BD avec DQL en utilisant les classes Repositoires](#18-accès-à-la-bd-avec-dql-en-utilisant-les-classes-repositoires)
       - [Exercices :](#exercices-)
-- [Accès à la BD avec Query Builder](#accès-à-la-bd-avec-query-builder)
-      - [](#)
+- [19. Accès à la BD avec Query Builder](#19-accès-à-la-bd-avec-query-builder)
+- [TILL HERE](#till-here)
 - [Formulaires en Symfony](#formulaires-en-symfony)
   - [Création d'un formulaire indépendant](#création-dun-formulaire-indépendant)
   - [Création une classe de formulaire](#création-une-classe-de-formulaire)
@@ -2892,7 +2893,7 @@ Nous allons créer un **nouveau projet**  qui contiendra uniquement des exemples
 
 **L'utilisation de ce projet un exemple/exercice sera toujours indiquée à l'avance**
 
-Créez maintenant le projet **ProjetRelationsSymfony**, configurez la connexion vers une autre BD (ex: 'relations'), rajoutez Doctrine lancez la création de la BD:
+Créez maintenant le projet **ProjetRelationsSymfony**, configurez la connexion vers une autre BD (ex: '**relations**'), rajoutez Doctrine lancez la création de la BD:
 
 ```console
 symfony new --full ProjetRelationsSymfony
@@ -3351,8 +3352,7 @@ Pour accéder à un objet dans la vue, utilisez la syntaxe "."
 
 3)  Créez une méthode qui obtient tous les clients qui s'appellent Marie Dupont
 
-4)  Créez une méthode qui obtient le client qui porte l'id numéro 3
-    dans la BD
+4)  Créez une méthode qui obtient le client qui porte l'id numéro 3 dans la BD (ou aun autre existant)
 
 <br>
 
@@ -3733,175 +3733,139 @@ Comparez ce code avec celui de "rajouterSansEncapsulation"...
 
 <br>
 
-# 16. Le Modèle : Héritage de classes et implémentation dans la BD
+# 16. Le Modèle : Héritage de classes 
 
+
+Nous allons utilisez le projet **ProjetRelationsSymfony** pour illustrer l'héritage.
 <br>
 
 **Exemple** : Les clients et les auteurs d'une application sont tous de personnes. Implementons ce modèle en code et dans la BD
 
-# TILL HERE
+<br>
 
-![](media/image24.png){width="3.058333333333333in"
-height="2.7319499125109363in"}
+![](./images/heritage1.png)
 
-Note : cr
 
 Nous pouvons approcher ce problème de deux formes différentes :
 
-1.  **Single Table Inheritance** : On crée un seul tableau contenant les
-    propriétés des trois entités. Dans le code il y a trois entités mais
-    dans la BD il y a qu'une. Pour savoir si une ligne dans le tableau
-    correspond à une entité ou une autre on rajoutera une colonne
-    "discriminatrice" qui indiquera le type de la ligne. Simple,
-    rapide et sans jointures.
+1.  **Single Table Inheritance** : On crée un seul tableau contenant les propriétés des trois entités. Dans le code il y a trois entités mais dans la BD il y a qu'une. Pour savoir si une ligne dans le tableau correspond à une entité ou une autre on rajoutera une **colonne discriminator** qui indiquera le type de la ligne. Simple, rapide et sans jointures.
 
-2.  **Class Table Inheritance** : On crée un tableau pour chaque entité.
-    Plus lourd, pas toujours stable. Chaque query, même les très
-    simples, demanderont la réalisation d'une jointure.
+2.  **Class Table Inheritance** : On crée un tableau pour chaque entité.  Plus lourd, pas toujours stable. Chaque query, même les très simples, demanderont la réalisation d'une jointure.
 
-Single Table Inheritance
-------------------------
+<br>
 
-L'héritage de table unique (Single Table inheritance) est une stratégie
-de mappage d'héritage dans laquelle toutes les classes d'une
-hiérarchie sont mappées vers une seule table de base de données. Afin de
-distinguer quelle ligne du tableau représente quel type dans la
-hiérarchie, une colonne dite "discriminator" est utilisée.
+## 16.1. Single Table Inheritance
 
-1)  **Créez les entités** enfants et parent : ClientH, AuteurH et
-    PersonneH
+L'héritage de table unique (Single Table inheritance) est une stratégie de mappage d'héritage dans laquelle **toutes les classes d'une hiérarchie sont mappées vers une seule table de base de données**. Afin de distinguer quelle ligne du tableau représente quel type dans la hiérarchie, une colonne dite "discriminator" est utilisée.
 
-2)  Rajoutez extends *PersonneH* dans les définitions des classes
-    filles pour indiquer à Doctrine la présence d'un héritage
+1)  **Créez les entités** enfants et parent : ClientH, AuteurH et PersonneH
+
+2)  Créez un héritage entre les filles et la classe mère. (ici, rajoutez l'héritage dans la définition des classes filles)
+
+```php
+class AuteurH extends PersonneH {...}
+class ClientH extends PersonneH {...}
+```
+
 
 3)  **Rajoutez les annotations** **InheritanceType,
-    DiscriminatorColumn** et **DiscriminatorMap** à la classe **parent**
+DiscriminatorColumn** et **DiscriminatorMap** à la classe **parent**
 
-> **InheritanceType** indique le type d'héritage. Ici c'est Single
-> Table
->
-> **DiscriminatorColumn** indique le nom de la colonne qui contiendra la
-> valeur qui nous indique à quelle classe fille correspond la ligne (ici
-> "auteurH" ou "clientH")
->
-> **DiscriminatorMap** indique les valeurs concretes de la colonne
-> indiquée dans DiscriminatorColumn
+**InheritanceType** indique le type d'héritage. Ici c'est Single Table
+**DiscriminatorColumn** indique le nom de la colonne qui contiendra la valeur qui nous indique à quelle classe fille correspond la ligne (ici "auteurH" ou "clientH")
+**DiscriminatorMap** indique les valeurs concretes de la colonne indiquée dans DiscriminatorColumn
+
+```php
+// n'oubliez pas d'importer ces annotations
+use Doctrine\ORM\Mapping\InheritanceType;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
 
 /**
+ * @ORM\Entity(repositoryClass=PersonneHRepository::class)
+ * @InheritanceType("SINGLE_TABLE")
+ * @DiscriminatorColumn(name="discr",type="string")
+ * @DiscriminatorMap({"personneH"="PersonneH","auteurH"="AuteurH","clientH"="ClientH"})]
+ */
+```
 
-*
-@ORMEntity(repositoryClass="AppRepositoryPersonneHRepository")
 
-* @**InheritanceType**("SINGLE_TABLE")
 
-* @**DiscriminatorColumn**(name="discr",type="string")
+1)  **Migrez la BD** et observez le résultat dans la BD
+<br>
 
-*
-@**DiscriminatorMap**({"personneH"="PersonneH","auteurH"="AuteurH","clientH"="ClientH"})]
+![](./images/heritage2.png)
 
-class PersonneH
-
-{
-
-.
-
-.
-
-.
-
-}
-
-4)  **Migrez la BD** et observez le résultat dans PHPMyAdmin
-
-> ![](media/image25.png){width="3.591666666666667in"
-> height="0.2952055993000875in"}
-
-Bien que nous avons trois entités au total, la méthode de Single Table
-crée une seule table contenant une colonne (discr) qui indiquera a
-quelle classe fille correspond la ligne (dans notre cas le colonne
-contient "auteurH" ou "personneH")
+Bien que nous avons trois entités au total, la méthode de **Single Table crée une seule table** contenant une colonne (discr) qui indiquera à quelle classe fille correspond  l'enregistrement dans la BD (dans notre cas le colonne contient "AuteurH" ou "ClientH")
 
 Les **régles** à suivre sont :
 
--   @InheritanceType et @DiscriminatorColumn doivent être spécifiés
-    dans la classe la plus haute appartenant à la hiérarchie des entités
-    mappées
+-   @InheritanceType et @DiscriminatorColumn doivent être spécifiés dans la classe base de de la hiérarchie des entités mappées
 
--   @DiscriminatorMap indique le type d'une ligne. Ici, une valeur de
-    "personneH" identifie une ligne comme étant de type PersonneH et
-    "auteurH" identifie une ligne comme étant de type AuteurH.
+-   @DiscriminatorMap indique le type d'une ligne. Ici, une valeur de **discr** indique *AuteurH* ou *ClientH* 
 
 On peut maintenant faire le CRUD de nos entités ...
 
 **Exemple** : insérer un Client et un Auteur dans la base de de données
 
+```php
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\ClientH;
+use App\Entity\AuteurH;
+use Symfony\Component\HttpFoundation\Response;
+
+
 class ExemplesHeritageController extends AbstractController
-
 {
+    /**
+     * @Route("/exemples/heritage/inserer/client/auteur")
+     */
+    public function insererClientAuteur(){
+        $em = $this->getDoctrine()->getManager();
 
-#[Route("/exemples/heritage/inserer/client/auteur")]
-
-public function insererClientAuteur(){
-
-$em = $this->getDoctrine()->getManager();
-
-// créer l'objet
-
-$client = new ClientH();
-
-$client->setNom("López");
-
-$client->setPrenom("Jean");
-
-$client->setEmail ("jean.lopez@lala.de");
-
-$client->setNumero(200);
-
-$auteur = new AuteurH();
-
-$auteur->setNom("Lucas");
-
-$auteur->setPrenom("George");
-
-$auteur->setNationalite("USA");
-
-// lier les objets avec la BD
-
-$em->persist($client);
-
-$em->persist($auteur);
-
-// écrire les objets dans la BD
-
-$em->**flush**();
-
-return new Response ("Ok, objets insérés");
-
+      
+        // créer l'objet
+        $client = new ClientH();
+        $client->setNom("López");
+        $client->setPrenom("Jean");
+        $client->setEmail ("jean.lopez@lala.de");
+        $client->setNumero(200);
+        $auteur = new AuteurH();
+        $auteur->setNom("Lucas");
+        $auteur->setPrenom("George");
+        $auteur->setNationalite("USA");
+        
+        // lier les objets avec la BD
+        $em->persist($client);
+        $em->persist($auteur);
+        
+        // écrire les objets dans la BD
+        $em->flush();
+        return new Response ("Ok, objets insérés");
+    }
 }
 
-}
+```
 
-Nous devons uniquement créer un Client et l'insérer, Doctrine remplira
-tant le tableau parent avec la colonne discriminateur ! Les valeurs qui
-ne concernent pas chaque entité respective seront *NULL* bien évidemment
+Nous devons uniquement créer un Client et l'insérer, Doctrine remplira tant le tableau parent avec la colonne discriminateur ! Les valeurs qui ne concernent pas chaque entité respective seront *NULL* (logique...)
 
-![](media/image26.png){width="6.383333333333334in"
-height="0.5444444444444444in"}
+<br>
 
-Class Table Inheritance
------------------------
+## 16.2. Class Table Inheritance
 
-> Nous n'allons pas developper cette méthode maintenant mais vous avez
-> la documentation ici :
+Nous n'allons pas developper cette méthode maintenant mais vous avez la documentation ici :
 
 <https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/inheritance-mapping.html#class-table-inheritance>
 
-Accès à la BD avec DQL
-======================
 
-Nous avons vu comment réaliser de requêtes CRUD simples, mais dans un
-projet réel nous allons devoir lancer de requêtes assez plus complexes,
-tels que de regroupements (GROUP BY), de jointures de tableaux (JOIN) ou
+# 17. Accès à la BD avec DQL
+
+Nous avons vu comment réaliser de requêtes CRUD simples, mais dans un projet réel nous allons devoir lancer de requêtes assez plus complexes, tels que de regroupements (GROUP BY), de jointures de tableaux (JOIN) ou
 même de sous-requêtes.
 
 Pour ce faire, on peut utiliser :
@@ -3920,249 +3884,198 @@ concrètement on va étudier la méthode numéro 2: DQL.
 
 <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/dql-doctrine-query-language.html>
 
-Exemples : projetDQLSymfony
+Tous les exemples et exercices se trouvent dans **ProjetDQLSymfony**. Créez votre propre projet et la BD (bibliothequeDQL)
 
-**DQL utilise des objets, pas de tableaux**. Nos requêtes doivent être
-basées sur notre modèle de classes. Ça implique qu'on ne peut pas, par
-exemple, faire une jointure de deux tableaux qui n'ont pas de relation
+**DQL utilise des objets, pas de tableaux**. Nos requêtes doivent être basées sur notre modèle de classes. Ça implique qu'on ne peut pas, par exemple, faire une jointure de deux tableaux qui n'ont pas de relation
 dans le modèle de classes.
 
-Nous pouvons réaliser des requêtes de SELECT, UPDATE et DELETE. Pour les
-INSERTS on doit utiliser la méthode déjà expliquée de persistance (créer
-l'objet, le rendre persistant et le stocker dans la BD en lançant
+Nous pouvons réaliser des requêtes de SELECT, UPDATE et DELETE. Pour les INSERTS on doit utiliser la méthode déjà expliquée de persistance (créer l'objet, le rendre persistant et le stocker dans la BD en lançant
 flush).
 
 Passons aux exemples d'utilisation pour mieux comprendre.
 
-SELECT
-------
+## 17.1. SELECT
 
-### Requête qui renvoi un array d'arrays
+### 17.1.1. Requête qui renvoi un array d'arrays
 
-// Exemple de SELECT uniquement des titres des livres
-
-// qui coutent plus de 15 euros en DQL,
-
-// on obtient un array de strings, pas d'objets
-
+```php
 #[Route ("/exemples/dql/exemple/select/array/arrays")]
-
 public function exempleSelectArrayArrays (){
-
-$em = $this->getDoctrine()->getManager();
-
-$query = $em->createQuery ("SELECT livre.titre, livre.prix FROM
-AppEntityLivre livre WHERE livre.prix>15");
-
-$resultat = $query->getResult();
-
-$vars = ['livres'=> $resultat];
-
-return $this->render
-("exemples_dql/exemple_select_array_arrays.html.twig", $vars);
-
+    $em = $this->getDoctrine()->getManager();
+    $query = $em->createQuery ("SELECT livre.titre, livre.prix FROM App\Entity\Livre livre ".
+                            "WHERE livre.prix>15");
+    $resultat = $query->getResult();
+    $vars = ['livres'=> $resultat];
+    return $this->render ("exemples_dql/exemple_select_array_arrays.html.twig", $vars);
 }
+```
+-   "livre" est un **alias** pour la classe Livre. Toutes **les entités de cette classe qui satisfont la requête seront incluses** dans le résultat de la requête.
 
--   "livre" est un **alias** pour la classe Livre. Toutes **les
-    entités de cette classe qui satisfont la requête seront incluses**
-    dans le résultat de la requête.
+-  **FROM** est toujours **suivi du nom d'une entité** (pas 'tableau'!). On doit écrire le chemin complet
 
--   **FROM est toujours suivi d'une classe** d'entitée (chemin
-    complet)
+-   **Les expressions** telles que *livre.titre* indiquent le "chemin" qui **permet d'atteindre des objets et de propriétés** dans la requête
 
--   **L'expression** "livre.titre" est juste un "chemin" qui
-    **permet d'atteindre des objets et de propriétés** dans la requête
+        Ex: livre.exemplaires, exemplaire.etat
 
-/![](media/image27.png){width="2.642195975503062in"
-height="3.752083333333333in"}
+![](./images/dql-arrayarrays.png)
 
-### Requête qui renvoi un array d'objets
 
-// SELECT des Livres complets en DQL,
+### 17.1.2. Requête qui renvoi un array d'objets
 
-// on obtient un array d'objets!
+```php
+// SELECT des Livres complets en DQL, 
+// on obtient un array d'objets! 
 
-#[Route ("/exemples/d/q/l/exemple/select/array/objets")]
-
+#[Route ("/exemples/dql/exemple/select/array/objets")]
 public function exempleSelectArrayObjets (){
-
-$em = $this->getDoctrine()->getManager();
-
-// avec cette requête on obtient un array d'objets
-
-$query = $em->createQuery ('SELECT livre FROM AppEntityLivre
-livre WHERE livre.prix >15');
-
-$resultat = $query->getResult();
-
-$vars = ['livres'=> $resultat];
-
-return $this->render
-("exemples_dql/exemple_select_array_arrays.html.twig", $vars);
-
+    $em = $this->getDoctrine()->getManager();
+    // avec cette requête on obtient un array d'objets
+    $query = $em->createQuery ('SELECT livre FROM App\Entity\Livre livre WHERE livre.prix >15');
+    $resultat = $query->getResult();
+    $vars = ['livres'=> $resultat];
+    return $this->render ("exemples_dql/exemple_select_array_objets.html.twig", $vars);   
 }
+```
 
-![](media/image28.png){width="3.1060608048993874in"
-height="1.2401268591426071in"}
+<br>
 
-### Regular Joins et Fetch Joins
+## 17.2. Regular Joins et Fetch Joins
 
-> Nous pouvons naviguer dans la hiérarchie d'objets de Doctrine tel
-> qu'on l'a fait jusqu'à maintenant...
+Nous pouvons naviguer dans la hiérarchie d'objets de Doctrine tel qu'on l'a fait jusqu'à maintenant...
 
-**Exemple** : obtenir un entité Livre de la BD et, une fois on l'a dans
-une variable, obtenir les Exemplaires de ce Livre pour après obtenir les
-Emprunts.
+**Exemple** : obtenir un entité Livre de la BD et, une fois on l'a dans une variable, obtenir les Exemplaires de ce Livre pour après obtenir les Emprunts.
 
-Tel qu'on a déjà vérifié, Doctrine utilise une technique qui porte le
-nom de **lazy-loading**. Pour résumer son fonctionnement : **si une
-entité** (ex. : Livre) **est associée à d'entités d'une autre classe**
-(ex. : Exemplaires dans Livre), **Doctrine réalisera les requêtes à la
-BD uniquement quand on accédera au contenu de ces dernières entités en
-PHP** (accéder aux exemplaires du Livre pour les afficher, par exemple).
-Autrement l'objet (ou liste d'objets) contenu dans l'entité (ex. :
-Exemplaires dans Livre) apparaitra vide (ou contenant un id, mais jamais
-complet)
+Tel qu'on a déjà vérifié, Doctrine utilise une technique qui porte le nom de **lazy-loading**. Pour résumer son fonctionnement : **si une entité** (ex. : Livre) **est associée à d'entités d'une autre classe** (ex. : Exemplaires dans Livre), **Doctrine réalisera les requêtes à la BD uniquement quand on accédera au contenu de ces dernières entités en PHP** (accéder aux exemplaires du Livre pour les afficher, par exemple).
+Autrement l'objet (ou liste d'objets) contenu dans l'entité (ex. : Exemplaires dans Livre) apparaitra vide (ou contenant un id, mais jamais complet)
 
-Ce comportement est très logique car si à chaque fois qu'on accède à
-une entité on doit charger toutes ses entités associés la surcharge du
-système peut être énorme (ex. : obtenir un Livre et devoir charger tous
-ses Exemplaires, Emprunts, Clients etc...)
+Ce comportement est très logique car si à chaque fois qu'on accède à une entité on doit charger toutes ses entités associés la surcharge du système peut être énorme (ex. : obtenir un Livre et devoir charger tous ses Exemplaires, Emprunts, Clients etc...)
 
-Quand on utilise du DQL contenant de jointures nous allons avoir deux
-possibilités : faire la requête pour qu'elle utilise le lazy-loading ou
-forcer la charge des entités associées.
+Quand on utilise du DQL contenant de jointures nous allons avoir deux possibilités : faire la requête pour qu'elle utilise le lazy-loading ou forcer la charge des entités associées.
 
 Voyons les deux cas de figure :
 
-**Regular Join (collection d'Exemplaires vide) :**
+### 17.2.1. Regular Join 
 
+Ici, la collection d'exemplaires sera vide
+
+```php
 // Regular Join
-
-#[Route ("/exemples/d/q/l/exemple/regular/join")]
-
+#[Route ("/exemples/dql/exemple/regular/join")]
 public function exempleRegularJoin(){
-
-$em = $this->getDoctrine()->getManager();
-
-$query = $em->createQuery ('SELECT livre FROM AppEntityLivre
-livre JOIN livre.exemplaires exemplaires');
-
-// observez que les exemplaires sont vides
-
-$resultat = $query->getResult();
-
-// observez que les exemplaires sont remplis dans le dump de la vue
-
-$vars = ['livres'=> $resultat];
-
-return $this->render
-("exemples_dql/exemple_regular_join.html.twig", $vars);
-
+    $em = $this->getDoctrine()->getManager();
+    $query = $em->createQuery ('SELECT livre FROM App\Entity\Livre livre JOIN '
+            . 'livre.exemplaires exemplaires');
+    $resultats = $query->getResult();
+    // observez que les exemplaires sont vides
+    $resultat = $query->getResult();
+    // observez que les exemplaires sont remplis dans le dump de la vue
+    $vars = ['livres'=> $resultat];
+    return $this->render ("exemples_dql/exemple_regular_join.html.twig", $vars);
+    
 }
+```
 
-![](media/image29.png){width="3.1917115048118987in"
-height="2.8833333333333333in"}
 
-**Fetch Join (collection d'Exemplaires remplie) :**
+![](./images/dql-regularjoin.png)
 
-// Fetch Join
+### 17.2.2. Fetch Join 
 
-#[Route ("/exemples/d/q/l/exemple/fetch/join")]
+Ici, la collection d'Exemplaires remplie. 
 
-public function exempleFetchJoin(){
+```php
+    // Fetch Join
+    #[Route ("/exemples/dql/exemple/fetch/join")]
+    public function exempleFetchJoin(){
+        $em = $this->getDoctrine()->getManager();
+        // On rajoute l'entité qui est en rélation (exemplaires) dans le SELECT
+        $query = $em->createQuery ('SELECT livre, exemplaires FROM App\Entity\Livre livre '
+                . 'JOIN livre.exemplaires exemplaires');
+        $resultat = $query->getResult();
+        // observez que les exemplaires sont remplis dans le dump de la vue
+        $vars = ['livres'=> $resultat];
+        return $this->render ("exemples_dql/exemple_fetch_join.html.twig", $vars);
+    }
 
-$em = $this->getDoctrine()->getManager();
+```
+![](./images/dql-fetchjoin.png)
 
-// si on indique juste "SELECT livre" on obtient les objets de cette
-entité
 
-$query = $em->createQuery ('SELECT livre, exemplaires FROM
-AppEntityLivre livre JOIN livre.exemplaires exemplaires');
+### 17.3. Fonctions Year, Month et Day
 
-$resultat = $query->getResult();
-
-// observez que les exemplaires sont remplis dans le dump de la vue
-
-$vars = ['livres'=> $resultat];
-
-return $this->render
-("exemples_dql/exemple_fetch_join.html.twig", $vars);
-
-}
-
-![](media/image30.png){width="3.6in" height="3.623077427821522in"}
-
-### Fonctions Year, Month et Day
-
-> Ces fonctions n'existent pas par défaut dans DQL. La meilleure
-> solution est de rajouter un bundle
+Ces fonctions n'existent pas par défaut dans DQL. La meilleure solution est de rajouter un bundle
 
 <https://github.com/beberlei/DoctrineExtensions>
 
-Lancez **composer require beberlei/DoctrineExtensions**
+
+```console
+composer require beberlei/DoctrineExtensions
+```
 
 Il faut rajouter les fonctions dans la config de doctrine
 **config/packages/doctrine.yaml :**
 
-        dql:
 
-            string_functions:
 
-                MONTH: DoctrineExtensionsQueryMysqlMonth
+```yml
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+        dql:
+            string_functions:
+                DAY: DoctrineExtensions\Query\Mysql\Day
+                MONTH: DoctrineExtensions\Query\Mysql\Month
+                YEAR: DoctrineExtensions\Query\Mysql\Year
 
-                YEAR: DoctrineExtensionsQueryMysqlYear
-
+```
 Pour l'utiliser c'est très simple :
 
+```php
 $em->createQuery("SELECT MONTH(c.dateConcours) AS mois, 
-
 YEAR(c.dateConcours) AS annee FROM AppEntityConcours c");
+```
 
-UPDATE
-------
+![](./images/dql-dates.png)
+
+
+## 17.4. UPDATE
 
 Exemple de UPDATE en DQL : réduire le prix d'un livre
 
+```php
 // UPDATE
+#[Route ("/exemples/dql/exemple/update/{titre}")]
+public function exempleUpdate (Request $req){
 
-#[Route ("/exemples/d/q/l/exemple/update")]
+    $em = $this->getDoctrine()->getManager();
+    $titre = $req->get('titre');
 
-public function exempleUpdate (){
+    $query = $em->createQuery ('UPDATE App\Entity\Livre l SET l.prix = l.prix - :montant WHERE l.titre = :titre');
 
-$em = $this->getDoctrine()->getManager();
-
-$query = $em->createQuery ('UPDATE AppEntityLivre l SET l.prix =
-l.prix - :montant WHERE l.titre = :titre');
-
-// pour simplifier on fixe de valeurs pour le montant à déduire et le
-livre à changer (ISBN)
-
-$montant = 0.5;
-
-$ISBN = "The Aleph";
-
-$query->setParameter ('montant',$montant);
-
-$query->setParameter ('titre',$ISBN);
-
-$query->execute(); // pas getResult!
-
-return $this->render
-("exemples_dql/exemple_update.html.twig");
+    // pour simplifier on fixe ici le montant à déduire 
+    $montant = 0.5; 
+    
+    $query->setParameter ('montant',$montant);
+    $query->setParameter ('titre',$titre);
+    $query->execute(); // pas getResult!
+    return $this->render ("exemples_dql/exemple_update.html.twig"); 
 
 }
+```
 
-**Important :** Les instructions DQL UPDATE sont portées directement
-dans une simple instruction UPDATE de la BD. Ça implique que les entités
-qui sont déjà chargées dans le contexte de persistance ne seront PAS
-synchronisées avec le nouvel état de la base de données mise à jour.
-Dans certains cas, quand vous utilisez du DQL il est recommandé
-d'appeler la méthode **clear** du EntityManager pour d'extraire les
-nouvelles instances de toute entité affectée.
 
-Exercices DQL
--------------
+**Important :** Les instructions DQL UPDATE sont **portées directement dans une simple instruction UPDATE de la BD**. Ça implique que **les entités qui sont déjà chargées dans le contexte de persistance (UOW) ne seront PAS synchronisées** avec le nouvel état de la base de données mise à jour.
+Dans certains cas, quand vous utilisez du DQL il est recommandé d'appeler la méthode **clear** du EntityManager pour d'extraire les nouvelles instances de toute entité affectée.
+
+
+#### Exercices DQL
 
 En utilisant DQL :
 
@@ -4188,48 +4101,44 @@ En utilisant DQL :
 8)  Obtenez tous les livres qui contient un texte dans le titre reçu
     comme paramètre dans l'URL
 
-9)  Obtenez tous les emprunts réalisés pendant la prémiere quinzaine de
-    février en utilisant DQL. On veut afficher le titre du livre, la
-    date de l'emprunt et le nom et le prénom du client
+9)  Obtenez tous les emprunts réalisés pendant la prémiere quinzaine de mars de 2021 en utilisant DQL. On veut afficher le titre du livre, la date de l'emprunt et le nom et le prénom du client
 
-    **Note** : Les fonctions DAY, MONTH et YEAR ne sont pas acceptées
-    par défaut dans DQL pour pouvoir garder le langage independant du
-    type de BD. Vous allez avoir besoin d'enregistrer de fonctions de
-    date dans symfony en rajoutant des extensions de doctrine. Essayez
-    de suivre par vous-mêmes la documentation !
-
-    <https://github.com/oroinc/doctrine-extensions>
-
-10) **Exercez-vous** en réalisant toute sorte de requêtes, essayez les
-    possibilités de Doctrine :
+10) **Exercez-vous** en réalisant toute sorte de requêtes, essayez les possibilités de Doctrine :
 
 <https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/dql-doctrine-query-language.html>
 
-11) **Extra** : Créez de vues pour afficher convenablement tous ces
-    résultats. Vous allez mieux apprendre coment parcourir les
-    structures de données
+11) **Extra** : Créez de vues pour afficher convenablement tous ces résultats. Vous allez mieux comprendre coment parcourir les structures de données
 
-Accès à la BD avec DQL en utilisant les classes Repositoires
-============================================================
+<br>
 
-Tel qu'on a déjà mentionné dans la section "Selection", quand on crée
-une entité sa classe Repository est créée aussi. Cette classe contient
-les méthodes par défaut qu'on a déjà utilisés (find, findBy, findOneBy,
-etc...). On va maintenant rajouter **de méthodes faits par nous capables
-de réaliser de requêtes plus complexes**.
+# 18. Accès à la BD avec DQL en utilisant les classes Repositoires
 
-Le but est de simplifier les actions du controller qui, au lieu de
-devoir contenir la logique de requêtes complexes, appelleront aux
-actions des repositoires.
+
+Tel qu'on a déjà mentionné dans la section "Selection", quand on crée une entité sa classe Repository est créée aussi. Cette classe contient les méthodes par défaut qu'on a déjà utilisés (find, findBy, findOneBy,
+etc...). On va maintenant rajouter **de méthodes faits par nous capables de réaliser de requêtes plus complexes**.
+
+Le but est de simplifier les actions du controller qui, au lieu de devoir contenir la logique de requêtes complexes, appelleront aux actions des repositoires.
 
 **Exemple** : Créez une méthode dans la classe Repository de Livre et l'utiliser depuis une action du controller (au lieu d'utiliser DQL depuis le controller lui-même)
 
 1.  **Créez la méthode du repository pour nous faciliter la tâche**
 
-Observez que :
-
--   La méthode renvoie le résultat de la requête, pas de vue bien
-    évidemment
+```php
+// DQL: obtenir les livres entre deux prix 
+public function livresEntreDeuxPrixDQL($pmin, $pmax)
+{
+    $em = $this->getEntityManager();
+    // avec cette requête on obtient un array
+    $query = $em->createQuery('SELECT livre FROM App\Entity\Livre livre WHERE livre.prix >= :pmin AND ' .
+        'livre.prix <= :pmax');
+    $query->setParameter('pmin', $pmin);
+    $query->setParameter('pmax', $pmax);
+    $resultat = $query->getResult();
+    // cette méthode renvoie le résultat de la requête
+    return $resultat;
+}
+```
+-   La méthode renvoie le résultat de la requête, pas de vue bien évidemment
 
 -   **Pour obtenir l'Entity Manager dans les classes Repository** on
     utilise
@@ -4237,62 +4146,31 @@ Observez que :
     **$this->getEntityManager()**. Nous ne sommes pas dans le
     controller !
 
-// obtenir les livres entre deux prix
 
-public function livresEntreDeuxPrixDQL ($pmin, $pmax){
-
-$em = $this->getEntityManager();
-
-// avec cette requête on obtient un array
-
-$query = $em->createQuery ('SELECT livre FROM AppEntityLivre
-livre WHERE livre.prix >= :pmin AND '.
-
-'livre.prix <= :pmax');
-
-$query->setParameter ('pmin', $pmin);
-
-$query->setParameter ('pmax', $pmax);
-
-$resultat = $query->getResult();
-
-// cette méthode renvoie le résultat de la requête
-
-return $resultat;
-
-}
-
-**
-**
 
 2.  **Utilisez la méthode depuis le controller**
 
 Observez qu'il n'y a pratiquement rien à faire dans l'action...
 
-#[Route
-("/exemples/d/q/l/repositories/utilise/repo/livres/entre/deux/prix/{prixMin}/{prixMax}")]
-
-function utiliseRepoLivresEntreDeuxPrix (Request $req){
-
-$prixMin = $req->get("prixMin");
-
-$prixMax = $req->get("prixMax");
-
-$em = $this->getDoctrine()->getManager();
-
-$livresRepo = $em->getRepository(Livre::class);
-
-$livres = $livresRepo->livresEntreDeuxPrixDQL($prixMin, $prixMax);
-
-dump ($livres);
-
-**die**();
-
-// return new Response .....
-
-}
+```php
+    #[Route ("/exemples/dql/repositories/utilise/repo/livres/entre/deux/prix/{prixMin}/{prixMax}")]
+    function utiliseRepoLivresEntreDeuxPrix (Request $req){
+    
+        $prixMin = $req->get("prixMin");
+        $prixMax = $req->get("prixMax");
+        
+        $em = $this->getDoctrine()->getManager();
+        $livresRepo = $em->getRepository(Livre::class);
+        $livres = $livresRepo->livresEntreDeuxPrixDQL($prixMin, $prixMax);
+        dump ($livres);
+        die();
+        
+        // return new Response .....
+    }
+```
 
 #### Exercices : 
+(pas résolus)
 
 1.  Faites une action où vous créez une adresse et plusieurs clients. Le
     tout sera stocké dans la BD
@@ -4303,25 +4181,112 @@ dump ($livres);
     l'entité Adresse pour vous faciliter la tâche d'obtenir les
     adresses d'une certaine ville
 
-Accès à la BD avec Query Builder
-================================
 
-**Query Builder est une API qui permet de générer des requêtes de
-séléction complexes qui renvoient des objets** (requêtes de
-regroupement, jointures, sous-requêtes...) et pas juste des arrays. En
-fait Query Builder est un générateur de DQL pour faciliter la création
+# 19. Accès à la BD avec Query Builder
+
+
+**Query Builder est une API qui permet de générer des requêtes de séléction complexes qui renvoient des objets** (requêtes de regroupement, jointures, sous-requêtes...) et pas juste des arrays. En fait Query Builder est un générateur de DQL pour faciliter la création
 de requêtes, mais DQL est préféré.
 
-On pourra réaliser les fonctions de DQL mais en utilisant une notation
-complètement orientée objet (avec ses avantages et ses inconvénients)
+On pourra réaliser les fonctions de DQL mais en utilisant une notation complètement orientée objet (avec ses avantages et ses inconvénients)
 
 Un Objet **QueryBuilder est accéssible depuis une classe**
 **Repository**.
 
-QueryBuilder fournit les méthodes suivantes qu'on combinera selon nos
-besoins concrètes :
+QueryBuilder fournit beaucoup de méthodes qu'on peut combiner selon nos besoins concrètes :
 
-![](media/image31.png){width="3.3375in" height="1.5400721784776903in"}
+https://www.doctrine-project.org/projects/doctrine-orm/en/2.8/reference/query-builder.html
+
+
+```php
+<?php
+class QueryBuilder
+{
+    // Example - $qb->select('u')
+    // Example - $qb->select(array('u', 'p'))
+    // Example - $qb->select($qb->expr()->select('u', 'p'))
+    public function select($select = null);
+
+    // addSelect does not override previous calls to select
+    //
+    // Example - $qb->select('u');
+    //              ->addSelect('p.area_code');
+    public function addSelect($select = null);
+
+    // Example - $qb->delete('User', 'u')
+    public function delete($delete = null, $alias = null);
+
+    // Example - $qb->update('Group', 'g')
+    public function update($update = null, $alias = null);
+
+    // Example - $qb->set('u.firstName', $qb->expr()->literal('Arnold'))
+    // Example - $qb->set('u.numChilds', 'u.numChilds + ?1')
+    // Example - $qb->set('u.numChilds', $qb->expr()->sum('u.numChilds', '?1'))
+    public function set($key, $value);
+
+    // Example - $qb->from('Phonenumber', 'p')
+    // Example - $qb->from('Phonenumber', 'p', 'p.id')
+    public function from($from, $alias, $indexBy = null);
+
+    // Example - $qb->join('u.Group', 'g', Expr\Join::WITH, $qb->expr()->eq('u.status_id', '?1'))
+    // Example - $qb->join('u.Group', 'g', 'WITH', 'u.status = ?1')
+    // Example - $qb->join('u.Group', 'g', 'WITH', 'u.status = ?1', 'g.id')
+    public function join($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
+
+    // Example - $qb->innerJoin('u.Group', 'g', Expr\Join::WITH, $qb->expr()->eq('u.status_id', '?1'))
+    // Example - $qb->innerJoin('u.Group', 'g', 'WITH', 'u.status = ?1')
+    // Example - $qb->innerJoin('u.Group', 'g', 'WITH', 'u.status = ?1', 'g.id')
+    public function innerJoin($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
+
+    // Example - $qb->leftJoin('u.Phonenumbers', 'p', Expr\Join::WITH, $qb->expr()->eq('p.area_code', 55))
+    // Example - $qb->leftJoin('u.Phonenumbers', 'p', 'WITH', 'p.area_code = 55')
+    // Example - $qb->leftJoin('u.Phonenumbers', 'p', 'WITH', 'p.area_code = 55', 'p.id')
+    public function leftJoin($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
+
+    // NOTE: ->where() overrides all previously set conditions
+    //
+    // Example - $qb->where('u.firstName = ?1', $qb->expr()->eq('u.surname', '?2'))
+    // Example - $qb->where($qb->expr()->andX($qb->expr()->eq('u.firstName', '?1'), $qb->expr()->eq('u.surname', '?2')))
+    // Example - $qb->where('u.firstName = ?1 AND u.surname = ?2')
+    public function where($where);
+
+    // NOTE: ->andWhere() can be used directly, without any ->where() before
+    //
+    // Example - $qb->andWhere($qb->expr()->orX($qb->expr()->lte('u.age', 40), 'u.numChild = 0'))
+    public function andWhere($where);
+
+    // Example - $qb->orWhere($qb->expr()->between('u.id', 1, 10));
+    public function orWhere($where);
+
+    // NOTE: -> groupBy() overrides all previously set grouping conditions
+    //
+    // Example - $qb->groupBy('u.id')
+    public function groupBy($groupBy);
+
+    // Example - $qb->addGroupBy('g.name')
+    public function addGroupBy($groupBy);
+
+    // NOTE: -> having() overrides all previously set having conditions
+    //
+    // Example - $qb->having('u.salary >= ?1')
+    // Example - $qb->having($qb->expr()->gte('u.salary', '?1'))
+    public function having($having);
+
+    // Example - $qb->andHaving($qb->expr()->gt($qb->expr()->count('u.numChild'), 0))
+    public function andHaving($having);
+
+    // Example - $qb->orHaving($qb->expr()->lte('g.managerLevel', '100'))
+    public function orHaving($having);
+
+    // NOTE: -> orderBy() overrides all previously set ordering conditions
+    //
+    // Example - $qb->orderBy('u.surname', 'DESC')
+    public function orderBy($sort, $order = null);
+
+    // Example - $qb->addOrderBy('u.firstName')
+    public function addOrderBy($sort, $order = null); // Default $order = 'ASC'
+}
+```
 
 La documentation de QueryBuilder se trouve ici :
 
@@ -4329,156 +4294,105 @@ La documentation de QueryBuilder se trouve ici :
 
 <https://www.doctrine-project.org/projects/doctrine-orm/en/2.7/reference/query-builder.html>
 
-À continuation on va réaliser un exemple pratique, on commencera par une
-requête simple.
+À continuation on va réaliser un exemple pratique, on commencera par une requête simple.
 
-Commencez par la création d'un controller portant le nom
-UtiliseQueryBuilderController
+Créez un controller portant le nom **UtiliseQueryBuilderController**
 
 **Exemple** : utiliser QueryBuilder pour construire une requête capable d'obtenir le nombre de Livres dont le prix se trouve entre un minimum et un maximum
 
-1.  **Créez la méthode du repositoire** (LivreRepository.php) **capable
-    de realiser la requête avec Query Builder**
+1.  **Créez la méthode du repositoire** (LivreRepository.php) **capable de realiser la requête avec Query Builder**
 
+```php
 // QUERYBUILDER: obtenir les livres entre deux prix
-
 // obtenir les livres entre deux prix, version QueryBuilder
+public function getEntreDeuxPrix($min, $max)
+{
+    $qb = $this->createQueryBuilder("u"); // u est un nom générique
+    $query = $qb->select('u')
+        ->where('u.prix >= :min')
+        ->andWhere('u.prix <= :max')
+        ->setParameter('min', $min)
+        ->setParameter('max', $max)
+        ->getQuery();
+    $res = $query->getResult();
+    //var_dump ($res);
 
-public function getEntreDeuxPrix ($min, $max){
-
-$qb = $this->createQueryBuilder("u"); // u est un nom générique
-
-$query = $qb->select('u')
-
-->where('u.prix >= :min')
-
-->andWhere('u.prix <= :max')
-
-->setParameter('min', $min)
-
-->setParameter('max', $max)
-
-->getQuery();
-
-$res = $query->getResult();
-
-//var_dump ($res);
-
-return $res;
-
+    return $res;
 }
+```
 
-Notez que l'API nous permet de réaliser l'ensemble de la requête sans
-utiliser ni du SQL pur ni du DQL. Sachez quand-même que QueryBuilder
-utilise le langage DQL comme langage sous-jacent.
+Notez que l'API nous permet de réaliser l'ensemble de la requête sans utiliser ni du SQL pur ni du DQL. Sachez quand-même que QueryBuilder utilise le langage DQL comme langage sous-jacent.
 
-2.  **Créez une action dans le controller qu'utilise cette méthode** et
-    envoyez la réponse au client (new Response) pour qu'il l'affiche
+1.  **Créez une action dans le controller qu'utilise cette méthode** et envoyez la réponse au client (new Response) pour qu'il l'affiche
 
-#[Route
-("/exemples/query/builder/utilise/repo/livres/entre/deux/prix/{prixMin}/{prixMax}")]
+```php
+#[Route ("/exemples/query/builder/utilise/repo/livres/entre/deux/prix/{prixMin}/{prixMax}")]
+public function utiliseRepoLivresEntreDeuxPrix (Request $req){
 
-function utiliseRepoLivresEntreDeuxPrix (Request $req){
+    $prixMin = $req->get("prixMin");
+    $prixMax = $req->get("prixMax");
+    
+    $em = $this->getDoctrine()->getManager();
+    $livresRepo = $em->getRepository(Livre::class);
+    $livres = $livresRepo->livresEntreDeuxPrixDQL($prixMin, $prixMax);
+    dump ($livres);
+    die();
+    
+    // return new Response .....
+}    
+```
 
-$prixMin = $req->get("prixMin");
-
-$prixMax = $req->get("prixMax");
-
-$em = $this->getDoctrine()->getManager();
-
-$livresRepo = $em->getRepository(Livre::class);
-
-$livres = $livresRepo->livresEntreDeuxPrixDQL($prixMin, $prixMax);
-
-dump ($livres);
-
-**die**();
-
-// return new Response .....
-
-}
-
-####  
 
 **Exemple** : obtenir un Client dont on connait l'email de la BD avec QueryBuilder
 
-1.  **Créez des données dans la BD**
+1.  Créez la méthode getByEmail dans le repositoire de l'entité Client (ClientRepository.php) :
 
--   Créez une nouvelle Personne dans la BD. Pour la
-    "discrimination-column", tapez "client"
+```php
+    // QUERYBUILDER: obtenir les clients par mail, version QueryBuilder
+    public function getParEmail ($email){
+        $qb = $this->createQueryBuilder("u");
+        $query = $qb->select('u')
+                    ->where ('u.email = :email')
+                    ->setParameter('email', $email)
+                    ->getQuery();
+        $resultat = $query->getSingleResult();
+        return $resultat;
+    }
+```
 
--   Créez un nouveau Client qui sera cette Personne (utilisez l'id de
-    la Personne qui vous venez d'encoder)
 
--   Créez la méthode getByEmail dans le repositoire de l'entité Client
-    (ClientRepository.php) :
+1.  **Créez une action dans le controller qu'utilise cette méthode** 
 
-2.  **Créez la méthode du repositoire capable de realiser la requête
-    avec Query Builder**
-
-// QUERYBUILDER: obtenir les clients par mail, version QueryBuilder
-
-public function getParEmail ($email){
-
-$qb = $this->createQueryBuilder("u");
-
-$query = $qb->select('u')
-
-->where ('u.email = :email')
-
-->setParameter('email', $email)
-
-->getQuery();
-
-$resultat = $query->getSingleResult();
-
-return $resultat;
-
-}
-
-3.  **Créez une action dans le controller qu'utilise cette méthode** et
-    envoyez la réponse au client (new Response) pour qu'il l'affiche
-
+```php
 #[Route ("/exemples/query/builder/trouver/client/par/mail/{email}")]
-
 public function trouverClientParMail(Request $req){
-
-$em = $this->getDoctrine()->getManager();
-
-$rep = $em->getRepository(Client::class);
-
-// on fait appel à la méthode du Repository
-
-$objetClient = $rep->getParEmail($req->get ("email"));
-
-// on affiche les données du Client, on a obtenu un objet
-
-dump ($objetClient);
-
-**die** ();
-
-// return new Response .....
-
+    $em = $this->getDoctrine()->getManager();
+    $rep = $em->getRepository(Client::class);
+    // on fait appel à la méthode du Repository
+    $objetClient = $rep->getParEmail($req->get ("email"));
+    // on affiche les données du Client, on a obtenu un objet
+    dump ($objetClient);
+    die ();
+    // return new Response .....
 }
+```
+**Note** : vous pouvez toujours afficher le SQL crée par queryBuilder en utilisant de méthodes de cette classe. Par exemple :
 
-**Note** : vous pouvez toujours afficher le SQL crée par queryBuilder en
-utilisant de méthodes de cette classe. Par exemple :
-
+```php
 dd ($repo->createQueryBuilder('g')->getQuery()->getSql())
-
+```
 ou
-
+```php
 $qb = $this->createQueryBuilder("u");
-
 $query = $qb->select('u')
-
 ->where ('u.email = :email')
-
 ->setParameter('email', $email)
-
 ->getQuery();
-
 dd($query->getSql());
+```
+
+# TILL HERE
+
 
 Formulaires en Symfony
 ======================

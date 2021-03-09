@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+
 use App\Entity\Livre;
 use App\Entity\Exemplaire;
+use App\Entity\Client;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -217,4 +219,62 @@ class ExemplesModeleController extends AbstractController
 
         return new Response("insert ok hydrate");
     }
+
+    // exercices: attention car de données doivent exister dans la BD (importez les fichiers dans /Entity/sql ou créez vos propres données)
+    
+    #[Route('/exemples/modele/exercice1')]
+    public function exercice1()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository(Livre::class);
+
+        $livre = $rep->findOneBy([
+            'titre' => 'Moby Dick',
+            'prix' => 20
+        ]);
+        // SELECT * FROM Livre WHERE titre = "Moby Dick" AND prix = 20
+
+        $vars = [
+            'livre' => $livre
+        ];
+        return $this->render('exemples_modele/exercice_1.html.twig', $vars);
+    }
+
+
+    #[Route('/exemples/modele/exercice2')]
+    public function exercice2()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository(Client::class);
+
+        $arrClients = $rep->findAll();
+        $vars = ['arrClients' => $arrClients];
+        return $this->render('exemples_modele/exercice_2.html.twig', $vars);
+    }
+
+
+
+    #[Route('/exemples/modele/exercice3')]
+    public function exercice3()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository(Client::class);
+
+        $arrClients = $rep->findBy(['nom'=>'Lipowska',
+                                'prenom'=> 'Joanna']);
+        $vars = ['arrClients' => $arrClients];
+        return $this->render('exemples_modele/exercice_3.html.twig', $vars);
+    }
+
+    #[Route('/exemples/modele/exercice4')]
+    public function exercice4()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository(Client::class);
+
+        $client = $rep->find(3);
+        $vars = ['client' => $client];
+        return $this->render('exemples_modele/exercice_4.html.twig', $vars);
+    }
+
 }
