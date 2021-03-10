@@ -150,8 +150,31 @@ class ExemplesModeleController extends AbstractController
         die();
     }
 
-    
+    #[Route('/exemples/modele/exercice1/delete')]
+    public function exercice1Delete()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository(Client::class);
+
+        $client = $rep->findOneBy(['nom' => 'Scaccia']);
+        $em->remove($client);
+        $em->flush();
+        dd($client);
+    }
 
 
+    #[Route('/exemples/modele/exercice2/insert/livres')]
+    public function exercice2InsertLivres()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $l1 = new Livre(['titre' => 'Lolo', 'prix' => 40, 'isbn' => '123412342314']);
+        $l2 = new Livre(['titre' => 'Pepe', 'prix' => 40, 'isbn' => '234234234234']);
+        $em->persist($l1);
+        $em->persist($l2);
+        $em->flush();
+        dd('Livre dans la BD, vérifiez!');
+        // return new Response("insert fait, vérifiez la BD");
+        // return new $this->render (.........)
 
+    }
 }

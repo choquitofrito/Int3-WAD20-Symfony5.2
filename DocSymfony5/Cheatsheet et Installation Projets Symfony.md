@@ -40,3 +40,30 @@ composer require --dev symfony/maker-bundle
 php bin/console make:entity
 ```
 Pour créer une rélation: choisir *relation* dans le type de données de l'attribut
+
+
+## Clonation et installation d'un projet
+
+1. **git clone/git pull** du repo
+2. **arrêter** tous les **serveurs** Symfony
+3. ouvrir une **console** **dans le dossier du projet**
+4.  
+```console
+composer install
+```
+5. **Démarrer le serveur** Symfony 
+6. Configurer la bd dans **.env**
+7. Créer la BD (si elle n'existe pas)
+```console
+php bin/console doctrine:database:create
+```
+8. Créer une migration et la lancer
+```console
+php bin/console make:migration
+php bin/console doctrine:migration:migrate
+```
+9. Remplir la BD 
+
+    a) Remplir la BD avec un **fichier SQL** (qui doit contenit uniquement des INSERT)<br>
+    b) Remplir la BD en utilisant **Fixtures** (voir chapitre correspondant dans les notes)
+    
