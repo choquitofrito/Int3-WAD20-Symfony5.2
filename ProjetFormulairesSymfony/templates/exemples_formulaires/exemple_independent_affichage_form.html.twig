@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<form action="{{ path('traitement_form_simple_post') }}" method="POST">
+    Nom:<input type="text" name="nom">
+    Age:<input type="number" name="age">   
+    <button type="submit">Envoyer POST</button> 
+</form>
+
+
+<form action="{{ path('traitement_form_simple_get') }}" method="GET">
+    Nom:<input type="text" name="produit">
+    Age:<input type="number" name="prix">   
+    <button type="submit">Envoyer GET</button> 
+</form>
+
+{% endblock %}
