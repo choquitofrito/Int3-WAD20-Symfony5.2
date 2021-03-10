@@ -45,8 +45,8 @@ Pour créer une rélation: choisir *relation* dans le type de données de l'attr
 ## Clonation et installation d'un projet
 
 1. **git clone/git pull** du repo
-2. **arrêter** tous les **serveurs** Symfony
-3. ouvrir une **console** **dans le dossier du projet**
+2. **Arrêter** tous les **serveurs** Symfony
+3. ouvrir une **console** **Dans le dossier du projet**
 4.  
 ```console
 composer install

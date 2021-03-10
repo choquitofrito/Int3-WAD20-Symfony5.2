@@ -9,6 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Livre;
 use App\Entity\Client;
 
+use Faker;
+
 class ExemplesModeleController extends AbstractController
 {
     #[Route('/exemples/modele', name: 'exemples_modele')]
@@ -150,6 +152,15 @@ class ExemplesModeleController extends AbstractController
         die();
     }
 
+    // test faker 
+    #[Route('/exemples/modele/test/faker')]
+    public function testFaker(){
+        $faker = Faker\Factory::create();
+        dump ($faker->name);
+        dd ("tout ok");
+    }
+
+    
     #[Route('/exemples/modele/exercice1/delete')]
     public function exercice1Delete()
     {
@@ -177,4 +188,7 @@ class ExemplesModeleController extends AbstractController
         // return new $this->render (.........)
 
     }
+
+
+
 }

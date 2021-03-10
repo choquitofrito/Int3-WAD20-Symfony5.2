@@ -129,7 +129,6 @@
     - [{#section-4 .ListParagraph}](#section-4-listparagraph)
   - [Rendu du formulaire dans la vue](#rendu-du-formulaire-dans-la-vue)
   - [Résumé : création et personnalisation de base d'un formulaire](#résumé--création-et-personnalisation-de-base-dun-formulaire)
-
 <br>
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
@@ -3929,7 +3928,7 @@ class ClientFixture extends Fixture
 }
 ```
 
-1. **Lancez** les fixtures**
+4. **Lancez** les fixtures
 
 ```console
 php bin/console doctrine:fixtures:load --append
@@ -3939,7 +3938,7 @@ php bin/console doctrine:fixtures:load --append
 
 Ici on a qu'une fixture mais on pourrait avoir plein.
 
-5.  Vérifiez que les données sont insérées dans la BD
+1.  Vérifiez que les données sont insérées dans la BD
 
 **Note**: si vous voulez générer de valeurs plus "réalistes" vous
 pouvez utiliser la librairie Faker.
