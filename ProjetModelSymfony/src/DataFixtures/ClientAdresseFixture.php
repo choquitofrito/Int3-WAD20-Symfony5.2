@@ -30,12 +30,13 @@ class ClientAdresseFixture extends Fixture
         $manager->flush();
 
         // obtenir les adresses et les mettre dans un array, tout dans une ligne
-        // on les obtient pour pouvoir fixer le client pour chaque adresse
+        // On les obtient pour pouvoir fixer le Client pour chaque Adresse
         $adresses = $manager->getRepository(Adresse::class)->findAll();
         // pour debug: dump ($adresses); // array d'objets adresses
 
-        // créer des objet Client 
-        for ($i = 0; $i < 10; $i++) {
+        // créer des objet Client, leur donner une Adresse et les stocker dans la BD.
+        // la clé étranger de la BD sera remplie automatiquement
+        for ($i = 0; $i < 5; $i++) {
             $client = new Client([
                 'nom' => $faker->lastName,
                 'prenom' => $faker->firstName,

@@ -3863,6 +3863,7 @@ Nous n'allons pas developper cette méthode maintenant mais vous avez la documen
 
 <https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/inheritance-mapping.html#class-table-inheritance>
 
+<br>
 
 # 17. Fixtures pour remplir la BD
 
@@ -3884,9 +3885,10 @@ Toute la documentation sur les fixtures se trouve ici :
 
 mais on va développer un exemple simple et associé à une classe d'entité qui nous servira plus tard.
 
-**Exemple** : Création d'une fixture 
+**Exemple** : Création d'une fixture pour stocker de Livres
 
-On va créer et lancer une fixture pour l'entité **Client** dans le projet **ProjetModelSymfony**. Si l'entité n'existe pas, créez la d'abord (client: nom et lienImage). Suivez cette procédure :
+On va créer et lancer une fixture pour l'entité **Livre** dans le projet **ProjetModelSymfony**. Suivez cette procédure :
+
 
 1.  Installez le **support** pour les **fixtures**
 
@@ -3909,23 +3911,26 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Client;
+use App\Entity\Livre;
 
-class ClientFixture extends Fixture
+class LivreFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
 
         for ($i = 0; $i < 10; $i++) {
-            $client = new Client();
-            $client->setNom("Dupont " + $i);
-            $client->setPrenom("Sarah " + $i);
-            $manager->persist($client);
+            $livre = new Livre();
+            // si on a un hydrate, pas besoin de sets...
+            $livre->setTitre("La vie de Toto Vol. " . $i);
+            $livre->setIsbn("12123123123123" . $i);
+            $livre->setPrix($i + 20);
+            $manager->persist($livre);
         }
 
         $manager->flush();
     }
 }
+
 ```
 
 4. **Lancez** les fixtures
@@ -3940,8 +3945,68 @@ Ici on a qu'une fixture mais on pourrait avoir plein.
 
 1.  Vérifiez que les données sont insérées dans la BD
 
-**Note**: si vous voulez générer de valeurs plus "réalistes" vous
-pouvez utiliser la librairie Faker.
+**Note**: si vous voulez générer de valeurs plus "réalistes" vous pouvez utiliser la librairie Faker.
+
+Vous avez un exemple dans **ProjetModele** (**ClientAdresseFixture.php**) où en plus on crée les liens entre deux entités.
+
+```php
+<?php
+
+namespace App\DataFixtures;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use App\Entity\Client;
+use App\Entity\Adresse;
+use Faker;
+
+class ClientAdresseFixture extends Fixture
+{
+    // on peux complexifier la création des fixtures mais on va le faire très simple ici
+    public function load(ObjectManager $manager)
+    {
+
+        $faker = Faker\Factory::create('fr_FR');
+
+        // créer quelques objets Adresse, stocker dans la BD
+        for ($i = 0; $i < 4; $i++) {
+            $adresse = new Adresse([
+                'rue' => $faker->streetAddress,
+                'numero' => $faker->buildingNumber,
+                'codePostal' => $faker->postcode,
+                'ville' => $faker->city,
+                'pays' => $faker->country
+            ]);
+            $manager->persist($adresse);
+        }
+        $manager->flush();
+
+        // obtenir les adresses et les mettre dans un array, tout dans une ligne
+        // On les obtient pour pouvoir fixer le Client pour chaque Adresse
+        $adresses = $manager->getRepository(Adresse::class)->findAll();
+        // pour debug: dump ($adresses); // array d'objets adresses
+
+        // créer des objet Client, leur donner une Adresse et les stocker dans la BD.
+        // la clé étranger de la BD sera remplie automatiquement
+        for ($i = 0; $i < 5; $i++) {
+            $client = new Client([
+                'nom' => $faker->lastName,
+                'prenom' => $faker->firstName,
+                'email' => $faker->email
+            ]);
+            // choisir une adresse random
+            $client->setAdresse($adresses[array_rand($adresses)]);
+
+            // vous pouvez faire dump ici et on les verra en console
+            // dump ($client);
+            $manager->persist($client);
+        }
+
+        $manager->flush();
+    }
+}
+```
+
 
 #### Exercices :
 
