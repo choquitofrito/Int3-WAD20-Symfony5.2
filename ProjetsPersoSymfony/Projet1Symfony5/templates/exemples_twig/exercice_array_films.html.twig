@@ -1,0 +1,17 @@
+<table style="border: 1px black solid">
+
+<tr>
+{% for label, value in films[0] %}
+    <th>{{ label | capitalize }}</th>
+{% endfor %}
+</tr>
+
+{% for film in films %}
+<tr>
+    {% for val in film %}
+        <td style="border: 1px black solid">{{ val }}</td>
+    {% endfor %}
+</tr>
+{% endfor %}
+
+</table>

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+{{dump(nom)}}
+    {% if 'van' in nom %}
+        <h3>{{nom}} est possiblement néerlandais</h3>
+    {% elseif nom ends with 'ani' or nom ends with 'oni' %}
+        <h3>{{nom}} nom est possiblement italien</h3>
+    {% elseif nom ends with 'ski' or nom ends with 'ska' %}
+        <h3>{{nom}} est possiblement un nom de famille polonais!</h3>
+    {% else %}
+        <h3>{{nom}} On ne sait pas vraiment d'òu vient {{nom}}</h3>
+    {% endif %}
+{% endblock %}
+
