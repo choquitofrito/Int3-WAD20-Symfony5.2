@@ -17,7 +17,7 @@ class ExemplesModeleController extends AbstractController
 {
 
 
-    #[Route ("/exemples/modele/exemple/find/one/by")]
+    #[Route("/exemples/modele/exemple/find/one/by")]
     public function exempleFindOneBy()
     {
         // obtenir le entity manager
@@ -27,8 +27,10 @@ class ExemplesModeleController extends AbstractController
 
         // on obtient l'objet, le filtre est envoyé sous la forme d'un array
         // (on peut rajouter de clés qui provoqueront an AND)
-        $livre = $rep->findOneBy(['titre' => 'Life and Fate',
-                                        'prix' => 20]);
+        $livre = $rep->findOneBy([
+            'titre' => 'Life and Fate',
+            'prix' => 20
+        ]);
 
         // on stocke le résultat dans un array associatif 
         // pour l'envoyer à la vue comme d'habitude
@@ -42,7 +44,7 @@ class ExemplesModeleController extends AbstractController
 
 
     // SELECT: find (chercher par id)
-    #[Route ("exemples/modele/exemple/find")]
+    #[Route("exemples/modele/exemple/find")]
     public function exempleFind()
     {
         $em = $this->getDoctrine()->getManager();
@@ -55,7 +57,7 @@ class ExemplesModeleController extends AbstractController
 
 
     // SELECT: findBy (chercher par un ou plusieurs champs, filtre array)
-    #[Route ("exemples/modele/exemple/find/by")]
+    #[Route("exemples/modele/exemple/find/by")]
     public function exempleFindBy()
     {
         $em = $this->getDoctrine()->getManager();
@@ -63,14 +65,14 @@ class ExemplesModeleController extends AbstractController
 
         // notez que findBy renverra toujours un array même s'il trouve 
         // qu'un objet
-        $livres = $rep->findBy(['prix'=>20]);
+        $livres = $rep->findBy(['prix' => 20]);
         $vars = ['livres' => $livres];
         return $this->render("exemples_modele/exemple_find_by.html.twig", $vars);
     }
 
 
     // SELECT: findAll (chercher par un ou plusieurs champs, filtre array)
-    #[Route ("exemples/modele/exemple/find/all")]
+    #[Route("exemples/modele/exemple/find/all")]
     public function exempleFindAll()
     {
         $em = $this->getDoctrine()->getManager();
@@ -85,9 +87,25 @@ class ExemplesModeleController extends AbstractController
     }
 
 
+    // EXEMPLE UTILISATION HYDRATE 
+    #[Route("exemples/modele/exemple/hydrate")]
+    public function exempleHydrate()
+    {
+        $livre = new Livre([
+            'titre' => 'Lalala',
+            'prix' => 40,
+            'description' => 'Blablablabalablablablabla'
+        ]);
+        dump ($livre);
+        // changer deux propriétés
+        $livre->hydrate(['titre' => 'Lolololo',
+                        'prix' => 10]);
+        dd($livre);
+    }
+
 
     // INSERT
-    #[Route ("exemples/modele/exemple/insert")]
+    #[Route("exemples/modele/exemple/insert")]
     public function exempleInsert()
     {
         $em = $this->getDoctrine()->getManager();
@@ -107,14 +125,14 @@ class ExemplesModeleController extends AbstractController
     }
 
     // UPDATE (attention à avoir une copie de la BD originale!)
-    #[Route ("exemples/modele/exemple/update")]
+    #[Route("exemples/modele/exemple/update")]
     public function exempleUpdate()
     {
         $em = $this->getDoctrine()->getManager();
         // on obtient d'abord un livre
         $unLivre = $em->getRepository(Livre::class)->findOneBy(array("titre" => "Life and fate"));
-        
-        $unLivre->setTitre("Toto est content"); 
+
+        $unLivre->setTitre("Toto est content");
         // pas besoin de persist 
         // quand on obtient un objet de la BD
         // $em->persist ($unLivre); 
@@ -123,7 +141,7 @@ class ExemplesModeleController extends AbstractController
     }
 
     // DELETE (attention!!!)
-    #[Route ("exemples/modele/exemple/delete")]
+    #[Route("exemples/modele/exemple/delete")]
     public function exempleDelete()
     {
         $em = $this->getDoctrine()->getManager();
@@ -138,7 +156,7 @@ class ExemplesModeleController extends AbstractController
 
 
     // Clear
-    #[Route ("/exemples/modele/exemple/clear")]
+    #[Route("/exemples/modele/exemple/clear")]
     public function exempleClear()
     {
         $em = $this->getDoctrine()->getManager();
@@ -154,7 +172,7 @@ class ExemplesModeleController extends AbstractController
 
 
     // Refresh
-    #[Route ("/exemples/modele/exemple/refresh")]
+    #[Route("/exemples/modele/exemple/refresh")]
     public function exempleRefresh()
     {
         $em = $this->getDoctrine()->getManager();
@@ -162,13 +180,13 @@ class ExemplesModeleController extends AbstractController
         // on modifie le Livre obtenu de la BD
         $unLivre->setTitre("La vie est belle");
         // on affiche le livre après la modification (domaine objets)
-        dump ($unLivre);
+        dump($unLivre);
 
         // recharge le livre de la BD, il y aura le titre original
         $em->refresh($unLivre);
 
         // de-commentez cette ligne pour vérifier que l'objet a à nouveau le titre original
-        dd( $unLivre); // dd est dump and die!
+        dd($unLivre); // dd est dump and die!
 
         $em->persist($unLivre);
         // rien ne change dans la BD
@@ -179,7 +197,7 @@ class ExemplesModeleController extends AbstractController
 
     // exemple de findOneBy. Pour créer le filtre de recherche
     // on utilise le hydrate (il faut le créer dans l'entity!)
-    #[Route ("/exemples/modele/exemple/update/hydrate")]
+    #[Route("/exemples/modele/exemple/update/hydrate")]
     public function exempleUpdateHydrate()
     {
         $em = $this->getDoctrine()->getManager();
@@ -203,7 +221,7 @@ class ExemplesModeleController extends AbstractController
 
 
     // INSERT d'un objet crée avec hydrate. On s'épargne les sets!
-    #[Route ("/exemples/modele/exemple/insert/hydrate")]
+    #[Route("/exemples/modele/exemple/insert/hydrate")]
     public function exempleInsertHydrate()
     {
         $livre = new Livre([
@@ -221,7 +239,7 @@ class ExemplesModeleController extends AbstractController
     }
 
     // exercices: attention car de données doivent exister dans la BD (importez les fichiers dans /Entity/sql ou créez vos propres données)
-    
+
     #[Route('/exemples/modele/exercice1')]
     public function exercice1()
     {
@@ -260,8 +278,10 @@ class ExemplesModeleController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository(Client::class);
 
-        $arrClients = $rep->findBy(['nom'=>'Lipowska',
-                                'prenom'=> 'Joanna']);
+        $arrClients = $rep->findBy([
+            'nom' => 'Lipowska',
+            'prenom' => 'Joanna'
+        ]);
         $vars = ['arrClients' => $arrClients];
         return $this->render('exemples_modele/exercice_3.html.twig', $vars);
     }
@@ -276,5 +296,4 @@ class ExemplesModeleController extends AbstractController
         $vars = ['client' => $client];
         return $this->render('exemples_modele/exercice_4.html.twig', $vars);
     }
-
 }
