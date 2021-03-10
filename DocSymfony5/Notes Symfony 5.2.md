@@ -100,19 +100,21 @@
 - [16. Le Modèle : Héritage de classes](#16-le-modèle--héritage-de-classes)
   - [16.1. Single Table Inheritance](#161-single-table-inheritance)
   - [16.2. Class Table Inheritance](#162-class-table-inheritance)
-- [17. Accès à la BD avec DQL](#17-accès-à-la-bd-avec-dql)
-  - [17.1. SELECT](#171-select)
-    - [17.1.1. Requête qui renvoi un array d'arrays](#1711-requête-qui-renvoi-un-array-darrays)
-    - [17.1.2. Requête qui renvoi un array d'objets](#1712-requête-qui-renvoi-un-array-dobjets)
-  - [17.2. Regular Joins et Fetch Joins](#172-regular-joins-et-fetch-joins)
-    - [17.2.1. Regular Join](#1721-regular-join)
-    - [17.2.2. Fetch Join](#1722-fetch-join)
-    - [17.3. Fonctions Year, Month et Day](#173-fonctions-year-month-et-day)
-  - [17.4. UPDATE](#174-update)
-      - [Exercices DQL](#exercices-dql)
-- [18. Accès à la BD avec DQL en utilisant les classes Repositoires](#18-accès-à-la-bd-avec-dql-en-utilisant-les-classes-repositoires)
+- [17. Fixtures pour remplir la BD](#17-fixtures-pour-remplir-la-bd)
       - [Exercices :](#exercices-)
-- [19. Accès à la BD avec Query Builder](#19-accès-à-la-bd-avec-query-builder)
+- [18. Accès à la BD avec DQL](#18-accès-à-la-bd-avec-dql)
+  - [18.1. SELECT](#181-select)
+    - [18.1.1. Requête qui renvoi un array d'arrays](#1811-requête-qui-renvoi-un-array-darrays)
+    - [18.1.2. Requête qui renvoi un array d'objets](#1812-requête-qui-renvoi-un-array-dobjets)
+  - [18.2. Regular Joins et Fetch Joins](#182-regular-joins-et-fetch-joins)
+    - [18.2.1. Regular Join](#1821-regular-join)
+    - [18.2.2. Fetch Join](#1822-fetch-join)
+    - [18.3. Fonctions Year, Month et Day](#183-fonctions-year-month-et-day)
+  - [18.4. UPDATE](#184-update)
+      - [Exercices DQL](#exercices-dql)
+- [19. Accès à la BD avec DQL en utilisant les classes Repositoires](#19-accès-à-la-bd-avec-dql-en-utilisant-les-classes-repositoires)
+      - [Exercices :](#exercices--1)
+- [20. Accès à la BD avec Query Builder](#20-accès-à-la-bd-avec-query-builder)
 - [TILL HERE](#till-here)
 - [Formulaires en Symfony](#formulaires-en-symfony)
   - [Création d'un formulaire indépendant](#création-dun-formulaire-indépendant)
@@ -1021,14 +1023,14 @@ Conservez cette structure de blocs dans vos twigs et remplissez à chaque fois l
 
 #### Exercices : création d'une action et un template
 
-Créez une deuxième action affichePays et un template qui affiche "vive la Belgique"
+Créez une deuxième action afficheclient et un template qui affiche "vive la Belgique"
 
 <br>
 
 ## 6.2. Les variables TWIG
 
 
-Twig peut utiliser des **variables**, ce qui nous permet d'accéder d'une façon très simple aux données envoyéés au template par le controller. Pour accéder une **variable** nous devons utiliser cette notation :
+Twig peut utiliser des **variables**, ce qui nous permet d'accéder d'une façon très simple aux données envoyéés au template par le controller. Pour accéder u **vaable** nous devons utiliser cette notation :
 
 ```twig
 {{ nom }}
@@ -1048,7 +1050,7 @@ public function afficheVille()
     $vars = [
         'nom' => 'Bruxelles',
         'population' => 1500000,
-        'pays' => 'Belgique'
+        'client' => 'Belgique'
     ];
     // render reçoit l'array associatif et renvoie l'objet Response
     // on accédera à cette array depuis la vue
@@ -1058,9 +1060,9 @@ public function afficheVille()
     );
 }
 ```
-<br>
+<b
 
-Nous venons de rajouter un paramètre à l'appel **render**. Cela nous permet d'envoyer de valeurs à la vue. Le format est **d'un array associatif dont les clés deviennent de variables** accessibles dans le twig. Ici on l'a appelé $vars mais le nom n'a aucune importance.
+Nouvenons de rajouter un paramètre à l'appel **render**. Cela nous permet d'envoyer de valeurs à la vue. Le format est **d'un array associatif dont les clés deviennent de variables** accessibles dans le twig. Ici on l'a appelé $vars mais le nom n'a aucune importance.
 
 On va utiliser maintenant ces variables dans le template twig. **Notez que pour accéder aux variables on a juste utilisé les clés de l'array**
 
@@ -1074,8 +1076,8 @@ Le nom de la ville est:
 {{ nom }}
 La population est:
 {{ population }}
-Cette ville se trouve dans ce pays:
-{{ pays }}
+Cette ville se trouve dans ce client:
+{{ client }}
 
 {% endblock %}
 ```
@@ -1083,8 +1085,8 @@ Faites appel à l'action et observez le résultat.
 
 Nous avons envoyé un array associatif dans le controller. Si on a juste une valeur simple à envoyer c'est encore plus simple :
 
-```php
-return $this->render ('exemples_twig/blablabla.html.twig',
+``hp
+re $ts->render ('exemples_twig/blablabla.html.twig',
 ['cinema'=> 'Aventura']);
 ```
 et on accède dans le template twig:
@@ -1193,7 +1195,7 @@ public function exemple1 (){
     $vars = [
         'ville' => ['nom' => 'Bruxelles',
                     'population' => 1500000,
-                    'pays' => 'Belgique']
+                    'client' => 'Belgique']
     ];
 
     return $this->render ('exemples_twig_boucles/exemple_1.html.twig', $vars);
@@ -1203,8 +1205,8 @@ public function exemple1 (){
 
 2.  Voici le contenu de la vue
 
-```twig
-Les données dans l'array sont :
+``wig
+L données dans l'array sont :
 <table>
 {% for cle, valeur in ville %}
 <tr><td>{{ cle }}</td><td>{{ valeur }}</td></tr>
@@ -1292,7 +1294,7 @@ public function exemple1()
     
     $ville = ['nom' => 'Bruxelles',
             'population' => 1500000,
-            'pays' => 'Belgique'
+            'client' => 'Belgique'
     ];
 
     return $this->render('exemples_twig_filtres/exemple_1.html.twig', [
@@ -1302,8 +1304,8 @@ public function exemple1()
 }
 ```
 Voici le template
-```twig
-{% extends 'base.html.twig' %}
+``wig
+{extends 'base.html.twig' %}
 
 {% block body %}
 {% if ville | length > 1 %}
@@ -2842,7 +2844,7 @@ pas mettre une collection d'exemplaires dans une BD relationnelle ! ;)
 
 #### Exercices : création d'entités et de rélations
 
-1)  On va considérer qu'un Client de la bibliothèque a une Adresse (rue, numero, codePostal, ville, pays) et qu'une adresse peut correspondre à plusieurs clients (ex: co-habitants dans un appart) 
+1)  On va considérer qu'un Client de la bibliothèque a une Adresse (rue, numero, codePostal, ville, client) et qu'une adresse peut correspondre à plusieurs clients (ex: co-habitants dans un appart) 
 
 Créez la classe Client pour représenter les clients et la classe Adresse pour représenter l'adresse de chaque client. Implémentez-la en utilisant Doctrine tel qu'on vient de faire
 
@@ -2850,7 +2852,7 @@ Créez la classe Client pour représenter les clients et la classe Adresse pour 
 
 ![](./images/diagramme-relations1.png)
 
-3)  Prenez des exemples du cours d'UML et implémentez les entités avec Doctrine dans un nouveau projet. Si vous êtes en train de planifier un projet pour vous, prenez plusieurs entités de votre schéma et implémentez-les avec Doctrine. Implementez les associations aussi
+3 Pren des exemples du cours d'UML et implémentez les entités avec Doctrine dans un nouveau projet. Si vous êtes en train de planifier un projet pour vous, prenez plusieurs entités de votre schéma et implémentez-les avec Doctrine. Implementez les associations aussi
 
 <br>
 
@@ -3863,7 +3865,94 @@ Nous n'allons pas developper cette méthode maintenant mais vous avez la documen
 <https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/inheritance-mapping.html#class-table-inheritance>
 
 
-# 17. Accès à la BD avec DQL
+# 17. Fixtures pour remplir la BD
+
+Doctrine fournit un outil qui nous permet **d'encoder de données dans la base de données d'une façon semi-automatique**, ce qui est très utile pendant les périodes de développement et de test de l'application.
+
+Le fonctionnement est simple : **si on veut encoder de données pour une classe d'entité** existante (ex : Livres) on **demande à Doctrine de créer une class Fixture** (ex : LivresFixtures) qui contient au moins une **méthode load**. Dans cette méthode (à remplir par nous) **contiendra le code qui insère** les données dans la BD. Puis on appelle cette fonction et les données seront stockés dans la BD.
+
+Ce système a plusieurs avantages :
+
+-   On peut appeler la méthode génératrice autant de fois qu'on veut
+
+-   Le code qui crée les données de la BD se trouve localisé
+
+-   On peut générer les données pour toutes les entités du projet avec une seule commande (si on a créé la Fixture pour chaque entité, bien sûr).
+
+Toute la documentation sur les fixtures se trouve ici :
+
+<https://symfony.com/doc/master/bundles/DoctrineFixturesBundle/index.html>
+
+mais on va développer un exemple simple et associé à une classe d'entité qui nous servira plus tard.
+
+**Exemple** : Création d'une fixture 
+
+On va créer et lancer une fixture pour l'entité **Client** dans le projet **ProjetModelSymfony**. Si l'entité n'existe pas, créez la d'abord (client: nom et lienImage). Suivez cette procédure :
+
+1.  Installez le **support** pour les **fixtures**
+
+```console
+composer require --dev doctrine/doctrine-fixtures-bundle
+```
+
+2.  **Créez la classe fixture** (nom: ClientFixture)
+
+```php
+php bin/console make:fixture
+```
+
+3.  **Editez** la function **load** pour qu'elle stocke des Clients
+
+```php
+<?php
+
+namespace App\DataFixtures;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use App\Entity\Client;
+
+class ClientFixture extends Fixture
+{
+    public function load(ObjectManager $manager)
+    {
+
+        for ($i = 0; $i < 10; $i++) {
+            $client = new Client();
+            $client->setNom("Dupont " + $i);
+            $client->setPrenom("Sarah " + $i);
+            $manager->persist($client);
+        }
+
+        $manager->flush();
+    }
+}
+```
+
+1. **Lancez** les fixtures**
+
+```console
+php bin/console doctrine:fixtures:load --append
+```
+
+**--append** permet de lancer la fixture sans effacer les données existantes dans les tableaux. Si vous l'enlevez-vous effacerez la totalité du contenu de votre BD (Symfony vous previent quand-même)
+
+Ici on a qu'une fixture mais on pourrait avoir plein.
+
+5.  Vérifiez que les données sont insérées dans la BD
+
+**Note**: si vous voulez générer de valeurs plus "réalistes" vous
+pouvez utiliser la librairie Faker.
+
+#### Exercices :
+
+1.  Créez une classe Fixture qui permette de rajouter automatiquement
+    des objets d'une classe de votre choix
+
+<br>
+
+
+# 18. Accès à la BD avec DQL
 
 Nous avons vu comment réaliser de requêtes CRUD simples, mais dans un projet réel nous allons devoir lancer de requêtes assez plus complexes, tels que de regroupements (GROUP BY), de jointures de tableaux (JOIN) ou
 même de sous-requêtes.
@@ -3894,9 +3983,9 @@ flush).
 
 Passons aux exemples d'utilisation pour mieux comprendre.
 
-## 17.1. SELECT
+## 18.1. SELECT
 
-### 17.1.1. Requête qui renvoi un array d'arrays
+### 18.1.1. Requête qui renvoi un array d'arrays
 
 ```php
 #[Route ("/exemples/dql/exemple/select/array/arrays")]
@@ -3920,7 +4009,7 @@ public function exempleSelectArrayArrays (){
 ![](./images/dql-arrayarrays.png)
 
 
-### 17.1.2. Requête qui renvoi un array d'objets
+### 18.1.2. Requête qui renvoi un array d'objets
 
 ```php
 // SELECT des Livres complets en DQL, 
@@ -3939,7 +4028,7 @@ public function exempleSelectArrayObjets (){
 
 <br>
 
-## 17.2. Regular Joins et Fetch Joins
+## 18.2. Regular Joins et Fetch Joins
 
 Nous pouvons naviguer dans la hiérarchie d'objets de Doctrine tel qu'on l'a fait jusqu'à maintenant...
 
@@ -3954,7 +4043,7 @@ Quand on utilise du DQL contenant de jointures nous allons avoir deux possibilit
 
 Voyons les deux cas de figure :
 
-### 17.2.1. Regular Join 
+### 18.2.1. Regular Join 
 
 Ici, la collection d'exemplaires sera vide
 
@@ -3978,7 +4067,7 @@ public function exempleRegularJoin(){
 
 ![](./images/dql-regularjoin.png)
 
-### 17.2.2. Fetch Join 
+### 18.2.2. Fetch Join 
 
 Ici, la collection d'Exemplaires remplie. 
 
@@ -4000,7 +4089,7 @@ Ici, la collection d'Exemplaires remplie.
 ![](./images/dql-fetchjoin.png)
 
 
-### 17.3. Fonctions Year, Month et Day
+### 18.3. Fonctions Year, Month et Day
 
 Ces fonctions n'existent pas par défaut dans DQL. La meilleure solution est de rajouter un bundle
 
@@ -4045,7 +4134,7 @@ YEAR(c.dateConcours) AS annee FROM AppEntityConcours c");
 ![](./images/dql-dates.png)
 
 
-## 17.4. UPDATE
+## 18.4. UPDATE
 
 Exemple de UPDATE en DQL : réduire le prix d'un livre
 
@@ -4111,7 +4200,8 @@ En utilisant DQL :
 
 <br>
 
-# 18. Accès à la BD avec DQL en utilisant les classes Repositoires
+
+# 19. Accès à la BD avec DQL en utilisant les classes Repositoires
 
 
 Tel qu'on a déjà mentionné dans la section "Selection", quand on crée une entité sa classe Repository est créée aussi. Cette classe contient les méthodes par défaut qu'on a déjà utilisés (find, findBy, findOneBy,
@@ -4181,8 +4271,9 @@ Observez qu'il n'y a pratiquement rien à faire dans l'action...
     l'entité Adresse pour vous faciliter la tâche d'obtenir les
     adresses d'une certaine ville
 
+<br>
 
-# 19. Accès à la BD avec Query Builder
+# 20. Accès à la BD avec Query Builder
 
 
 **Query Builder est une API qui permet de générer des requêtes de séléction complexes qui renvoient des objets** (requêtes de regroupement, jointures, sous-requêtes...) et pas juste des arrays. En fait Query Builder est un générateur de DQL pour faciliter la création
