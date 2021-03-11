@@ -32,13 +32,13 @@ class ExemplesAjaxAxiosController extends AbstractController
     {
 
         $valeurNom = $requeteAjax->get('nom');
-        $arrayReponse = ['leMessage' => 'Bienvenu, ' . $valeurNom];
+        $arrayReponse = ['leMessage' => 'Bienvenu, ' . $valeurNom,
+                        'autreCle' => 'je suis une autre valeur'];
         return new JsonResponse($arrayReponse);
     }
 
 
     // exemple d'utilisation d'AJAX avec de blocs ("master page")
-
     #[Route ("/exemples/ajax/axios/exemple1/affichage/master/page")]
     public function exemple1AffichageMasterPage()
     {
@@ -64,11 +64,11 @@ class ExemplesAjaxAxiosController extends AbstractController
     {
         return $this->render("/exemples_ajax_axios/exemple1_affichage_master_page_script_externe.html.twig");
     }
-
-    /**
-     * [Route ("/exemples/ajax/axios/exemple1/traitement/master/page/script/externe", options= {"expose":true}, name = "exemple1_traitement_externe")]
-     */
+    
     // action qui traite la commande AJAX, elle n'a pas une vue associée
+    /**
+     * @Route ("/exemples/ajax/axios/exemple1/traitement/master/page/script/externe", options= {"expose"=true}, name = "exemple1_traitement_externe")]
+     */
     public function exemple1TraitementMasterPageScriptExterne(Request $requeteAjax)
     {
         $valeurNom = $requeteAjax->get('nom');

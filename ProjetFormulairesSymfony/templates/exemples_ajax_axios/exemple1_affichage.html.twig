@@ -27,8 +27,9 @@
         .then(function (response) {
             // response.data est un objet qui correspond à l'array associatif envoyé dans le controller
             // JsonResponse a transformé l'array en JSON. Axios transforme le JSON en objet JS
-            // (et on utilise ici la clé "leMessage")
+            // (et on utilise ici les clé "leMessage" et "autreCle")
             document.getElementById("divMessage").innerHTML = response.data.leMessage;
+            document.getElementById("divMessage").innerHTML += " " + response.data.autreCle;
             console.log (response);
         })
         .catch(function (error) {
