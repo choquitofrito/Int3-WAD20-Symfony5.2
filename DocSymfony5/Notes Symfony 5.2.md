@@ -178,6 +178,7 @@
   - [Création d'un serveur virtuel (virtual host) en OSX](#création-dun-serveur-virtuel-virtual-host-en-osx)
 - [(En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur](#en-cours-cette-doc-appartient-à-symfony-4-traduction-des-messages-de-succèserreur)
 
+
 <br>
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
