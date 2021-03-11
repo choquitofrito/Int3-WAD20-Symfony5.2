@@ -129,7 +129,7 @@
   - [21.9. Bonnes pratiques pour créer de formulaires en Symfony](#219-bonnes-pratiques-pour-créer-de-formulaires-en-symfony)
   - [21.10. Style de base pour les formulaires](#2110-style-de-base-pour-les-formulaires)
   - [21.11. Formulaires concernant plusieurs entités](#2111-formulaires-concernant-plusieurs-entités)
-- [21.12. (IN PROGRESS) Formulaire contenant une liste déroulante d'entités filtrées](#2112-in-progress-formulaire-contenant-une-liste-déroulante-dentités-filtrées)
+  - [21.12. (IN PROGRESS) Formulaire contenant une liste déroulante d'entités filtrées](#2112-in-progress-formulaire-contenant-une-liste-déroulante-dentités-filtrées)
   - [21.13. Upload de fichiers en utilisant un formulaire](#2113-upload-de-fichiers-en-utilisant-un-formulaire)
     - [21.13.1. Stockage dans le serveur d'une seule image pour chaque entité](#21131-stockage-dans-le-serveur-dune-seule-image-pour-chaque-entité)
     - [21.13.2. Possibles problèmes dans l'upload](#21132-possibles-problèmes-dans-lupload)
@@ -137,6 +137,45 @@
   - [21.15. Utilisation de blocs dans twig avec AJAX](#2115-utilisation-de-blocs-dans-twig-avec-ajax)
       - [Exercices : Ajax avec Axios](#exercices--ajax-avec-axios)
   - [21.16. Ajax et Axios avec script externe au Twig (sans Webpack)](#2116-ajax-et-axios-avec-script-externe-au-twig-sans-webpack)
+  - [21.17. AJAX en Symfony (Vanilla JS)](#2117-ajax-en-symfony-vanilla-js)
+  - [21.18. Utilisation de blocs dans twig avec AJAX](#2118-utilisation-de-blocs-dans-twig-avec-ajax)
+      - [Exercices : utilisation d'AJAX Vanilla](#exercices--utilisation-dajax-vanilla)
+- [22. Response JSON en Symfony](#22-response-json-en-symfony)
+  - [22.1. Renvoi JSON d'un array d'objets obtenu avec les méthodes d'un repo](#221-renvoi-json-dun-array-dobjets-obtenu-avec-les-méthodes-dun-repo)
+  - [22.2. Renvoi JSON d'un array d'objets obtenu avec DQL](#222-renvoi-json-dun-array-dobjets-obtenu-avec-dql)
+- [till here](#till-here)
+- [23. Authentification : inscription et login/password](#23-authentification--inscription-et-loginpassword)
+  - [# 23.1. Configuration de la sécurité et création d'un formulaire de login](#-231-configuration-de-la-sécurité-et-création-dun-formulaire-de-login)
+  - [(En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur](#en-cours-cette-doc-appartient-à-symfony-4-traduction-des-messages-de-succèserreur)
+  - [Création d'un formulaire d'inscription](#création-dun-formulaire-dinscription)
+- [Logout](#logout)
+- [Accès à l'objet app.user](#accès-à-lobjet-appuser)
+- [Authentication et Rôles](#authentication-et-rôles)
+  - [Gestion de rôles](#gestion-de-rôles)
+  - [Contrôle d'accès par rôles](#contrôle-daccès-par-rôles)
+    - [Dans security.yaml](#dans-securityyaml)
+    - [Dans le controller](#dans-le-controller)
+    - [Dans les vues](#dans-les-vues)
+  - [Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre](#gestion-de-lerreur-access-denied-exception-en-utilisant-une-classe-propre)
+- [Fenêtre modale pour le login](#fenêtre-modale-pour-le-login)
+  - [Description générale](#description-générale)
+  - [Adaptation à Ajax et fenêtre modale](#adaptation-à-ajax-et-fenêtre-modale)
+  - [Formulaire d'enregistrement](#formulaire-denregistrement)
+- [Envoi du mail (Swift Mailer)](#envoi-du-mail-swift-mailer)
+- [Pagination](#pagination)
+- [JS et CSS avec Webpack encore](#js-et-css-avec-webpack-encore)
+  - [Installation de Webpack Encore et de node_modules](#installation-de-webpack-encore-et-de-node_modules)
+  - [Configurer Webpack Encore](#configurer-webpack-encore)
+  - [Lancer Webpack](#lancerwebpack)
+  - [Utiliser le code dans les vues](#utiliser-le-code-dans-les-vues)
+- [Encore et Bootstrap](#encore-et-bootstrap)
+- [Intégration de boutons de paiement Paypal](#intégration-de-boutons-de-paiement-paypal)
+- [4. Installation de packages dans un projet Symfony Flex](#4-installation-de-packages-dans-un-projet-symfony-flex)
+- [5. Symfony avec Apache. Configuration des Virtual Hosts](#5-symfony-avec-apache-configuration-des-virtual-hosts)
+  - [Création d'un serveur virtuel (virtual host) en Windows](#création-dun-serveur-virtuel-virtual-host-en-windows)
+      - [Exercice : création d'un projet contenant l'application skeleton](#exercice--création-dun-projet-contenant-lapplication-skeleton)
+  - [Création d'un serveur virtuel (virtual host) en OSX](#création-dun-serveur-virtuel-virtual-host-en-osx)
+
 <br>
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
@@ -5315,7 +5354,7 @@ Voici le code des **templates** :
 
 <br>
 
-# 21.12. (IN PROGRESS) Formulaire contenant une liste déroulante d'entités filtrées
+## 21.12. (IN PROGRESS) Formulaire contenant une liste déroulante d'entités filtrées
 
 **Note:**: réaliser cet exemple vous devez savoir créer d'abord un **User** en utilisant le système de sécurité de Symfony.
 
@@ -5577,9 +5616,6 @@ Axios est une librairie que nos simplifie les appels AJAX. Vous pouvez parfaitem
 
 Créez un controller **ExemplesAjaxFormDataController** (code original dans le projet **ProjetFormulairesSymfony**). Ce controller contiendra uniquement quelques exemples d'appel Ajax. Plus tard on réalisera des exemples plus pratiques basés sur la BD du projet.
 
-Exemple d'appel AJAX avec un formulaire
-
-
 Dans cet exemple on envoie de données en utilisant AJAX **sans utiliser un formulaire**. Nous avons juste les contrôles. Dans la section suivante on utilisera un formulaire complet.
 
 1.  **Créez une vue contenant un formulaire. Cette vue contiendra aussi le code AJAX**
@@ -5821,4 +5857,2283 @@ Actions:
 
 **Important** : dans les routes qui seront accédées par ce bundle (regardez le code dans le controller) vous devez rajouter le paramètre **{"expose"=true}** (utilisez des annotations pour ces routes). Le code du projet inclut déjà cette option.
 
+
+
+<br>
+
+## 21.17. AJAX en Symfony (Vanilla JS)
+
+**Objectif** : utiliser AJAX dans un template Twig
+
+Créez un controller **ExemplesAjaxFormDataController** (code original
+dans le projet **ProjetFormulairesSymfony**). Ce controller contiendra uniquement quelques exemples d'appel Ajax. Plus tard on réalisera des exemples plus pratiques basés sur la BD du projet.
+
+Ceci est un exemple pédagogique, bien que vous pouvez utiliser cette tecnique aussi.
+
+Dans cet exemple on envoie de données en utilisant AJAX **sans utiliser un formulaire**. Nous avons juste les contrôles. Dans la section suivante on utilisera un formulaire complet
+
+1.  **Créez une vue contenant du code AJAX**
+
+**Exemple** : on tapera un nom dans l'input et, quand on clique sur le bouton, un message de bienvenue sera affiché dans le div. 
+
+Attention aux **names** des contrôles car on les utilisera dans le
+traitement de l'action dans le controller!!
+
+
+```twig 
+<input type="text" id="inputNom" />
+<input type="submit" id="envoyerNom" value="Envoyer"/>
+<div id="divMessage"></div>
+
+<script>
+envoyerNom.addEventListener ("click", function (event){
+    var xhr = new XMLHttpRequest ();
+    
+    xhr.onreadystatechange = function (){
+        if (xhr.readyState == 4){
+            if (xhr.status == 200){
+                // transformer le string JSON envoyé par le serveur 
+                // comme réponse en objet JavasScript
+                var reponse = JSON.parse (xhr.responseText);
+                divMessage.innerHTML = reponse.message;
+                console.log (reponse);
+                console.log (typeof(reponse));
+            }
+            // s'il y a une erreur:
+            else {
+                // effacer en production!
+                console.log (xhr.reponseText);
+            }
+            
+        }
+        
+    }
+    
+    xhr.open ('POST','/exemples/ajax/exemple1/traitement');
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send ("nom=" + inputNom.value);
+    
+});    
+</script>
+```
+
+2.  Créez l'action **exemple1Affichage**, qui renvoie le rendu de la
+    vue exemple1_affichage.html
+
+```php
+// exemple simple d'utilisation d'AJAX Vanilla sans promises
+#[Route("/exemples/ajax/exemple1/affichage")]
+public function exemple1Affichage()
+{
+    return $this->render("/exemples_ajax/exemple1_affichage.html.twig");
+}
+```
+
+<br>
+
+3.  Créez l'action **exempleTraitementAjax** qui traite la pétition
+    AJAX
+
+```php
+#[Route("/exemples/ajax/exemple1/traitement")]
+// action qui traite la commande AJAX, elle n'a pas une vue associée
+public function exemple1Traitement(Request $requeteAjax)
+{
+    $valeurNom = $requeteAjax->get('nom');
+    $arrayReponse = ['message' => 'Bienvenu, ' . $valeurNom];
+    return new JsonResponse($arrayReponse);
+}
+```
+
+<br>
+
+
+## 21.18. Utilisation de blocs dans twig avec AJAX
+
+Il s'agit juste d'une combinaison de master page + AJAX, rien de
+nouveau.
+
+1.  Créez un template **master_page.html.twig** contenant une section pour nos vues. Créez un block pour le contenu et un autre pour le JS
+
+```twig
+<html>
+    <body>
+        <header>
+            Voici la section header
+        </header>
+        <main>
+            Voici la section main
+            {% block contenuMain %}{% endblock %}
+        </main>
+        <footer>
+            Voici la section footer
+        </footer>
+    
+    </body>
+    {% block javascripts %}{% endblock %}
+</html>
+```
+
+
+2.  **Créez une vue** *exemple1_affichage_master_page.html.twig* **qui hérite du template** *master_page.html.twig*
+
+```twig
+{% extends '/exemples_ajax/master_page.html.twig' %}
+
+{% block contenuMain %}
+Nom<input type="text" id="inputNom" />
+<button id="envoyerNom">Envoyer</button>
+<div id="divMessage"></div>
+{% endblock %}
+
+
+```
+
+3.  Rajoutez le code Ajax dans un bloc **javascripts** dans la même vue, le code doit faire appel à une action dans le controller qui gére la petition Ajax.
+
+```twig
+{% block javascripts %}
+<script>
+envoyerNom.addEventListener ("click", function (event){
+    var xhr = new XMLHttpRequest ();
+    
+    xhr.onreadystatechange = function (){
+        if (xhr.readyState == 4){
+            if (xhr.status == 200){
+                // transformer le string JSON envoyé par le serveur 
+                // comme réponse en objet JavasScript
+                var reponse = JSON.parse (xhr.responseText);
+                divMessage.innerHTML = reponse.message;
+                console.log (reponse);
+                console.log (typeof(reponse));
+            }
+            // s'il y a une erreur:
+            else {
+                // effacer en production!
+                console.log (xhr.reponseText);
+            }
+            
+        }
+        
+    }
+    
+    xhr.open ('POST','/exemples/ajax/exemple1/traitement/master/page');
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send ("nom=" + inputNom.value);
+    
+});    
+</script>
+
+{% endblock %}
+
+```
+Notez que dans le code Ajax on doit réaliser l'opération pertinente
+avec les données reçues du serveur (ex : afficher dans un div)
+
+4.  Créez l'action qui affiche la vue qu'on vient de créer
+
+```php
+// exemple d'utilisation d'AJAX avec de blocs ("master page")
+#[Route("/exemples/ajax/exemple1/affichage/master/page")]
+public function exemple1AffichageMasterPage()
+{
+    return $this->render("/exemples_ajax/exemple1_affichage_master_page.html.twig");
+}
+```
+
+5.  Créez l'action qui traite la requête AJAX
+
+Dans cette action, renvoyez votre réponse JSON. Pour ce faire, au lieu d'envoyer un objet Response ou le rendu d'une vue, vous allez utiliser un objet JSonResponse. Par exemple :
+
+```php
+#[Route("/exemples/ajax/exemple1/traitement/master/page")]
+// action qui traite la commande AJAX, elle n'a pas une vue associée
+public function exemple1TraitementMasterPage(Request $requeteAjax)
+{
+    $valeurNom = $requeteAjax->get('nom');
+    $arrayReponse = ['message' => 'Bienvenu, ' . $valeurNom];
+    return new JsonResponse($arrayReponse);
+}
+```
+
+
+Pour finir, sachez que les fichiers .**js** et .**css** sont considérés comme des "assets" en Symfony. Pour pouvoir en rajouter dans notre projet vous devez créer les dossiers **public/assets/js** et **public/assets/css** respectivement et y placer vos fichiers. Dans vos vues, inclure les fichiers est simple :
+
+```twig
+<script src={{ asset('/assets/js/monFichier.js')} }"></script>
+
+<link rel="stylesheet" href="{{ asset('/assets/css/monCss.css') }}" />
+```
+
+Vous avez des exemples dans le projet **projetFormulaires (controller
+ExemplesAjaxController)**
+
+#### Exercices : utilisation d'AJAX Vanilla
+
+1. Faites un jeu de deviner un chiffre en utilisant Ajax en Symfony (utilisez le controller AjaxExemples)
+
+2. Créez une autre master page et deux vues qui en héritent. La première contient le jeu que vous venez de réaliser et la deuxième contient trois boutons. Chaque bouton affiche la photo d'un animal sans recharger la page.
+
+<br>
+
+# 22. Response JSON en Symfony
+
+## 22.1. Renvoi JSON d'un array d'objets obtenu avec les méthodes d'un repo  
+
+On montre ici comment renvoyer un array d'objets sous la forme de JSON depuis une acion du controller. Les objets proviennent d'une requête à la BD en utilisant les méthodes de base du repo.
+
+La séquence peut être résumée en : 
+
+**obtenir avec find (ou autre) -> serialize -> renvoyer un objet Response contenant du JSON**
+
+**Exemple** : obtenir une liste d'aeroports et les afficher dans un div dans la vue
+
+**Code commenté :**
+
+-   **Projet** projetFormulaires
+
+-   **Controller** ExemplesAjaxAxiosController, actions :
+
+    -   exempleAffichageObjetsRepo
+
+    -   exempleAffichageObjetsTraitementRepo
+
+-   **Vue** exemple_affichage_objets_repo.html.twig
+
+
+<br>
+
+
+## 22.2. Renvoi JSON d'un array d'objets obtenu avec DQL
+
+
+La séquence peut être résumée en : 
+
+**obtenir avec find (ou autre) -> getArrayResult -> renvoyer un objet JsonResponse**
+
+**Exemple** : obtenir une liste d'aeroports et les afficher dans un div
+
+**Code :**
+
+-   **Projet** projetFormulaires
+
+-   **Controller** ExemplesAjaxAxiosController, actions
+
+    -   exempleAffichageObjetsDql
+
+    -   exempleAffichageObjetsTraitementDql
+
+-   **Vue** exemple_affichage_objets_dql.html.twig
+
+<br>
+
+# till here
+
+
+# 23. Authentification : inscription et login/password
+
+**Objectif** : créer un système d'authentification 
+
+Créez un projet **ProjetLoginPass**. Ce projet contiendra :
+
+1.  Un formulaire de login/password traditionnel
+
+2.  Un formulaire d'inscription pour rajouter des utilisateurs dans la
+    BD
+
+**Important :** Si vous avez une ancienne version de XAMPP assurez-vous d'avoir au moins la version 10.2 de MariaDB. Pour mettre à jour votre version de MariaDB pour xampp suivez les instructions qui se trouvent
+ici **dans sa totalité** :
+
+<https://stackoverflow.com/questions/44027926/update-xampp-from-maria-db-10-1-to-10-2>
+
+
+# 23.1. Configuration de la sécurité et création d'un formulaire de login
+------------------------------------------------------------------
+
+> On va réaliser une configuration de base de la sécurité pour pouvoir
+> créer un formulaire d'inscription/login standard. Pour des options
+> plus avancés (ex : changez d'utilisateur sans devoir se déconnecter
+> de l'application) consultez la documentation ici :
+>
+> <https://symfony.com/doc/current/security.html>
+>
+> <https://symfony.com/doc/current/security/form_login_setup.html>
+>
+> La procédure à suivre devra :
+
+1.  **Installer le support de sécurité dans le projet**
+
+2.  **Créer** **une** **entité** **User** avec l'assistant
+
+3.  **Créer** (avec l'assistant)
+
+    -   Un **controller** pour le **login** et **le logout**
+
+    -   Un **template pour afficher le formulaire** de login
+
+    -   Un **Guard Authenticator**, **classe** qui **traite les
+        informations** du formulaire de login
+
+4.  Configurez la BD dans **.env**, créez le **schéma** de la BD, créez
+    et lancez une **migration**
+
+5.  **Encoder des utilisateurs et de passwords dans la BD**
+
+6.  **Vérifier** le bon fonctionnement en tapant un couple login/pass
+    valable
+
+> Réalisez la procédure en détail :
+
+1.  **Installer le support de sécurité dans le projet**
+
+composer require symfony/security-bundle
+
+2.  **Créer** **une** **entité** **User** avec l'assistant avec
+    **make:user** (pas make:entity!)
+
+php bin/console make:user
+
+Cette commande crée l'entité, qui **doit** implémenter l'interface
+[UserInterface](https://github.com/symfony/symfony/blob/4.2/src/Symfony/Component/Security/Core/User/UserInterface.php)
+
+> (Faites la migration pour que la BD soit mise à jour!)
+>
+> L'assistant vous demandera :
+
+-   Le nom de la classe (on choisira User)
+
+-   Si vous voulez stocker de données dans la BD avec Doctrine (oui!)
+
+-   La propriété qu'on utilisera pour réaliser le login (on choisira
+    email)
+
+-   Si on souhaite hasher les passwords (oui!)
+
+> Ouvrez **src/Entity/User.php** et regardez le code. **Vous pouvez par
+> après rajouter d'autres propriétés ou méthodes si vous le souhaitez
+> (make:entity)**
+>
+> L'assistant aura modifié aussi le fichier **security.yaml** (dans
+> **config/packages**) selon les informations qu'on vient de fournir.
+>
+> Note : c'est très important de respecter l'indentation dans les
+> fichiers .yaml 
+
+3.  **Créer le controller, le template et un Guard Authenticator (avec
+    l'assistant)** :
+
+    -   Un **controller** pour le **login** et **une** **route**
+
+    -   Un **template pour afficher le formulaire** de login
+
+    -   Un **Guard Authenticator**, **classe** qui **traite les
+        informations** du formulaire de login
+
+Ces trois pas se font **avec une seule commande de l'assistant** :
+
+> php bin/console make:auth
+
+Pour les questions posées par l'assistant on choisira :
+
+-   **L'option** **1** pour que Symfony crée un formulaire de login de
+    base et pas seulement le système d'authentification vide
+
+-   **FormulaireLoginAuthenticator** comme nomme de la classe Guard
+    Authenticator qui prendra en charge la requête à la BD pour réaliser
+    **l'authentification** (crée dans le dossier **src/Security**)
+
+-   **SecuriteController** comme nom du controller (actions login et
+    logout)
+
+-   **Oui**, car on veut que Symfony crée aussi l'URL de logout (avec
+    l'action qui deloggera l'user, c.à.d. l'effacer de la session)
+
+> Cette action met aussi à jour le fichier de configuration
+> config/packages/**security.yaml**.
+>
+> Observez que le controller et le template ont été créés. Vous pouvez
+> accéder à la vue contenant le formulaire de login en tapant la route
+> de l'action **login** du controller.
+
+4.  Configurez la BD dans **.env** (projetloginpass), créez le
+    **schéma** de la BD, créez et lancez une **migration**
+
+> php bin/console doctrine:database:create
+>
+> php bin/console make:migration
+>
+> php bin/console doctrine:migrations:migrate
+
+5.  **Encoder des utilisateurs et de passwords dans la BD**
+
+Créez une fixture pour la classe User (voir chapitre précédant sur le
+Doctrine Fixtures).
+
+> composer require --dev doctrine/doctrine-fixtures-bundle
+>
+> php bin/console make:fixture
+
+La fixture portera le nom **UserFixtures**. Attention au nom car si on
+se trompe il n'y aura pas un message d'erreur.
+
+Cette méthode est plus facile qu'encoder les utilisateurs à la main,
+**car le password doit être hashé**
+
+Doc: <https://symfony.com/doc/current/security.html> (2c)
+
+> Dans ce cas, la fonction **load** devra créer un utilisateur, fixer
+> ses attributs et le stocker dans la BD. Nous devons utiliser un
+> service pour encoder le password avant d'appeler à setPassword. Le
+> service est injecté dans le constructeur de la classe (dependency
+> injection par le constructeur !!).
+>
+> Voici un code possible pour la Fixture **UserFixtures.php** :
+
+namespace AppDataFixtures;
+
+use DoctrineBundleFixturesBundleFixture;
+
+use DoctrineCommonPersistenceObjectManager;
+
+use AppEntityUser;
+
+use
+SymfonyComponentSecurityCoreEncoderUserPasswordEncoderInterface;
+
+class UserFixtures extends Fixture
+
+{
+
+**private** $passwordEncoder;
+
+public function **__construct**(UserPasswordEncoderInterface
+$passwordEncoder)
+
+{
+
+$this->passwordEncoder = $passwordEncoder;
+
+}
+
+public function load(ObjectManager $manager)
+
+{
+
+**for** ($i = 0; $i < 10 ; $i++){
+
+$user = new User();
+
+$user->setEmail ("user".$i."@lala.com");
+
+$user->setPassword($this->passwordEncoder->encodePassword(
+
+$user,
+
+'lePassword'.$i
+
+));
+
+$manager->persist ($user);
+
+}
+
+$manager->**flush**();
+
+}
+
+}
+
+**Important :** si votre entité a d'autres attributs (nom, adresse,
+etc...) il faudra rajouter les sets qui correspondent
+
+N'oubliez pas de lancer la fixture avec :
+
+> php bin/console doctrine:fixtures:load
+
+**Note** : Symfony nous indique qu'il effacera la BD (purge). Choisissez
+**oui**.
+
+Si vous avez besoin à un moment donné d'obtenir le hash d'un password
+depuis la console, tapez :
+
+> php bin/console security:encode-password
+
+et puis tapez le password. Vous pouvez par après le copier-coller dans
+la table (colonne password)
+
+Dans **phpmyadmin** votre tableau **User** ressemblera à :
+
+![](media/image34.png){width="5.537878390201225in"
+height="2.877382983377078in"}
+
+6.  **Vérifier** le bon fonctionnement en tapant un couple login/pass
+    valable
+
+> Allez sur la page de login (par défaut l'action login dans
+> SecuriteController) et tapez un couple login/pass valable. Si tout va
+> bien vous allez obtenir une Exception car **dans votre controller
+> Authenticator** (**FormulaireLoginAuthenticator** dans le dossier
+> **src/Security**) vous n'avez pas spécifié une Response pour le
+> serveur (méthode **onAuthenticationSuccess** de ce controller)
+
+![](media/image35.png){width="6.383333333333334in"
+height="0.8993055555555556in"}
+
+> Vous avez juste à implémenter cette action pour indiquer quoi faire
+> dans le cas de succès. Voici un exemple :
+
+public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+
+{
+
+    if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+
+        return new RedirectResponse($targetPath);
+
+    }
+
+    // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
+
+    
+
+    // nous devons charger une vue ou faire quoi qui ce soit
+
+    // ex:
+
+    // on peut penser à  : return $this->redirectToRoute ('accueil'); // mais cette classe n'a pas la méthode car 
+
+    // elle n'est pas un controller! On utilise alors :
+
+    return new RedirectResponse($this->urlGenerator->generate('accueil'));
+
+    // throw new Exception('TODO: provide a valid redirect inside '.__FILE__);
+
+}
+
+> Dans le cas de succès, le code qui reste de l'action **login** ne
+> sera pas lancé car on a fait un redirect. Ici vers une action qui
+> porte le nom 'accueil', mais c'est à vous de choisir. Pour
+> l'exemple, créez le controller AccueilController avec l'assistant et
+> une vue contenant un message de bienvenue.
+>
+> Si une erreur de login s'est produite, **nous avons deux
+> possibilités** pour le traiter :
+
+a)  **Utiliser le template login crée par Symfony et l'adapter à nos
+    besoins (par défaut)**
+
+> Dans cet exemple, si le couple login/pass n'est pas correcte
+> l'action **onAuthenticationSuccess** ne sera pas lancé. Symfony
+> essayera de lancer l'action **onAuthenticationFailure** mais elle
+> n'existe pas. Le code de l'action login continuera et la variable
+> **error** contiendra l'info de l'erreur de login.
+>
+> La vue sera rechargée et affichera (voir if) un div contenant le
+> message de l'erreur qui s'est produite (ex: mail inexistant, invalid
+> credentials si le password n'est pas correcte...).
+>
+> Dans la vue on peut choisir par nous-mêmes quoi faire s'il y a une
+> erreur, il suffit de vérifier la valeur de cette variable et agir
+> conséquemment (afficher un message d'erreur, rediriger vers un autre
+> site etc...). On peut aussi juste établir une traduction pour les
+> messages d'erreur de base de Symfony, car par défaut ils seront en
+> anglais !
+>
+> À chaque essai de login c'est conseillé de lancer l'action
+> **logout** pour effacer le contenu de la session. On parlera du logout
+> plus bas.
+
+b)  Définir **onAuthenticationFailure** dans
+    **FormulaireLoginAuthenticator.php**
+
+> Cette action sera lancée quand il y aura une erreur de login, de la
+> même manière que **onAuthenticationSuccess** est lancée dans le cas de
+> succès. Elle est commentée dans le code, effacez les commentaires pour
+> que Symfony la trouve. Le comportement expliqué dans a) sera
+> logiquement annulé car le code de la vue ne sera plus lancé.
+
+//   methode faite par nous-mêmes. Enlevez les commentaires pour voir l'effet
+
+public function onAuthenticationFailure(
+
+SymfonyComponentHttpFoundationRequest $request, 
+
+SymfonyComponentSecurityCoreExceptionAuthenticationException $exception)
+
+{
+
+    throw new Exception ("error dans le login, c'est onAuthenticationFailure dans FormulaireLoginAuthenticator qui s'en occupe"); // rediriger, exception etc...
+
+}
+
+    
+
+(En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur
+--------------------------------------------------------------------------------------
+
+1.  Changer la variable **locale** de **en** à **fr** dans
+    **config/services.yaml**
+
+2.  Créez un fichier contenant les traductions des messages selon le
+    **locale** (voir **translations/security.fr.xlf** dans
+    **projetLoginPass**)
+
+> Maintenant, à chaque fois qu'un service de Symfony renvoie un message
+> il lira le fichier de traductions. Nous avons qu'à rajouter la
+> traduction de chaque message en francáis.
+>
+> Le service de traduction mérite d'une section à part qu'on ne
+> traitera pas dans ce tuto.
+>
+> <https://symfony.com/doc/current/translation.html> (voir la section
+> **Basic Translation**).
+
+Création d'un formulaire d'inscription
+----------------------------------------
+
+> Vous pouvez créer un formulaire d'inscription automatiquement et le
+> personnaliser après en suivant les instructions de cette documentation
+> :
+>
+> <https://symfony.com/doc/current/doctrine/registration_form.html>
+>
+> Si vous n'avez pas réalisé les opérations du chapitre précédente,
+> suivez au moins les pas 1,2,3 pour configurer la sécurité dans
+> Symfony, créer l'entité User et le Guard Authenticator.
+>
+> Voici la continuation de la procédure, qui créera un formulaire
+> d'inscription :
+
+Lancez, dans la console :
+
+> php bin/console make:registration-form
+>
+> Choisissez si vous voulez qu'on ne puisse pas avoir de doublons dans
+> les Users et si vous voulez que les utilisateurs soient logés
+> directement après l'inscription (comme dans la plupart de sites)
+>
+> L'assistant créera :
+
+-   Une classe formulaire (**RegistrationFormType**)
+
+-   Un controller qui crée l'objet formulaire et le renvoie à la vue
+
+-   Un template qui affiche le formulaire
+
+> A ce stade de la formation vous savez comment éditer le formulaire
+> pour l'adapter à vos besoins.
+>
+> **Important :** si vous modifiez l'entité User pour, par exemple,
+> rajouter une propriété **nom,** et vous voulez **générer à nouveau le
+> formulaire d'inscription**, **effacez** d'abord le formulaire
+> RegistrationFormType.php, le controller RegistrationController.php et
+> le template register.html.twig.
+
+Logout
+======
+
+Les outils de sécurité de Symfony nous permettent d'implémenter le
+logout très facilement :
+
+1)  Rajoutez dans **config/packages/security.yaml** une section qui
+    **indique le path à saisir dans l'URL** **quand on veut réaliser un
+    logout (pas un name)** et **la route (pas un name) de l'action qui
+    sera lancée après avoir fait le logout** (route complete, pas le
+    name !). "Faire le logout" est, en gros, effacer l'objet User de
+    la session. Symfony s'en chargera de le faire sans votre
+    intervention
+
+> **main**:
+
+anonymous: **true**
+
+guard:
+
+authenticators:
+
+- AppSecurityFormulaireLoginAuthenticator
+
+**logout:**
+
+**path: /logout**
+
+**target: /apres/logout**
+
+**Important : Respectez l'indentation dans les fichiers .yaml. Elle est
+faite avec des espaces!**
+
+On doit avoir une action
+
+2)  Laissez vide l'action de logout (elle ne sera jamais lancée) et
+    créez l'action à lancer après d'avoir fini le traitement du logout
+    (effacer user, session etc...)
+
+"ProjetLoginPass" contient cette fonctionnalité. L'action cible se
+trouve dans **SecuriteController**.
+
+    // La route "logout" sera utilisé par security.yaml
+
+    // Le name "logout" será utilisé dans le path de la vue (le lien de logout)
+
+    // le code de cette action ne se lancera jamais
+
+    /**
+
+     * @Route("**/logout**", name="logout")
+
+     */
+
+    public function logout()
+
+    {
+
+        // ce code ne se lance jamais, cette action peut être vide
+
+    }
+
+    // target: la route à lancer APRÈS le logout 
+
+    /**
+
+     * @Route("**/apres/logout**"**)**
+
+     */
+
+    public function apresLogout()
+
+    {
+
+        dd("Hasta la vista, baby");
+
+    }
+
+Accès à l'objet app.user
+=========================
+
+Une fois l'utilisateur est logué vous pouvez obtenir son objet **User**
+associé :
+
+1.  Dans le controller
+
+$this->getUser()
+
+2.  Dans la vue
+
+app.user
+
+Les deux méthodes renvoient l'objet User représentant l'utilisateur
+qui es connecté ou **null** si personne n'a fait login.
+
+L'objet User contient **toutes les propriétés et on peut les accéder en
+utilisant les gets et sets**.
+
+Par exemple :
+
+{{ dump (app.user) }}
+
+Ces deux instructions donnent les même résultat car app.user.username
+est juste un raccourci de Symfony pour user.getUsername()
+
+{{ dump (app.user.getUsername()) }}
+
+{{ dump (app.user.username) }}
+
+Des actions d'exemple se trouvent dans le projet "ProjetLoginPass",
+controller SecurityController
+
+Authentication et Rôles 
+========================
+
+Gestion de rôles
+----------------
+
+> Nous allons traiter la gestion de rôles en Symfony et on va utiliser
+> comme base le projet qu'on vient de créer, **ProjetLoginPass**. Nous
+> voulons profiter de toute la partie d'authentification qui reste la
+> même et qu'on ne veut pas refaire.
+
+a.  Clonez le projet **ProjetLoginPass** de github dans un dossier
+    **ProjetLoginPassRoles** avec cette ligne :
+
+> git clone https://github.com/choquitofrito/ProjetLoginPass.git
+> ProjetLoginPassRoles
+>
+> composer install
+
+b.  Effacez les migrations (dans le dossier Migrations, elles
+    correspondent à l'autre projet), modifiez votre fichier **.env**
+    pour pointer vers une autre base de données
+    **projetloginpassroles.**
+
+c.  Juste pour enrichir le projet et montrer que c'est faisable,
+    rajouter une propriété **nom** à l'entité User
+
+> php bin/console make:entity User
+
+d.  Rajoutez un champ **TextType** (importez-le!) au formulaire et
+    effacez la section "agree terms" dans
+    **FormRegistrationFormType.php** pour pouvoir saisir le nom aussi
+    dans le form d'inscription
+
+    ...
+
+> ->add('email')
+
+            **->add ('nom', TextType::class)**
+
+**            **->add('plainPassword', PasswordType::class, [
+
+      
+
+...
+
+e.  Editez le formulaire d'inscription (vue
+    **registration/registration.html.twig**)
+
+    Rajoutez la génération du champ du formulaire **nom**
+
+> {{ form_row(registrationForm.nom) }}
+
+Et effacez la génération du champ **agreeTerms**
+
+Vous pouvez tester ce formulaire. Il manque uniquement la fonctionnalité
+de rajouter de rôles mais on ne fera pas ça ici. Vous pouvez toujours
+éditer les rôles plus tard à la main ou en utilisant la méthode
+**setRoles** de l'entité!
+
+f.  Créez la BD même manière que dans le projet précèdent
+
+> php bin/console doctrine:database:create
+>
+> php bin/console make:migration
+>
+> php bin/console doctrine:migrations:migrate
+
+g.  Remplacez la fixture par celle-ci, qui rajoute des Users avec de
+    rôles (comprenez le code!)
+
+class UserFixtures extends Fixture
+
+{
+
+    
+
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+
+    {
+
+         $this->passwordEncoder = $passwordEncoder;
+
+    }
+
+    
+
+    public function load(ObjectManager $manager)
+
+    {
+
+        // on va créer 5 admins et 5 clients+gestionnaires
+
+        for ($i = 0; $i < 5 ; $i++){
+
+            $user = new User();
+
+            $user->setEmail 
+
+("newuser".$i."@lala.com"); // user1@lala.com, user2@lala.com etc....
+
+            $user->setPassword
+
+($this->passwordEncoder->encodePassword(
+
+                 $user,
+
+                 'lePassword'.$i // lepassword1, lepassword2, etc...
+
+             ));
+
+            $user->setNom("nom".$i);
+
+            $user->setRoles(['ROLE_ADMIN']);
+
+            $manager->persist ($user);
+
+        }
+
+        for ($i = 0; $i < 5 ; $i++){
+
+            $user = new User();
+
+            $user->
+
+setEmail ("autreuser".$i."@lala.com"); // user1@lala.com, user2@lala.com etc....
+
+            $user->setPassword($this->passwordEncoder->encodePassword(
+
+                 $user,
+
+                 'lePassword'.$i // lepassword1, lepassword2, etc...
+
+             ));
+
+            $user->setNom("nom".$i);
+
+            $user->setRoles(['ROLE_CLIENT','ROLE_GESTIONNAIRE']);
+
+            $manager->persist ($user);
+
+        }
+
+        $manager->flush();
+
+    }
+
+}
+
+h.  Lancer les fixtures pour la remplir. Dans ce projet on crée
+    plusieurs types d'user (voir **DataFixtures/UserFixtures**). Selon
+    le système de rôles de Symfony, vous pouvez choisir vous-mêmes les
+    noms des rôles en sachant que le nom du rôle doit commencer par
+    **ROLE_** (ex: ROLE_CLIENT, ROLE_ADMIN, ROLE_PARTICIPANT...)
+
+> php bin/console doctrine:fixtures:load
+
+(pas --append car vous voulez carrément effacer le tableau User)
+
+> **Note** : Une autre option pour remplir les users (plus élaborée,
+> possible alternative à la fixture et qui n'est pas convenable ici)
+> est de créer un user ayant un rôle ROLE_SUPER_ADMIN qui puisse
+> accéder à la gestion de tous les utilisateurs en utilisant un
+> formulaire. Cet user aura accès à une route qui affiche un deuxième
+> formulaire d'inscription/modification permettant le
+> choix/modification du rôle des utilisateurs. Attention car la sécurité
+> de votre site peut être en jeu !
+
+Contrôle d'accès par rôles
+---------------------------
+
+> Puis vous pouvez restreindre l'accès à certains rôles de trois
+> manières :
+
+1.  dans **security.yaml**
+
+2.  dans un controller
+
+3.  dans une vue
+
+On va développer ici un exemple de chaque méthode
+
+### Dans security.yaml 
+
+On peut restreindre l'accès à de grandes sections de notre site (ex:
+partie admin) avec **le control d'accès dans**
+**config/packages/security.yaml.** C'est assez simple mais il faut
+connaitre un minimum les expressions régulières ou adapter les exemples
+ci-dessous à vos besoins
+
+<https://symfony.com/doc/current/security.html#security-authorization-access-control>
+
+1.  **Créez un controller** GestionController et ses vues
+    correspondantes. On utilisera ces actions pour vérifier le bon
+    fonctionnement des restrictions qu'on fera plus tard dans
+    security.yaml
+
+class GestionController extends AbstractController
+
+{
+
+    // ces routes sont accessibles uniquement pour certains roles
+
+    // car on l'a fixé dans security.yaml
+
+    /**
+
+     * @Route("/gestion/action1")
+
+     */
+
+    public function action1()
+
+    {
+
+        return $this->render('gestion/action1.html.twig');
+
+    }
+
+    /**
+
+     * @Route("/gestion/action2")
+
+     */
+
+    public function action2()
+
+    {
+
+        return $this->render('gestion/action2.html.twig');
+
+    }
+
+}
+
+(gestion/action1.html.twig, le code sera pareil pour action2. Le dump
+affiche les rôles)
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+Voici action 1
+
+{{ dump (app.user.getRoles())}}
+
+{% endblock %}
+
+2.  **Créez les restrictions dans security.yaml**
+
+    Les deux actions de ce controller doivent être uniquement par un
+    utilisateur ayant le role ROLE_GESTIONNAIRE. C'est dans
+    **security.yaml** qu'on a fixé cette restriction :
+
+access_control:
+
+        - { path: ^/gestion, roles: [ROLE_GESTIONNAIRE] }
+
+> Faites logout. Faites login avec un user de chaque type (regardez la
+> BD) et essayez de lancer les actions gestion/action1 et
+> gestion/action2 (depuis l'URL). Observez les résultats selon l'user
+> qui est connecté : seulement les users ayant le ROLE_GESTIONNAIRE
+> pourront lancer ces actions. Les autres obtiennent une exception
+> **Access Denied**
+
+### Dans le controller
+
+Si on ne veut pas créer de restrictions par routes, on peut tout
+simplement vérifier si l'utilisateur qui est connecté possède le rôle
+demandé à l'intérieur d'une action du controller.
+
+Ex: dans une action, permettre l'accès à l'action uniquement au role
+ROLE_CLIENT
+
+> $this->denyAccessUnlessGranted(["ROLE_CLIENT"]);
+
+Si l'user n'a aucun de ces rôles il y aura une exception.
+
+Créez le controller **AutreController** et ses vues, en rajoutant le
+code qui vérifie le rôle :
+
+/**
+
+     * @Route("/autre/action1")
+
+     */
+
+    public function action1()
+
+    {
+
+> // deux rôles peuvent avoir l'accès mais il y a un bug! 
+>
+> //
+> this->denyAccessUnlessGranted(['ROLE_CLIENT','ROLE_ADMIN']);
+
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+
+        return $this->render('autre/action1.html.twig');
+
+    }
+
+    /**
+
+     * @Route("/autre/action2")
+
+     */
+
+    public function action2()
+
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_GESTIONNAIRE');
+
+        // si pas d'exception...
+
+        return $this->render('autre/action2.html.twig');
+
+    }
+
+> Si l'utilisateur ne possède pas le rôle fixé dans l'action, **une
+> exception sera lancée.** Pour tester le bon fonctionnement faites
+> d'abord logout. Faites login avec un user de chaque type (regardez la
+> BD) et essayez de lancer les actions autre/action1 et autre/action2
+> (depuis l'URL). Observez les résultats selon l'user qui est
+> connecté.
+
+### Dans les vues
+
+Vous pouvez aussi vérifier les rôles dans les vues pour afficher/masquer
+le code de votre choix selon le rôle de l'utilisateur qui est connecté
+en utilisant **is_granted**.
+
+Créez une nouvelle action **action 3** qui ne limite pas par rôle :
+
+    /**
+
+     * @Route("/autre/action3")
+
+     */
+
+    public function action3()
+
+    {
+
+        // on va controller l'accès dans la vue
+
+        return $this->render('autre/action3.html.twig');
+
+    }
+
+Et controlez le rôle dans la vue :
+
+{% if is_granted('ROLE_ADMIN') %}
+
+    La vie de l'admin est dure
+
+    {# ex: <a href="{{ path ('effacer_user') }}">effacer</a> #}
+
+{% else %}
+
+    La vie est belle
+
+{% endif %}
+
+Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre
+---------------------------------------------------------------------------------
+
+Pour **personnaliser l'action à réaliser** en cas **d'erreur d'accès
+par rôle** vous devez utiliser une classe propre.
+
+1.  **Créer une classe** (ici c'est **Security/
+    GestionnaireErreurAcces.php**) **contenant une action où on fixera
+    l'action à réaliser**. Voici un exemple où, **dans le cas d'une
+    erreur d'accès**, on redirige vers login (notez que la redirection
+    se fait de manière différente quand on se trouve à l'extérieur du
+    controller)
+
+<?php 
+
+namespace AppSecurity;
+
+use SymfonyComponentHttpFoundationRequest;
+
+use SymfonyComponentHttpFoundationResponse;
+
+use SymfonyComponentHttpFoundationRedirectResponse;
+
+use SymfonyComponentRoutingGeneratorUrlGeneratorInterface;
+
+use SymfonyComponentSecurityCoreExceptionAccessDeniedException;
+
+use SymfonyComponentSecurityHttpAuthorizationAccessDeniedHandlerInterface;
+
+class GestionnaireErreurAcces implements AccessDeniedHandlerInterface
+
+{
+
+    private $router;
+
+    public function __construct (UrlGeneratorInterface $router){
+
+        $this->router = $router;
+
+    }
+
+    public function handle(Request $request, AccessDeniedException $accessDeniedException)
+
+    {
+
+        // choisissez la route vers laquelle y aller. Ici on a choisi app_login
+
+        return new RedirectResponse ($this->router->generate ("app_login")); 
+
+    }
+
+}
+
+2.  Rajouter la clé **access_denied_handler** dans **security.yaml**
+    qui pointe vers la classe qu'on vient de créer (indentation !!!)
+
+            logout:
+
+                path: /logout
+
+                target: /apres/logout 
+
+                # target est le name l'action qui 
+
+> # sera lancée après l'action logout
+
+            
+access_denied_handler: AppSecurityGestionnaireErreurAcces
+
+Fenêtre modale pour le login
+============================
+
+Description générale 
+---------------------
+
+Cette section explique plus en profondeur le comportement du système de
+login/pass qu'on peut créer automatiquement avec **make:auth**, ainsi
+que les bases pour modifier ce système en utilisant une **fenêtre modale
+et ajax**.
+
+On part du principe que vous avez déjà créé votre entité user et le
+système de login avec make:auth (voir les sections précédentes).
+
+L'action login créé par Symfony rend toujours la vue qui affiche le
+login ($this->render).
+
+Avec la configuration par défaut de Symfony, cette action sera lancée
+dans deux cas de figure :
+
+- **GET** : **quand on tape /login dans l'URL** du navigateur ou,
+normalement, quand on génère la route **avec un href**
+
+- **POST** : quand on fait **submit** dans un formulaire dont l'action
+pointe vers la route de cette action.
+
+Dans le code généré par Symfony pour le form de login **il n'y a pas
+d'attribut "action".** Ça implique que quand on clique sur le bouton
+de submit on chargera à nouveau la même route (dans ce cas ça sera
+/login). Plusieurs actions de la classe de notre Authenticator seront
+lancées **avant de lancer le code de cette action.**
+
+**En résumé** :
+
+1.  si on tape /login dans **l'URL**, l'action fait un rendu de la vue
+    login.html.twig. La vue envoie deux paramètres au controller : le
+    dernier utilisateur connecté avec succès et un message correspondant
+    à l'erreur qui s'est produite dans le dernier essai de connexion
+
+2.  si on fait **submit** et le **login est ok** on charge
+    **onAuthenticatioSuccess** et **puis le code de l'action login**,
+    **sauf** si à l'intérieur de la méthode onAuthenticatioSuccess on
+    redirige vers une autre action.
+
+**Note**: sachez que cette action sera aussi appelée si on crée un form
+d'enregistrement et on choisit d'être logué automatiquement après
+l'enregistrement
+
+3.  si on fait **submit** et le **login n'est pas ok** on charge
+    **onAuthenticationFailure**. Si cette action n'existe pas on charge
+    directement le code de l'action login, qui charge à son tour la vue
+    login. Pareil que dans onAuthenticationSuccess on peut rediriger,
+    lancer une exception ou quoi que ce soit. La différence est que
+    cette action est optionnelle, mais onAuthenticationSuccess est
+    obligatoire.
+
+Tel qu'on a déjà mentionné, dans le code généré par défaut par Symfony
+l'action login envoie toujours deux valeurs à la vue :
+
+1. **lastUsername** : contient le nom du dernier utilisateur qui s'est
+logué correctement
+
+2. **error** : objet qui contient des infos sur l'erreur qui s'est
+produit (email inexistant, crédentielles invalides...)
+
+Ces infos sont utilisées dans le template par défaut, mais bien
+évidemment vous pouvez les utiliser comment vous voulez.
+
+Adaptation à Ajax et fenêtre modale
+-----------------------------------
+
+Dans plein de cas on va vouloir utiliser une fenêtre modale pour le
+login (ou même pour d'autres actions). Considérons un cas pratique :
+
+1)  On est sur un site contenant une nav avec un lien
+    "login/inscription" à l'intérieur. On clique et on "ouvre la
+    fenêtre". Cette "fenêtre" est juste un div caché qui se trouve
+    quelque part dans la page (header.html.twig, par exemple). Dans ce
+    div on inclut la vue du formulaire de login
+
+2)  Quand on remplit le login on aura deux cas de figure possibles
+
+    a.  Login ok : on ferme le div et on est dans l'accueil. On modifie
+        quoi que ce soit dans la page pour montrer à l'utilisateur
+        qu'il s'est logué correctement (ex: icône dans la nav). On
+        peut aussi rediriger, mais on va devoir le faire avec JS
+        (explication plus tard)
+
+    b.  Login pas ok : on affiche un message d'erreur dans un div qui
+        était vide et qui se trouve dans le code du div de login (la
+        "fenêtre modale")
+
+Pour ce faire on a besoin d'AJAX. Pour nous faciliter la tâche on
+utilisera Axios. Voici l'ensemble d'actions pour créer un exemple de
+ce système.
+
+Le code final se trouve dans **ProjetLoginPassModal**, et
+l'authentification fait partie d'un projet existant.
+
+1)  Inclure la vue login.html.twig créé par Symfony dans le bon
+    emplacement (ici, dans le header.twig.html à l'emplacement
+    correspondant). Utilisez include (twig). On peut adapter le code
+    selon nos besoins. Logiquement on doit remplacer l'ancien contenu
+    du template.
+
+> <!-- include la vue du login  -->
+>
+> {% include "security/login.html.twig" %}
+>
+> <!-- <form>
+>
+>     <div class="form-group">
+
+.
+
+.
+
+(ce code ne nous sert plus à rien. Juste adaptez le css si vous avez
+besoin)
+
+2)  Dans la vue du login, **créer des id** un pour le bouton et un autre
+    pour le form car on va utiliser Ajax et on doit rajouter un
+    événement et créer un objet FormData
+
+<form id="formLogin">    // pas d'action ni de méthode, on utilise
+Axios
+
+.
+
+<button class="btn btn-lg btn-primary" type="submit" id="btnLogin">
+
+3)  Créer un **div** pour afficher les **messages d'erreur**
+
+<!-- pour afficher l'erreur -->
+
+<div id="divMessageErreur">
+
+<!-- vide par défaut -->
+
+</div>
+
+4)  **Importer axios et faire un appel ajax** à l'action login **en lui
+    envoyant le form**. La route est **(**"app_login"). Si vous
+    utilisez un fichier externe .js au lieu de twig vous allez devoir
+    utiliser le **FOSJsRoutingBundle**, mais ici on n'a pas besoin.
+
+    Notez qu'on a crée un block **customjs**. On est déjà dans un bloc
+    **content**, car la vue qui inclut le le header.html.twig
+    (index.html.twig) se trouve dans ce bloc déjà. Il n'y a pas de
+    problèmes si on imbrique les blocs. Bien sûr, cette structure est
+    juste un exemple.
+
+    Vous devez choisir quoi faire selon ce qu'on reçoit du controller.
+    Ici on affiche un message d'erreur ou on redirige (ici on peut!)
+    vers l'accueil :
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+
+   document.getElementById("btnLogin").addEventListener("click", function (event) {
+
+        event.preventDefault();
+
+        axios({
+
+            url: '{{ path ("app_login") }}',
+
+            method: 'POST',
+
+            headers: { 'Content-Type': 'multipart/form-data' },
+
+            data: new FormData(document.getElementById("formLogin"))
+
+        })
+
+        .then(function (response) {
+
+                // si erreur
+
+                if (response.data.error != undefined) {
+
+                    divMessageErreur.innerHTML = response.data.error;
+
+                }
+
+                // si pas d'erreur
+
+                else {
+
+                    console.log ('connexion ok login');
+
+                    window.location.href = "{{ path ('accueil') }}";
+
+                }
+
+                
+
+        })
+
+        .catch(function (error) {
+
+                console.log(error);
+
+        });
+
+    });    
+
+</script>
+
+**
+**
+
+5)  **Adapter l'action de login** (SecurityController dans le projet).
+    Cette action, dans notre cas, n'est jamais appelée dans l'URL
+
+    Si une erreur s'est produite, on envoie le lastUserName et
+    l'erreur pour que la vue le traite en js. S'il n'y a pas
+    d'erreur, on envoie uniquement le lastUserName. Notez qu'on **ne
+    peut pas rediriger vers une autre action ici car on doit renvoyer
+    une response JSON!! (on a appelé avec Axios) .** Si on essaie une
+    redirection, le rendu de la vue correspondante se trouvera dans la
+    reponse du serveur mais elle ne sera pas chargée dans le navigateur.
+
+/**
+
+ * @Route("/login/modal", name="app_login")
+
+ */
+
+public function login(AuthenticationUtils $authenticationUtils, Request $req): Response
+
+{
+
+    // get the login error if there is one
+
+    $error = $authenticationUtils->getLastAuthenticationError();
+
+    // last username entered by the user
+
+    $lastUsername = $authenticationUtils->getLastUsername();
+
+    $response = new JsonResponse(['lastUsername' => $lastUsername]); // cas de base : pas d'erreur 
+
+    // si erreur, on envoie le message. Il faut choisir le message qu'on affiche selon l'erreur
+
+    // ou tout simplement afficher login/pass incorrecte
+
+    if (!is_null($error)) {
+
+        $response = new JsonResponse([
+
+            'error' => 'Utilisateur ou mot de passe incorrectes', //$error->getMessage(), // autrement on envoie tout un objet!
+
+            'lastUsername' => $lastUsername
+
+        ]);
+
+    }
+
+    return $response; // on renvoie la reponse dans tous les cas. Elle sera traitée en JS
+
+}
+
+6)  Dans le Authenticator (FormulaireLoginAuthenticator), modifiez
+    l'action **onAuthenticationSuccess** pour qu'elle redirige vers
+    l'accueil. Dans le template de l'accueil vous pouvez incruster les
+    données de l'utilisateur là où vous voulez.
+
+public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+
+{
+
+    // if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+
+    //     return new RedirectResponse($targetPath);
+
+    // }
+
+    // redirigez vers login: là on fera reponse JSON qui nous convient.
+
+    // Contrairement à certaines docs, on ne peut pas renvoyer null ni éliminer la méthode
+
+    return new RedirectResponse($this->urlGenerator->generate('accueil'));
+
+    
+
+    
+
+    // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
+
+    // throw new Exception('TODO: provide a valid redirect inside '.__FILE__);
+
+}
+
+7)  Changer la nav ou le template de base pour afficher l'utilisateur
+    qui vient de se connecter
+
+    Ex. de base dans **header.html.twig** :
+
+{% if app.user.username is defined %}
+
+logged: {{ app.user.username }} 
+
+{% endif %} 
+
+Formulaire d'enregistrement
+----------------------------
+
+> **Le plus simple est de créer une action et une vue pour réaliser
+> l'enregistrement.** Mais si vous voulez le rendre modal aussi :
+>
+> Adaptez le formulaire d'enregistrement est plus simple car on peut
+> incruster l'action du **register** de **RegistrationController**
+> quelque part dans le template. Si l'enregistrement fonctionne, on
+> sera logués et dans l'accueil. Autrement un message d'erreur sera
+> affiché. Il faut faire attention de rajouter l'action dans la vue
+> register.html.twig car il n'a pas d'action par défaut (même
+> situation que dans le formulaire de login dans les sections
+> précédentes).
+>
+> **Il faudra quand-même adapter l'action car, en cas d'erreur,
+> l'action d'enregistrement recharge la vue !** (il faudra le
+> remplacer par ajax etc...)
+
+Envoi du mail (Swift Mailer)
+============================
+
+> Doc: <https://symfony.com/doc/current/email.html>
+>
+> Doc sur Gmail et cloud:
+> <https://symfony.com/doc/current/email.html#email-using-gmail>
+
+Par défaut, Symfony utilise le module Swift Mailer pour envoyer des
+mails (**projetFormulaires**).
+
+**Exemple** : envoi d'un mail en utilisant Swift Mailer :
+
+1)  Rajoutez **Swift** **Mailer** à votre projet
+
+composer require symfony/swiftmailer-bundle
+
+2)  Le fichier **packages/swiftmailer.yaml** sera mis à jour mais on
+    doit configurer les détails de la connexion dans le fichier **.env**
+
+    Le format de la connexion le plus habituel est :
+
+MAILER_URL=smtp://localhost:25?encryption=ssl&auth_mode=login&username=&password=
+
+Si vous ne disposez pas d'un serveur mail et vous voulez envoyer des
+emails en utilisant Gmail, Symfony permet de le faire en utilisant ce
+format :
+
+**MAILER_URL=gmail://user:password@localhost**
+
+Exemple :
+
+MAILER_URL=gmail://developinterface3:Gaucheret3!@localhost
+
+**Note** : le mot **gmail** n'est pas un protocole en soi. C'est juste
+un raccourci pour que Swift Mailer utilise le protocole smtp,
+sécurisation ssl, login comme méthode d'authentification et le serveur
+smtp.gmail.com
+
+3)  Créez un **controller** contenant une action qui envoie le mail et
+    les vues :
+
+    **contenu_mail.html.twig** : le contenu du mail en soi
+
+    **envoyer_mail.html.twig** : la vue à rendre par l'action (style
+    "mail envoyé" ou autre)
+
+class MailController extends AbstractController
+
+{
+
+#[Route("/mail/envoyer/mail", name="envoyer_mail")]
+
+public function envoyerMail(Swift_Mailer $mailer)
+
+{
+
+$message = (new Swift_Message ('Hello mail'))
+
+->setFrom ('developinterface3@gmail.com')
+
+->setTo ('developinterface3@gmail.com')
+
+->setBody (
+
+$this->renderView (
+
+'mail/contenu_mail.html.twig'
+
+),
+
+'text/html'
+
+);
+
+$mailer->send($message);
+
+return $this->render('mail/envoyer_mail.html.twig');
+
+}
+
+}
+
+4)  
+
+Pagination
+==========
+
+Exemple pratique : projet **ProjetPaginatorNoWebpack**
+
+1.  Installez le module KpnPaginatorBundle
+
+<https://github.com/KnpLabs/KnpPaginatorBundle>
+
+composer require knplabs/knp-paginator-bundle
+
+2.  Copiez le fichier de configuration **kpn_paginator.yaml** dans
+    **config/packages**. En principe utilisez la configuration par
+    défaut
+
+knp_paginator:
+
+    page_range: 5                       # number of links showed in the pagination menu (e.g: you have 10 pages, a page_range of 3, on the 5th page you'll see links to page 4, 5, 6)
+
+    default_options:
+
+        page_name: page                 # page query parameter name
+
+        sort_field_name: sort           # sort field query parameter name
+
+        sort_direction_name: direction  # sort direction query parameter name
+
+        distinct: true                  # ensure distinct results, useful when ORM queries are using GROUP BY statements
+
+        filter_field_name: filterField  # filter field query parameter name
+
+        filter_value_name: filterValue  # filter value query parameter name
+
+    template:
+
+        pagination: '@KnpPaginator/Pagination/sliding.html.twig'     # sliding pagination controls template
+
+        sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # sort link template
+
+        filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template
+
+3.  Dans une action de votre controller, récupérez une instance du
+    paginator (service). Voici un exemple commenté de son utilisation
+
+class ExemplePaginationController extends AbstractController
+
+{
+
+    /**
+
+     * @Route("/exemple/pagination", name="exemple_pagination")
+
+     */
+
+    public function index(PaginatorInterface $paginator, Request $request)
+
+    {
+
+        $livres = $this->getDoctrine()->getRepository(Livre::class)->findAll();
+
+        
+
+        // Cette méthode est plus rapide que findAll
+
+        // $livres = $this->getDoctrine()->getRepository(Livre::class)->createQueryBuilder('l')->getQuery();
+
+        $numeroPage = $request->query->getInt('page', 1); // 1 par défaut, s'il n'y a pas de page dans l'URL
+
+        $paginationLivres = $paginator->paginate(
+
+            $livres,
+
+            $numeroPage,
+
+            5 // résultats affichés par page
+
+        );
+
+        return $this->render(
+
+            'exemple_pagination/index.html.twig',
+
+            ['paginationLivres' => $paginationLivres]
+
+        );
+
+    }
+
+}
+
+4.  Voici la vue correspondante :
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ExemplePaginationController!{% endblock %}
+
+{% block stylesheets %}
+
+<link href="{{ asset ('/assets/css/bootstrap.min.css') }}" rel="stylesheet">
+
+{% endblock %}
+
+{% block body %}
+
+{% for livre in paginationLivres %}
+
+<div class="">
+
+    {{ livre.titre }}<br>
+
+    {{ livre.description }}
+
+</div>
+
+{% endfor %}
+
+{# inclusion de la pagination  #}
+
+<div class="paginationLivres">
+
+    {{ knp_pagination_render (paginationLivres) }}
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="module" src="{{ asset ('/assets/js/main.js') }}"></script>
+
+{% endblock %}
+
+JS et CSS avec Webpack encore
+=============================
+
+Si vous voulez utiliser du JS et CSS vous pourriez juste créer un
+dossier dans public et inclure vos fichiers .**js** et .**css**,
+mais la bonne pratique consiste à utiliser **Webpack**. Symfony possède
+l'extension **Webpack Encore**, qui facilite énormément l'installation
+et utilisation de Webpack.
+
+On va procéder à installer Webpack dans un projet vide et réaliser
+quelques exemples. Créez un projet **ExemplesWebpack** et un controller
+**MainController** (le projet complet est disponible dans GitHub)
+
+Le but de Webpack est de **centraliser la charge de tout notre code JS
+et CSS dans un seul** (ou éventuellement plusieurs si on le souhaite)
+**fichier .js**. Webpack permet en plus de compiler, minimiser et
+découper en morceaux notre code pour optimiser le chargement dans
+l'application.
+
+Nous allons installer, configurer et utiliser Webpack Encore.
+
+Installation de Webpack Encore et de node_modules
+--------------------------------------------------
+
+1.  **Installez Webpack Encore dans votre projet**
+
+> **composer require encore**
+
+-   Installe et habilite le module **WebpackEncoreBundle**
+
+-   Crée le dossier **assets** (à ne pas confondre avec un possible
+    dossier **/public/assets** qu'on aurait pu créer avant d'utiliser
+    Webpack Encore
+
+-   Créer les fichier **assets/js/app.js** qui centralise la charge de
+    tout le code **js** et **css**
+
+-   Crée un fichier** webpack.config.js **dans /config/packages qui
+    contient la configuration du module
+
+2.  **Installez les dépendances JS de Webpack Encore**
+
+> **yarn install**
+>
+> Cette ligne crée le dossier **node_modules** et le rajoute au
+> ./gitignore
+
+Configurer Webpack Encore
+-------------------------
+
+Ouvrez le fichier **webpack.config.js **pour configurer Encore. Vous
+pouvez personnaliser Encore selon vos besoins :
+
+.**setOutputPath** : emplacement des fichiers compilés
+
+.**setPublicPath** : le chemin utilisé par le serveur (ex: dans le code
+des vues) pour accéder l'OutputPath
+
+.**addEntry** **('app','./assets/js/app.js')** : on aura un
+**entry** pour chaque fichier .js qui regroupe un ensemble de code. Ici
+on a crée un entry portant le nom "app" qui pointe vers un fichier
+app.js
+
+Ouvrez le fichier **app.js** et observez qu'on importe le **.css**!
+(Concrètement on importe le fichier
+
+**assets/css/app.css**)
+
+Lancer Webpack 
+---------------
+
+Pour compiler les assets une seule fois :
+
+**yarn encore dev**
+
+Pour lancer un daemon qui recompilera à chaque fois qu'on change le .js
+ou le .css :
+
+**yarn encore dev --watch**
+
+Pour créer la version de production :
+
+**yarn encore production**
+
+Encore compilera le code JS et CSS dans dossier **public/build** qui
+contiendra un nouveau
+fichier** app.js** et un **app.css** qui rassembleront tout le contenu JS et CSS
+(ainsi que les fichiers **manifest.json**,** entrypoints.json**,** runtime.js**).
+
+Si on a crée plusieurs entries on aura plusieurs fichiers.
+
+Utiliser le code dans les vues
+------------------------------
+
+Pour faciliter l'utilisation de Webpack dans les templates on a des fonctions **Helper.**
+Vous pouvez inclure ces appels dans vos blocs javascripts et css dans
+les vues.
+
+Pour css : {{ encore_entry_link_tags ('app') }}
+
+Pour js : {{ encore_entry_script_tags ('app') }}
+
+La reference 'app' est configurée dans le fichier **entrypoints.json,
+qui a été crée à partir de votre fichier webpack.config.js**. Vous
+pouvez utiliser un autre nom et, tel qu'on a déjà mentionné, avoir
+plusieurs **entries** ('app', 'autre', 'main'...)
+
+Encore et Bootstrap
+===================
+
+**Note:** la procédure qui suit à été utilisez pour inclure bootstrap
+dans le projet **ProjetPaginatorWebpack**
+
+**Installez bootstrap :**
+
+yarn add bootstrap --dev
+
+Quand on inclut Bootstrap avec une balise SCRIPT, le code attend que jQuery soit une variable global.
+On change le app.js pour importer bootstrap, qui se trouve dans
+node_modules :
+
+**import $ from 'jquery';**
+
+**import 'bootstrap';**
+
+Bootstrap a besoin de  **popper.js** :
+
+Installez le avec npm :
+
+npm install --save popper.js
+
+Rajoutez-le aux modules avec :
+
+yarn add popper --dev
+
+Pour utiliser le css de bootstrap on doit d'abord l'importer :
+
+**@import '~bootstrap/dist/css/bootstrap.css';**
+
+**dans le fichier app.css**
+
+Le tilde est necessaire pour referencer un fichier qui se trouve dans le
+dossier node_modules.
+
+Si vous voulez utiliser le js de boostrap, vous devez inclure :
+
+// pour pouvoir utiliser jQuery et le JS de Bootstrap
+
+import $ from 'jquery';
+
+import 'bootstrap'; 
+
+**dans** **app.js**. Pour les fonts :
+
+yarn add font-awesome ---dev
+
+Si vous allez utiliser jQuery, vous devez l'installer aussi :
+
+yarn add jQuery --dev
+
+Intégration de boutons de paiement Paypal
+=========================================
+
+Si vous voulez utiliser Paypal dans une application en production vous
+devez comprendre complètement le système de paiements et savoir très
+bien ce que vous faites :).
+
+La façon la plus simple d'intégrer Paypal dans votre site est
+d'utiliser les Smart Payment Buttons, car vous devez uniquement
+utiliser du code javascript et c'est vraiment simple. Paypal fournit en
+plus un **sandbox** pour que vous puissiez vérifier les paiements du
+point de vue de l'acheteur et du point de vue du vendeur. Les
+instructions sont très claires et il faut uniquement adapter le code à
+vos besoins (ex : calculer le montant à payer d'une transaction,
+indiquer quoi faire dans le cas de succès ou échec d'un paiement
+etc...)
+
+Suivez ces instructions pour pouvoir faire un test. Créez d'abord un
+projet symfony contenant au moins une vue où vous allez insérer le code
+proposé par Paypal. Vous avez un exemple dans
+**ProjetPaypalSmartButtons**.
+
+Vous devez :
+
+1.  Ouvrir compte Business en Paypal (remplir toutes les données car
+    c'est un vrai compte!)
+
+2.  Cliquer sur Tools All tools
+
+3.  Cliquez à gauche sur Integrate Paypal
+
+4.  Cliquez sur Developer Site
+
+5.  Cliquez sur Checkout
+
+6.  Cliquez sur Smart Payment Buttons Overview et comprenez le système
+
+7.  Suivez le tuto complet de Smart Payment Buttons
+
+8.  Cliquez en bas de la page sur "Add a Smart Payment Buttons
+    integration to your website"
+
+9.  Suivez les instructions. Conseil : quand vous allez devoir cliquez
+    dans **Log into the Developer Dashboard**, faites-le dans une
+    nouvelle fenêtre (clic droit). Le code proposé par Paypal ser
+    intégré dans la vue (voir exemple dans le le projet)
+
+A effacer :
+
+--- 
+
+Pour JS :
+
+- Créer le fichier assetsget_nice_message.js
+
+module.exports = function (exclamationCount){
+
+    return "j'aime bien l'omelette". "!" . repeat (exclamationCount);
+
+}
+
+(Node)
+
+ou 
+
+export default function (exclamationCount){
+
+    return "j'aime bien l'omelette". "!" . repeat (exclamationCount);
+
+}
+
+(ECMA)
+
+- Dans app.js, importez le module :
+
+const getNiceMessage = require ('./get_nice_message');
+
+(Node)
+
+ou 
+
+import getNiceMessage from './get_nice_message'
+
+(ECMA)
+
+Changez aussi require pour import ()
+
+- Utilisez la fonction dans app.js pour la tester
+
+// any CSS you import will output into a single css file (app.css in this case)
+
+import '../css/app.css';
+
+const getNiceMessage = require ('./get_nice_message');
+
+// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
+
+// import $ from 'jquery';
+
+console.log(getNiceMessage(5));
+
+////////////////////////////////////
+
+// Installer de librairies avec YARN
+
+////////////////////////////////////
+
+jQuery
+
+------
+
+yarn add jquery --dev
+
+et puis (app.js)
+
+import $ from 'jquery'; 
+
+(pas besoin de "./" car de cette manière Webpack le cherchera dans node_modules (dossier)
+
+Bootstrap
+
+---------
+
+Quand on inclut Bootstrap avec une balise SCRIPT, le code attend que jQuery soit une variable globale.
+
+Pour inclure bootstrap avec Webpack on doit utiliser yarn :
+
+yarn add bootstrap --dev
+
+On change le app.js :
+
+import $ from 'jquery';
+
+import 'bootstrap';
+
+On doit arranger la dépendance de popper.js :
+
+npm install --save popper.js
+
+(yarn add popper --dev)
+
+Importer le bootstrap.css. La tilde est necessaire pour referencer un node module à l'interieur d'un fichier css.
+
+@import '~bootstrap/dist/css/bootstrap.css';
+
+Pour les fonts :
+
+yarn add font-awesome --dev
+
+
+
+# 4. Installation de packages dans un projet Symfony Flex
+
+**Symfony Flex** est un plug-in pour **Composer** installé **par défaut lors de
+la création d'une nouvelle application (projet) Symfony** et automatisant les
+tâches les plus courantes des applications Symfony. Flex modifie le
+comportement de base de *require*, *update* et *remove.* Beaucoup de
+packages de Symfony contiennent une *recipe* (« recette ») **: un
+ensemble d'instructions pour installer et activer le package dans un
+projet Symfony**. Flex peut aussi être rajouté dans un projet Symfony
+d'une version précédente (qui n'aie pas Flex). Plus de
+documentation ici :
+
+[https://symfony.com/doc/current/setup.html#creating-symfony-applications](https://symfony.com/doc/current/setup.html%23creating-symfony-applications)
+
+# 5. Symfony avec Apache. Configuration des Virtual Hosts
+
+Cette section explique comment heberger Symfony dans un serveur Apache local. Si vous utilisez le serveur inclut dans Symfony avec la commande **symfony serve**, passez à la section suivante.
+
+Considérez qu'on a une application web qui se trouve dans le dossier
+
+    C:/xampp/htdocs/Symfony52/projet1symfony/web
+
+Normalement on devrait saisir cette URL pour y accéder :
+
+    localhost/Symfony52/projet1symfony/web
+
+Apache permet d'utiliser la technique de réécriture d'URL. Cela nous permettra, par exemple, d'avoir un projet
+qui se trouve dans
+
+    C:/xampp/htdocs/Symfony52/projet1symfony/web
+
+Et en accéder en utilisant tout simplement cette URL :
+
+    projet1symfony.localhost
+
+Nous devons configurer cette correspondance dans le fichier
+
+    /xampp/apache/conf/extra/httpd-vhosts.conf
+
+(en Windows. Si on utilise OSX ou Linux le fichier se trouve ailleurs. Les indications pour ces systèmes se trouvent dans les sections qui suivent)
+
+Le nom vhosts vient du fait qu'on est en train de créer un **serveur virtuel**.
+
+C'est Apache qui transforme une URL dans autre, mais toujours selon nos
+règles.
+<br>
+
+Création d'un serveur virtuel (virtual host) en Windows
+--------------------------------------------------------
+
+**Pour créer et utiliser un serveur virtual suivez ces pas** :
+
+1.  Activez d'abord la réécriture de l'URL dans la configuration
+    d'Apache ainsi que la lecture des serveurs virtuels dans
+    httpd-vhosts. Juste ouvrez le fichier
+    **c:/xampp/apache/conf/httpd.conf** et effacez les commentaires
+    de ces deux lignes (si elles sont commentées)
+
+```apache
+LoadModule rewrite_module modules/mod_rewrite.so
+Include conf/extra/httpd-vhosts.conf
+````
+
+2.  Modifiez (ou créez) le fichier
+    **c:xampp\apacheconf\extra\vhosts.conf** en rajoutant :
+
+```apache
+<VirtualHost *:80>
+ServerName projet1Symfony.localhost
+DocumentRoot "C:/xampp/htdocs/Symfony52/projet1/Symfonypublic"
+<Directory "C:/xampp/htdocs/Symfony52/projet1/Symfonypublic">
+AllowOverride All
+Order Allow,Deny
+Allow from All
+</Directory>
+</VirtualHost>
+```
+
+Pour chaque nouveau projet vous devez rajouter la première section en
+modifiant le ServerName, DocumentRoot et Directory.
+
+Pour pouvoir continuer à utiliser le serveur **localhost** normalement
+vous devez rajouter sa **configuration** :
+
+```apache
+<VirtualHost *:80>
+ServerName localhost
+DocumentRoot "C:/xampp/htdocs"
+<Directory "C:/xampp/htdocs">
+AllowOverride All
+Require all granted
+</Directory>
+</VirtualHost>
+```
+
+3.  Installez **l'apache-pack** qui créera les règles d'écriture d'url
+    pour le projet (Apache en aura besoin). Dans le dossier du projet,
+    tapez :
+
+
+        composer require symfony/apache-pack
+
+(Répondez "y" pour accepter l'installation)
+
+4.  Rajoutez, dans le fichier **hosts**
+    
+        c:/Windows/System32/drivers/etc/hosts
+
+    la ligne suivante:
+
+        127.0.0.1 projet1Symfony.localhost
+
+(Vous devez démarrer notepad comme administrateur)
+
+5.  Redémarrez le serveur Apache et allez sur le site :
+
+http://projet1symfony.localhost/
+
+Une page de bienvenue devrait s'afficher
+
+#### Exercice : création d'un projet contenant l'application skeleton
+
+Créez un deuxième projet projet2Symfony selon la procédure précédente
+
+<br>
+
+Création d'un serveur virtuel (virtual host) en OSX
+----------------------------------------------------
+
+1.  Activez la lecture de httpd-vhosts dans le fichier httpd.conf:
+    ouvrez **xampp** et cliquez sur le bouton Config pour ouvrir ce
+    fichier de configuration d'Apache.
+
+    Note: Le fichier se trouve dans Applications/xampp/xamppfiles/etc
+
+    Une fois le fichier ouvert, effacez les commentaires de ces deux
+    lignes (si elles sont commentées)
+
+Include conf/extra/httpd-vhosts.conf
+
+Activez aussi la réécriture de l'URL dans la configuration d'Apache e
+
+LoadModule rewrite_module modules/mod_rewrite.so
+
+2.  Modifiez (ou créez) le fichier
+    **/Applications/XAMPP/xamppfiles/etc/extra/httpd-vhosts.conf** en
+    rajoutant :
+
+```Apache
+<VirtualHost *:80>
+
+ServerName projet1Symfony.localhost
+
+DocumentRoot
+"**/Applications/XAMPP/xamppfiles/htdocs/Symfony4/projet1Symfony/public**"
+
+<Directory
+"**/Applications/XAMPP/xamppfiles/htdocs/Symfony4/projet1Symfony/public**">
+
+AllowOverride All
+
+Order Allow,Deny
+
+Allow from All
+
+</Directory>
+
+</VirtualHost>
+```
+
+Pour chaque nouveau projet vous devez rajouter la première section en
+modifiant le ServerName, DocumentRoot et Directory.
+
+Pour pouvoir continuer à utiliser le serveur **localhost** normalement (pas seulement avec de virtual hosts pour Symfony!)
+vous devez rajouter cette **configuration** :
+
+```apache
+<VirtualHost *:80>
+ServerName localhost
+DocumentRoot "**/Applications/XAMPP/xamppfiles/htdocs**"
+<Directory "**/Applications/XAMPP/xamppfiles/htdocs**">
+AllowOverride All
+Require all granted
+</Directory>
+</VirtualHost>
+```
+
+3.  Dans le dossier de votre projet, installez **l'apache-pack** qui créera les règles d'écriture d'url pour le projet (Apache en aura besoin). Dans le dossier du projet, tapez :
+
+        php composer.phar require symfony/apache-pack
+
+(Répondez "y" pour accepter l'installation)
+
+4.  Rajoutez dans cette ligne dans le fichier **hosts** :
+
+        127.0.0.1 projet1Symfony.localhost localhost
+
+Pour éditer le fichier hosts :
+
+    1.  Ouvrez la console
+    2.  Tapez cd /
+    3.  Tapez sudo nano etc/hosts
+    4.  Tapez votre mot de passe
+    5.  Rajoutez la ligne indiquée
+    6.  Enregistrez le fichier avec CONTROL-O et puis Enter, sortez du
+        logiciel avec CONTROL-X et puis Enter
 
