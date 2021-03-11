@@ -129,17 +129,14 @@
   - [21.9. Bonnes pratiques pour créer de formulaires en Symfony](#219-bonnes-pratiques-pour-créer-de-formulaires-en-symfony)
   - [21.10. Style de base pour les formulaires](#2110-style-de-base-pour-les-formulaires)
   - [21.11. Formulaires concernant plusieurs entités](#2111-formulaires-concernant-plusieurs-entités)
-- [till here](#till-here)
-- [21.12. Formulaire contenant une liste déroulante d'entités filtrés](#2112-formulaire-contenant-une-liste-déroulante-dentités-filtrés)
-- [Upload de fichiers en utilisant un formulaire](#upload-de-fichiers-en-utilisant-un-formulaire)
-  - [Stockage dans le serveur d'une seule image pour chaque entité](#stockage-dans-le-serveur-dune-seule-image-pour-chaque-entité)
-  - [Problèmes dans l'upload](#problèmes-dans-lupload)
-- [AJAX en Symfony avec Axios](#ajax-en-symfony-avec-axios)
-  - [Exemple d'appel AJAX avec un formulaire](#exemple-dappel-ajax-avec-un-formulaire)
-  - [Utilisation de blocs dans twig avec AJAX](#utilisation-de-blocs-dans-twig-avec-ajax)
-      - [Exercice 1 : faites un jeu de deviner un chiffre en utilisant Ajax en Symfony (utilisez le controller AjaxExemples)](#exercice-1--faites-un-jeu-de-deviner-un-chiffre-en-utilisant-ajax-en-symfony-utilisez-le-controller-ajaxexemples)
-      - [Exercice 2 : créez une autre master page et deux vues qui en héritent. La première contient le jeu que vous venez de réaliser et la deuxième contient trois boutons. Chaque bouton affiche la photo d'un animal sans recharger la page.](#exercice-2--créez-une-autre-master-page-et-deux-vues-qui-en-héritent-la-première-contient-le-jeu-que-vous-venez-de-réaliser-et-la-deuxième-contient-trois-boutons-chaque-bouton-affiche-la-photo-dun-animal-sans-recharger-la-page)
-  - [Ajax et Axios avec script externe au Twig (sans Webpack)](#ajax-et-axios-avec-script-externe-au-twig-sans-webpack)
+- [21.12. (IN PROGRESS) Formulaire contenant une liste déroulante d'entités filtrées](#2112-in-progress-formulaire-contenant-une-liste-déroulante-dentités-filtrées)
+  - [21.13. Upload de fichiers en utilisant un formulaire](#2113-upload-de-fichiers-en-utilisant-un-formulaire)
+    - [21.13.1. Stockage dans le serveur d'une seule image pour chaque entité](#21131-stockage-dans-le-serveur-dune-seule-image-pour-chaque-entité)
+    - [21.13.2. Possibles problèmes dans l'upload](#21132-possibles-problèmes-dans-lupload)
+  - [21.14. AJAX en Symfony avec Axios](#2114-ajax-en-symfony-avec-axios)
+  - [21.15. Utilisation de blocs dans twig avec AJAX](#2115-utilisation-de-blocs-dans-twig-avec-ajax)
+      - [Exercices : Ajax avec Axios](#exercices--ajax-avec-axios)
+  - [21.16. Ajax et Axios avec script externe au Twig (sans Webpack)](#2116-ajax-et-axios-avec-script-externe-au-twig-sans-webpack)
 <br>
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
@@ -2897,7 +2894,7 @@ Voici un exemple :
 
 Considérons qu'on a juste besoin de connaitre qui sont les clients qui ont emprunté un exemplaire et vice-versa. Nous aurions ce schéma :
 
-![](images/clients-exemplaires.png)
+![](./images/clients-exemplaires.png)
 
 **Important :**
 
@@ -3087,7 +3084,7 @@ Faites la migration et observez les changements dans le code des entités ainsi 
 <br>
 
 
-![](images/one-to-one-avatar.png)
+![](./images/one-to-one-avatar.png)
 
 L'utilisateur_id est lié (FK) à l'id du client
 <br>
@@ -3107,7 +3104,7 @@ Considérons un magasin qui organise les produits en catégories. Une catégorie
 
 <br>
 
-![](images/relation-reflexive-one-to-many.png)
+![](./images/relation-reflexive-one-to-many.png)
 <br>
 
 Dans **ProjetRelationsSymfony**:
@@ -3168,7 +3165,7 @@ Créez et lancez la migration, observerz le schéma de la BD:
 
 <br>
 
-![](images/relation-reflexive-BD.png)
+![](./images/relation-reflexive-BD.png)
 
 Ici, le categorie_parent_id est lié avec l'id de la Categorie 
 
@@ -3183,7 +3180,7 @@ Dans le code PHP (Habitant.php) on obtient deux listes, une pour les sous-catég
 
 Si la relation est de **plusieurs à plusieurs sans attributs** (ex. : une Personne supervise plusieurs Personnes et elle est à son tour Supervisé par d'autres Personnes), on peut utiliser une **relation many-to-many** (si on n'a pas d'attributs dans la relation.
 
-![](images/relation-reflexive-many-to-many.PNG)
+![](./images/relation-reflexive-many-to-many.PNG)
 
 Dans **ProjetRelationsSymfony**:
 
@@ -3197,7 +3194,7 @@ Créez et lancez la migration. Observez le résultat dans le code et dans la BD 
 
 <br>
 
-![](images/relation-reflexive-many-to-many-BD.PNG)
+![](./images/relation-reflexive-many-to-many-BD.PNG)
 
 <br>
 
@@ -3208,7 +3205,7 @@ Créez et lancez la migration. Observez le résultat dans le code et dans la BD 
 
 Voici un exemple (on rajoute le suffixe MMA pour ne pas écraser les autres entités).
 
-![](images/relation-reflexive-many-to-many-attributes-UML.PNG)
+![](./images/relation-reflexive-many-to-many-attributes-UML.PNG)
 
 
 Dans **ProjetRelationsSymfony**:
@@ -3226,7 +3223,7 @@ Dans **ProjetRelationsSymfony**:
 
 <br>
 
-![](images/relation-reflexive-many-to-many-attributes.png)
+![](./images/relation-reflexive-many-to-many-attributes.png)
 
 
 
@@ -3637,7 +3634,7 @@ exemplaire.
 
 Mais si vous le lancez-vous obtenez :
 
-![](images/error-cascade.png)
+![](./images/error-cascade.png)
 
 Symfony remarque qu'on n'a pas fait **persist** des objets associés au Livre (les Exemplaires du Livre qu'on vient de créer). Pour que le mécanisme fonctionne, nous avons deux possibilités :
 
@@ -4644,7 +4641,39 @@ Si on crée une classe formulaire pour une entité, quand on fait submit **on ob
 
 Nous allons faire un exemple, préparons le contexte :
 
-Créez d'abord un **nouveau projet** (ex : **projetFormulaires**) contenant un controller (ex : **FormulairesController**). Créez une entité *Aeroport* (nom, code, dateMiseEnService, heureMiseEnService, description) et créez la BD (ex: formulairesbd) avec la migrations. Créez une fixture pour avoir quelques données.
+Créez d'abord un **nouveau projet** (ex : **projetFormulaires**) contenant un controller (ex : **FormulairesController**). Créez une entité *Aeroport* (nom, code, dateMiseEnService, heureMiseEnService, description) et créez la BD (ex: formulairesbd) avec la migrations. Créez une fixture **AeroportFixture** pour avoir quelques données (voici une qui utilise Faker)
+
+```php
+<?php
+
+namespace App\DataFixtures;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use Faker;
+use App\Entity\Aeroport;
+
+class AeroportFixture extends Fixture
+{
+    public function load(ObjectManager $manager)
+    {
+
+        
+        $faker = Faker\Factory::create();
+        for ($i = 0; $i < 5; $i++) {
+            $aeroport = new Aeroport(['nom'=>$faker->city . " Airport",
+                                    'code'=>$faker->postcode,
+                                    'dateMiseEnService'=>$faker->dateTime,
+                                    'heureMiseEnService'=>$faker->dateTime,
+                                    'description'=>$faker->realText($faker->numberBetween(10,30))]);
+            
+            $manager->persist($aeroport);
+        }
+        $manager->flush();
+    }
+}
+
+```
 
 **Exemple** : création d'une classe de formulaire associé à une entité (Aeroport)
 
@@ -5286,308 +5315,80 @@ Voici le code des **templates** :
 
 <br>
 
-# till here
+# 21.12. (IN PROGRESS) Formulaire contenant une liste déroulante d'entités filtrées
 
-# 21.12. Formulaire contenant une liste déroulante d'entités filtrés
+**Note:**: réaliser cet exemple vous devez savoir créer d'abord un **User** en utilisant le système de sécurité de Symfony.
 
 
-> Considérez ce modèle :
->
-> ![](media/image33.png){width="6.383333333333334in"
-> height="4.476388888888889in"}
->
-> Un **User** inscrit à un de ses **GroupeMusique** à un concours.
->
-> Quand on affiche le formulaire **d'Inscription** on veut pouvoir
-> choisir le **GroupeMusique** à inscrire dans le **Concours, mais on
-> veut avoir uniquement les groupes qui ont été créés par cet User**. On
-> doit créer la liste de **GroupeMusique** en filtrant par **User**.
->
-> On se trouve dans une situation similaire à celle de l'exemple
-> précédant, mais la requête qui renvoie les entités de la liste (avant
-> Genre et maintenant GroupeMusique) doit filtrer par User. **Mais on ne
-> peut pas obtenir l'User dans le code du formulaire!**
->
-> Nous avons deux solutions :
+Considérez ce modèle :
 
-a)  Envoyer l'User comme option (array associatif) pendant la création
-    du formulaire (méthode **createForm**) quand on crée le formulaire
-    dans le Controller. Cet array **$options** sera disponible dans la
-    méthode **buildForm** de la classe formulaire.
+![](./images/form-entites.png)
+
+Un **User** qui joue dans de groupes de musique veut inscrire un de ses **GroupeMusique** à un concours.
+Quand on affiche le formulaire **d'Inscription** on veut pouvoir choisir le **GroupeMusique** à inscrire dans le **Concours, mais on veut avoir uniquement les groupes qui ont été créés par cet User**. On doit créer la liste de **GroupeMusique** en filtrant par **User**.
+
+On se trouve dans une situation similaire à celle de l'exemple précédant, mais la requête qui renvoie les entités de la liste (avant *Genre* et maintenant *GroupeMusique*) doit filtrer par *User*. 
+
+**Mais on ne peut pas obtenir l'User dans le code du formulaire, car c'est un formulaire pour l'entité Inscription!**
+
+Nous avons **deux solutions** :
+
+a)  Envoyer l'User comme option (array associatif) pendant la création du formulaire (méthode **createForm**) quand on crée le formulaire dans le Controller. Cet array **$options** sera disponible dans la méthode **buildForm** de la classe formulaire.
 
 b)  Enregistrer le formulaire comme Service dans **services.yaml**.
-    Créer un paramètre contenant le token de l'User et l'envoyer lors
-    de la création du Formulaire
 
-    Cette solution est expliquée ici :
+Créer un paramètre contenant le token de l'User et l'envoyer lors de la création du Formulaire
 
-    <https://stackoverflow.com/questions/38199882/filter-entitytype-by-owner-current-user>
+Cette solution est expliquée ici :
 
-> Dans les deux cas, il faut adapter la requête (QueryBuilder) dans la
-> création de la liste.
->
-> Réalisons la première méthode (envoyer l'User dans la création du
-> form) :
+<https://stackoverflow.com/questions/38199882/filter-entitytype-by-owner-current-user>
 
-1)  D'abord on crée une fixture capable de créer des users et de
+Dans les deux cas, il faut adapter la requête (QueryBuilder) dans la création de la liste. Réalisons la première méthode (envoyer l'User dans la création du form).
+
+On va réaliser un exemple.
+
+**Exemple**:
+
+
+
+1.  D'abord on crée une fixture capable de créer des users et de
     groupes et de les lier (**RajouterGroupesUsers**) :
 
-<?php
-
-namespace AppDataFixtures;
-
-use AppEntityUser;
-
-use AppEntityGroupeMusique;
-
-use DoctrineBundleFixturesBundleFixture;
-
-use DoctrineCommonPersistenceObjectManager;
-
-use SymfonyComponentSecurityCoreEncoderUserPasswordEncoderInterface;
 
 class RajouterGroupesUsers extends Fixture
 
-{
 
-    private $passwordEncoder;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+1.  Créez l'action du controller, qui envoie l'user dans la création du form
 
-    {
-
-         $this->passwordEncoder = $passwordEncoder;
-
-    }
-
-    
-
-    public function load(ObjectManager $manager)
-
-    {
-
-        for ($i = 0; $i < 3 ; $i++){
-
-            
-
-            $user = new User();
-
-            $user->setNom("autre user" . $i);
-
-            $user->setEmail("user".$i."liegroupe@gmx.com");
-
-            $user->setPassword($this->passwordEncoder->encodePassword(
-
-                $user,
-
-                'unpass' 
-
-            ));
-
-            $manager->persist ($user);
-
-            for ($j = 0; $j < 5; $j++){
-
-                $groupeMusique = new GroupeMusique();
-
-                $groupeMusique->setNom("le groupe ".$j." de ".$user->getNom());
-
-                $user->addGroupeGere($groupeMusique);
-
-                $manager->persist ($groupeMusique);
-
-            }
-
-            // dans ce cas on aurait pu faire aussi $groupeMusique->setUser($user);  ����         
-
-        }
-
-        $manager->flush();
-
-    }
-
-}
-
-2)  Créez l'action du controller, qui envoie l'user dans la création
-    du form
-
-    /**
+    /*
 
      * @Route("/exemple/filtre/form/user", name="exemple_filtre_form_user")
 
      */
 
     public function exempleFiltreFormUser(Request $request)
-
-    {
-
-        // On utilise l'array options pour envoyer l'User       
-
-        $inscription = new Inscription(); 
-
-        // La date est créé dans le constructeur de l'entité
-
-        $form = $this->
-
-> createForm(InscriptionFiltreType::class, $inscription, 
->
-> **['user'=>$this->getUser()]**);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {            
-
-            $entityManager = $this->getDoctrine()->getManager();
-
-            $entityManager->persist($inscription);
-
-            $entityManager->flush();
-
-            return $this
-
-> ->render('exemple_filtre_form_user/enregistrement_succes.html.twig');
-
-        }
-
-        return $this
-
-->render('exemple_filtre_form_user/affichage.html.twig',
-
-['form'=> $form->createView()]);
-
     }
 
-3)  Créez votre form (InscriptionFiltreType) :
+4.  Créez votre form (InscriptionFiltreType) :
 
-<?php
 
-namespace AppForm;
-
-use AppEntityConcours;
-
-use AppEntityInscription;
-
-use AppEntityGroupeMusique;
-
-use AppRepositoryConcoursRepository;
-
-use SymfonyComponentFormAbstractType;
-
-use AppRepositoryGroupeMusiqueRepository;
-
-use SymfonyComponentFormFormBuilderInterface;
-
-use SymfonyBridgeDoctrineFormTypeEntityType;
-
-use SymfonyComponentOptionsResolverOptionsResolver;
-
-use SymfonyComponentFormExtensionCoreTypeDateType;
-
-use SymfonyComponentFormExtensionCoreTypeTextType;
-
-use SymfonyComponentFormExtensionCoreTypeChoiceType;
 
 class InscriptionFiltreType extends AbstractType
 
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
-
-    {
-
-        //dd($options['user']);
-
-        $builder
-
-            ->add('dateInscription', DateType::class, [
-
-                'required' => false,
-
-            ])
-
-            ->add('groupeMusique', EntityType::class, [
-
-                'class' => GroupeMusique::class,
-
-                'query_builder' => function (GroupeMusiqueRepository $repo) use ($options) {
-
-                    // dd ($options['user']); // attention au "use" car fonction anonyme
-
-                    // afficher le SQL
-
-                    // dd ($repo->createQueryBuilder('g')->getQuery()->getSql());
-
-                    return $repo->createQueryBuilder('g')
-
-                                ->select ('g')
-
-                                ->innerJoin('g.user','u','WITH','u.id=:idUser')
-
-                                ->setParameter ('idUser',$options['user']);
-
-                                // doc exemples join : https://www.doctrine-project.org/projects/doctrine-orm/en/2.7/reference/query-builder.html
-
-                },
-
-                'choice_label' => function ($groupeMusique) {
-
-                    return $groupeMusique->getNom();
-
-                },
-
-            ])
-
-            ->add('concours', EntityType::class, [
-
-                'class' => Concours::class,
-
-                'query_builder' => function (ConcoursRepository $repo) {
-
-                    
-
-                    return $repo->createQueryBuilder('c');
-
-                },
-
-                'choice_label' => function ($concours) {
-
-                    return $concours->getNom();
-
-                },
-
-            ]);;
-
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-
-    {
-
-        $resolver->setDefaults([
-
-            'user' => null, // valeur de l'option par défaut, car c'est optionnel
-
-            'data_class' => Inscription::class,
-
-        ]);
-
-    }
 
 }
 
-Pour le tester, lancez les fixtures et **faites** **login** avec un
-parmi les users qui se trouvent dans la fixture
-**RajouterGroupesUsers.php** . Puis lancez l'action
-**exempleFiltreFormUser** du controller **ExempleFiltreFormUser**
-(tapez-la dans l'url). La liste de groupes doit contenir uniquement les
-groupes auxquels l'user qui vient de faire login appartient.
+Pour le tester, lancez les fixtures et **faites** **login** avec un parmi les users qui se trouvent dans la fixture **RajouterGroupesUsers.php** . Puis lancez l'action **exempleFiltreFormUser** du controller **ExempleFiltreFormUser**
+(tapez-la dans l'url). La liste de groupes doit contenir uniquement les groupes auxquels l'user qui vient de faire login appartient.
 
-Upload de fichiers en utilisant un formulaire
-=============================================
+<br>
 
-Dans cette section on propose une méthode pour pouvoir faire upload de
-fichiers du client au serveur en utilisant un formulaire crée par
-Symfony.
+## 21.13. Upload de fichiers en utilisant un formulaire
+
+Dans cette section on propose une méthode pour pouvoir faire upload de fichiers du client au serveur en utilisant un formulaire crée par Symfony.
 
 La documentation pour ce faire se trouve ici :
 
@@ -5595,74 +5396,56 @@ La documentation pour ce faire se trouve ici :
 
 Mais nous allons développer nos propres exemples.
 
-Stockage dans le serveur d'une seule image pour chaque entité 
----------------------------------------------------------------
+<br>
 
-**Objectif :** Pouvoir faire upload d'une image pour chaque entité dans
-la BD.
+### 21.13.1. Stockage dans le serveur d'une seule image pour chaque entité 
 
-On va créer une entité (Pays) et un formulaire qui nous permettra de
-faire upload d'une image associée à cette entité (une image pour chaque
-pays). Notre action stockera le nom du pays et le lien vers l'image
-dans la BD, ainsi que le fichier en soi dans un dossier du serveur.
+**Objectif :** Pouvoir faire upload d'une image pour chaque entité dans la BD.
+
+On va créer une entité (Pays) et un formulaire qui nous permettra de faire upload d'une image associée à cette entité (une image pour chaque pays). Notre action stockera le nom du pays et le lien vers l'image dans la BD, ainsi que le fichier en soi dans un dossier du serveur.
 
 **Procédure :**
 
-1.  **Créez l'entité** (Pays, contenant le **nom** du pays et un champ
-    **lienImage** pour stocker **le lien** de l'image. Les deux sont du
-    type string)
+1.  **Créez l'entité** (Pays, contenant le **nom** du pays et un champ **lienImage** pour stocker **le lien** de l'image. Les deux sont du type string)
 
-**Important: effacez la specification des types (paramètres et retour)
-dans les méthodes set et get de lienImage**
+**IMPORTANT: effacez la specification des types (paramètres et retour) dans les méthodes set et get de lienImage**
 
-2.  Générez les entités et mettez à jour le schéma de la BD
+Faites la migration.
 
-3.  **Créez la classe du formulaire** pour cette entité (PaysType.php).
-    Pour le champ **uneImage, choisissez FileType**, et rajoutez un
-    bouton de submit.
+2.  **Créez la classe du formulaire** pour cette entité (PaysType.php). Pour le champ **uneImage, choisissez FileType**, et rajoutez un bouton de submit.
 
-**
-**
+```php
+<?php
+namespace App\Form;
 
-namespace AppForm;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
-use SymfonyComponentFormAbstractType;
-
-use SymfonyComponentFormExtensionCoreTypeTextType;
-
-use SymfonyComponentFormExtensionCoreType**FileType**;
-
-use SymfonyComponentFormFormBuilderInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class PaysType extends AbstractType
-
 {
-
-public function buildForm (FormBuilderInterface $builder,
-**array** $options)
-
-{
-
-$builder->add('nom', TextType::class)
-
-->add('lienImage', **FileType**::class , **array**
-('label'=>"Sélectionner l'image du pays"));
-
+   
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('nom', TextType::class)
+                ->add('lienImage', FileType::class , array ('label'=>"Sélectionner l'image du pays"));
+        
+    }
 }
+```
 
-}
 
 4.  Créez **un fichier twig capable d'afficher ce formulaire**
 
+```twig
 {# affichage_formulaire upload.html.twig #}
-
 {{ form_start (formulaire) }}
-
 {{ form_widget (formulaire) }}
-
 <input type="submit" class="btn" value="Envoyer" />
-
 {{ form_end (formulaire) }}
+```
 
 5.  Créez **une action qui traite les données envoyées par le
     formulaire**
@@ -5672,278 +5455,182 @@ Cette action doit :
 -   **Créer un objet formulaire** (PaysType) **associé à une entité
     vide** ($pays de la classe Pays)
 
--   **Gérer la requête :** HandleRequest remplira les propriétés de
-    l'entité (hydrate)
+-   **Gérer la requête :** HandleRequest remplira les propriétés de l'entité
+  
+-   **Vérifier que le formulaire a été envoyé** (isSubmitted) **et si les données sont valables** (isValid).
 
--   **Vérifier que le formulaire a été envoyé** (isSubmitted) **et si
-    les données sont valables** (isValid).
+-   **Obtenir le fichier** (**objet UploadedFile**, pas un string) **de l'entité** associée au formulaire
 
--   **Obtenir le fichier** (**objet UploadedFile**, pas un string) **de
-    l'entité** associée au formulaire
+    -   **Obtenir un nom de fichier unique** pour le stocker dans le serveur (si on utilise le nom original il pourrait y avoir plein de doublons !)
 
-    -   **Obtenir un nom de fichier unique** pour le stocker dans le
-        serveur (si on utilise le nom original il pourrait y avoir plein
-        de doublons !)
+    -   **Stocker le fichier dans le serveur** sous le nom choisi
 
-    -   **Stocker le fichier dans le serveur**
-
--   **Affecter la propriété contenant le fichier dans l'entité et lui
-    donner le nom unique qu'on vient d'obtenir**
+-   **Affecter la propriété contenant le fichier dans l'entité et lui donner le nom unique qu'on vient d'obtenir**
 
 -   **Stocker l'objet dans la BD**
 
+
 Voici le code de l'action :
 
-namespace AppController;
 
-use
-SymfonyBundleFrameworkBundleControllerAbstractController;
+```php
+<?php
+namespace App\Controller;
 
-use SymfonyComponentRoutingAnnotationRoute;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
-use SymfonyComponentHttpFoundationRequest;
+use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Pays;
+use App\Form\PaysType;
+use Symfony\Component\HttpFoundation\Response;
 
-use AppEntityPays;
-
-use AppFormPaysType;
-
-use SymfonyComponentHttpFoundationResponse;
-
-class ExemplesFormulaireUploadController extends
-AbstractController
-
+class ExemplesFormulaireUploadController extends AbstractController
 {
+    #[Route ("/exemples/formulaire/upload/exemple")]
+    public function exemple (Request $request){
+        // créer une nouvelle entité vide
+        $pays = new Pays();
+        // créer un formulaire associé à cette entité
+        $formulairePays = $this->createForm (PaysType::class, $pays);
+        // gérer la requête (et hydrater l'entité)
+        $formulairePays->handleRequest($request);
+        // vérifier que le formulaire a été envoyé (isSubmitted) et que les données sont valides
+        if ($formulairePays->isSubmitted() && $formulairePays->isValid()){
+            // obtenir le fichier (pas un "string" mais un objet de la class UploadedFile)
+            $fichier = $pays->getLienImage();
+            // obtenir un nom de fichier unique pour éviter les doublons dans le dossier
+            $nomFichierServeur = md5(uniqid()).".".$fichier->guessExtension();
+            // stocker le fichier dans le serveur (on peut indiquer un dossier)
+            $fichier->move ("dossierFichiers", $nomFichierServeur);
+            // affecter le nom du fichier de l'entité. Ça sera le nom qu'on
+            // aura dans la BD (un string, pas un objet UploadedFile cette fois)
+            $pays->setLienImage($nomFichierServeur);
 
-#[Route ("/exemples/formulaire/upload/exemple");]
+            // stocker l'objet dans la BD, ou faire update
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($pays);
+            $em->flush();
+            return new Response ("fichier uploaded et BD mise à jour!");
+        }
+        else {
+            return $this->render ("/exemples_formulaires_upload/affichage.html.twig",
+                    ['formulaire'=> $formulairePays->createView()]);
+        }
 
-public function exemple (Request $request){
-
-// créer une nouvelle entité vide
-
-$pays = new Pays();
-
-// créer un formulaire associé à cette entité
-
-$formulairePays = $this->createForm (PaysType::class, $pays);
-
-// gérer la requête (et hydrater l'entité)
-
-$formulairePays->handleRequest($request);
-
-// vérifier que le formulaire a été envoyé (isSubmitted)
-
-// et que les données sont valides
-
-if ($formulairePays->isSubmitted() &&
-$formulairePays->isValid()){
-
-// obtenir le fichier (pas un "string" mais un
-
-// objet de la class UploadedFile)
-
-$fichier = $pays->getLienImage();
-
-// obtenir un nom de fichier unique
-
-// pour éviter les doublons dans le dossier
-
-$nomFichierServeur =
-**md5**(**uniqid**()).".".$fichier->guessExtension();
-
-// stocker le fichier dans le serveur (on peut indiquer un dossier)
-
-$fichier->move ("dossierFichiers", $nomFichierServeur);
-
-// affecter le nom du fichier de l'entité. Ça sera le nom qu'on
-
-// aura dans la BD (un string, pas un objet UploadedFile cette fois)
-
-$pays->setLienImage($nomFichierServeur);
-
-// stocker l'objet dans la BD, ou faire update
-
-$em = $this->getDoctrine()->getManager();
-
-$em->persist($pays);
-
-$em->**flush**();
-
-return new Response ("fichier uploaded et BD mise à jour!");
-
+    }
 }
+```
 
-else {
+### 21.13.2. Possibles problèmes dans l'upload
 
-return $this->render
-("/exemples_formulaires_upload/affichage.html.twig",
+Nous pouvons avoir de problèmes liés à certaines limites concernant la taille des fichiers qu'on peut charger dans le serveur.
 
-['formulaire'=> $formulairePays->createView()]);
+1.  Dans **php.ini**, **upload_max_filesize** spécifie la taille maximale accepté par le module de php
 
-}
-
-}
-
-}
-
-Problèmes dans l'upload
-------------------------
-
-Nous pouvons avoir de problèmes liés à certaines limites concernant la
-taille des fichiers qu'on peut charger dans le serveur.
-
-1.  Dans **php.ini**, **upload_max_filesize** spécifie la taille
-    maximale accepté par le module de php
-
+```config
 ; Maximum allowed size for uploaded files.
+; http://php.net/upload-max-filesize
+upload_max_filesize=20M
+```
 
-; [http://php.net/upload-max-filesize]{.underline}
+Changez-la selon vos besoins.
 
-**upload_max_filesize**=20M
 
-2.  Dans **php.ini**, **post_max_size** indique la taille maximale
-    d'un formulaire envoyé en POST (avec ou sans le champ d'upload)
+2.  Dans **php.ini**, **post_max_size** indique la taille maximale d'un formulaire envoyé en POST (avec ou sans le champ d'upload)
 
+
+```config
 ; Maximum size of POST data that PHP will accept.
-
-; Its value may be 0 to disable the limit. It is ignored if POST data
-reading
-
+; Its value may be 0 to disable the limit. It is ignored if POST data reading
 ; is disabled through enable_post_data_reading.
+; http://php.net/post-max-size
+post_max_size=20M
+```
 
-; [http://php.net/post-max-size]{.underline}
+Notez que, en ce qui concerne l'upload d'un fichier, ça ne vous sert à rien de changer le premier paramètre sans changer le deuxième car il faut que le serveur admette un post contenant un fichier d'au moins la taille permise par **upload_max_filesize.**
 
-**post_max_size**=20M
+Si on a un formulaire avec un champ d'upload, la taille du POST sera, en gros, celle du fichier envoyé plus celle de tous les autres champs du formulaire.
 
-Notez que, en ce qui concerne l'upload d'un fichier, ça ne vous sert à
-rien de changer le premier paramètre sans changer le deuxième car il
-faut que le serveur admette un post contenant un fichier d'au moins la
-taille permise par **upload_max_filesize.**
+Après avoir augmenté la valeur de ces deux paramètres on ne doit plus avoir de problèmes, mais si ce n'est pas le cas il faut considérer aussi les paramètres suivants :
 
-Si on a un formulaire avec un champ d'upload, la taille du POST sera,
-en gros, celle du fichier envoyé plus celle de tous les autres champs du
-formulaire.
+3.  Dans certains cas il faut considérer aussi la limite pour la taille du fichier **.php** qu'on peut charger (en **php.ini**)
 
-Après avoir augmenté la valeur de ces deux paramètres on ne doit plus
-avoir de problèmes, mais si ce n'est pas le cas il faut considérer
-aussi les paramètres suivants :
-
-3.  Dans certains cas il faut considérer aussi la limite pour la taille
-    du fichier **.php** qu'on peut charger (en **php.ini**)
-
+```console
 ; Maximum amount of memory a script may consume (128MB)
-
 ; [http://php.net/memory-limit]{.underline}
-
 memory_limit=128M
+```
 
-4.  Il peut avoir aussi un problème si la connexion du client est lente
-    et l'upload prend plus du temps spécifié dans **max_input_time**
-    (**php.ini**). Ce paramètre indique le temps maximum permis pour
-    analyser les données du POST ou GET: c'est le temps qui passe entre
-    l'appel au script PHP et le début de son exécution. Dans la
-    configuration de XAMPP la valeur est -1, il n'y a pas de limite de
-    temps.
 
-AJAX en Symfony avec Axios
-==========================
+4.  Il peut avoir aussi un problème si la connexion du client est lente et l'upload prend plus du temps spécifié dans **max_input_time** (**php.ini**). Ce paramètre indique le temps maximum permis pour analyser les données du POST ou GET: c'est le temps qui passe entre l'appel au script PHP et le début de son exécution. Dans la configuration de XAMPP la valeur est -1, il n'y a pas de limite de temps.
 
-**Objectif** : utiliser AJAX dans un template Twig avec Axios
 
-Axios est une librairie que nos simplifie les appels AJAX. Vous pouvez
-parfaitement faire du AJAX sans cette librairie mais ici on l'utilise
-pour nous faciliter la tâche.
 
-Créez un controller **ExemplesAjaxFormDataController** (code original
-dans le projet **projetFormulaires**). Ce controller contiendra
-uniquement quelques exemples d'appel Ajax. Plus tard on réalisera des
-exemples plus pratiques basés sur la BD du projet.
+## 21.14. AJAX en Symfony avec Axios
+
+<br>
+
+Nous allons montrer **comment utiliser AJAX dans un template Twig avec Axios**
+
+Axios est une librairie que nos simplifie les appels AJAX. Vous pouvez parfaitement faire du AJAX sans cette librairie mais ici on l'utilise pour nous faciliter la tâche.
+
+Créez un controller **ExemplesAjaxFormDataController** (code original dans le projet **ProjetFormulairesSymfony**). Ce controller contiendra uniquement quelques exemples d'appel Ajax. Plus tard on réalisera des exemples plus pratiques basés sur la BD du projet.
 
 Exemple d'appel AJAX avec un formulaire
-----------------------------------------
 
-> Dans cet exemple on envoie de données en utilisant AJAX **sans
-> utiliser un formulaire**. Nous avons juste les contrôles. Dans la
-> section suivante on utilisera un formulaire complet.
 
-1.  **Créez une vue contenant un formulaire. Cette vue contiendra aussi
-    le code AJAX**
+Dans cet exemple on envoie de données en utilisant AJAX **sans utiliser un formulaire**. Nous avons juste les contrôles. Dans la section suivante on utilisera un formulaire complet.
 
-> **Exemple** : créez un formulaire contenant un input (nom). Quand on
-> clique sur le bouton, un message de bienvenue sera affiché dans le
-> div. Analysez vous-même le code.
->
-> Attention aux **names** des contrôles car on les utilisera dans le
-> traitement de l'action dans le controller!!
+1.  **Créez une vue contenant un formulaire. Cette vue contiendra aussi le code AJAX**
 
-{% extends "base.html.twig" %}
+**Exemple** : créez un formulaire contenant un input (nom). Quand on clique sur le bouton, un message de bienvenue sera affiché dans le div. 
 
-{% block body %}
+Attention aux **names** des contrôles car on les utilisera dans le traitement de l'action dans le controller!!
 
-<!-- formulaire à envoyer  -->
+(Fichier **exemple1_affichage.html** dans **ProjetFormulairesSymfony**)
 
-<form id="leFormulaire">
+```twig
+{% extends "base.html.twig" %}
 
-    <input type="text" name="nom" />
-
-    <input type="submit" value="Envoyer" />
-
+{% block body %}
+<!-- formulaire à envoyer  -->
+<form id="leFormulaire" method="POST">
+    <input type="text" name="nom" />
+    <input type="submit" id="envoyerNom" value="Envoyer" />
+    <div id="divMessage"></div>
 </form>
+{% endblock %}
 
-<div id="divMessage"></div>
-
-{% endblock %}
-
-{% block javascripts %}
-
-<!-- AJAX - AXIOS  -->
-
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+{% block javascripts %}
+<!-- AJAX - AXIOS  -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    envoyerNom.addEventListener("click", function (event) {
+        event.preventDefault();
 
-    envoyerNom.addEventListener("click", function (event) {
+        console.log (document.getElementById("leFormulaire"));
 
-        event.preventDefault();
-
-        console.log (document.getElementById("leFormulaire"));
-
-        axios({
-
-            url: '{{path ("exemple1_traitement")}}',
-
-            method: 'POST',
-
-            headers: { 'Content-Type': 'multipart/form-data' },
-
-            data: new FormData(document.getElementById("leFormulaire"))
-
-        })
-
-        .then(function (response) {
-
-            // response.data est un objet qui correspond à l'array associatif envoyé dans le controller
-
-            // JsonResponse a transformé l'array en JSON. Axios transforme le JSON en objet JS
-
-            // (et on utilise ici la clé "leMessage")
-
-            document.getElementById("divMessage").innerHTML = response.data.leMessage;
-
-            console.log (response);
-
-        })
-
-        .catch(function (error) {
-
-            console.log(error);
-
-        });
-
-    });    
-
+        axios({
+            url: '{{path ("exemple1_traitement")}}',
+            method: 'POST',
+            headers: { 'Content-Type': 'multipart/form-data' },
+            data: new FormData(document.getElementById("leFormulaire"))
+        })
+        .then(function (response) {
+            // response.data est un objet qui correspond à l'array associatif envoyé dans le controller
+            // JsonResponse a transformé l'array en JSON. Axios transforme le JSON en objet JS
+            // (et on utilise ici la clé "leMessage")
+            document.getElementById("divMessage").innerHTML = response.data.leMessage;
+            console.log (response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    });    
 </script>
-
-{% endblock %}
+{% endblock %}
+```
 
 Dans l'appel AXIOS on envoie un objet JS contenant :
 
@@ -5954,254 +5641,184 @@ Dans l'appel AXIOS on envoie un objet JS contenant :
 -   Les « **headers** » de la requête, pour indiquer qu'on envoie un
     formulaire (dans ce cas)
 
--   Les **donnés (data)** : un objet JS contenant de clés et de valeurs.
-    Ici on envoie un objet FormData (classe de JS) construit à partir du
-    formulaire qui se trouve dans la page web
+-   Les **donnés (data)** : un objet JS contenant de clés et de valeurs. Ici on envoie un objet FormData (classe de JS) construit à partir du formulaire qui se trouve dans la page web
 
-> Créez l'action qui affiche la vue exemple1_affichage.html
+2. Créez l'action qui affiche la vue **exemple1_affichage.html** dans 
 
-    /**
+```php
+#[Route ("/exemples/ajax/axios/exemple1/affichage" )]
+public function exemple1Affichage()
+{
+    return $this->render("/exemples_ajax_axios/exemple1_affichage.html.twig");
+}
+```
 
-     * @Route ("/exemples/ajax/axios/exemple1/affichage" );
+3.  Créez l'action qui traite la pétition AJAX
 
-     */
-
-    public function exemple1Affichage()
-
-    {
-
-        return $this->render("/exemples_ajax_axios/exemple1_affichage.html.twig");
-
-    }
-
-2.  Créez l'action qui traite la pétition AJAX
-
-/**
-
- * @Route ("/exemples/ajax/axios/exemple1/traitement",name="exemple1_traitement" );
-
- */
-
-// action qui traite la commande AJAX, elle n'a pas une vue associée
-
-public function exemple1Traitement(Request $requeteAjax)
-
+```php
+#[Route ("/exemples/ajax/axios/exemple1/traitement",name:"exemple1_traitement" )]
+// action qui traite la commande AJAX, elle n'a pas une vue associée
+public function exemple1Traitement(Request $requeteAjax)
 {
 
-    $valeurNom = $requeteAjax->get('nom');
-
-    $arrayReponse = ['leMessage' => 'Bienvenu, ' . $valeurNom];
-
-    return new JsonResponse($arrayReponse);
-
+    $valeurNom = $requeteAjax->get('nom');
+    $arrayReponse = ['leMessage' => 'Bienvenu, ' . $valeurNom];
+    return new JsonResponse($arrayReponse);
 }
+```
 
-Cette action reçoit un objet Request. On peut accèder aux éléments du
-formulaire en utilisant get. Dans cet exemple, l'action renvoie un array
-à traiter dans le code JS. Pour envoyer des arrays ou des objets à JS
-depuis PHP on doit les transformer en **JSON**. On verra d'autres
-exemples (envoyer des objets) par la suite.
+Cette action reçoit un objet Request. On peut accèder aux éléments du formulaire en utilisant **get**. Dans cet exemple, l'action renvoie un array à traiter dans le code JS. Pour envoyer des arrays ou des objets à JS depuis PHP on doit les transformer en **JSON**. On verra d'autres exemples (envoyer des objets) par la suite.
 
-Utilisation de blocs dans twig avec AJAX
-----------------------------------------
+![](./images/axios1.png)
+
+
+
+## 21.15. Utilisation de blocs dans twig avec AJAX
 
 Il s'agit juste d'une combinaison de master page + AJAX, rien de
 nouveau.
 
-1.  Créez un template master_page.html.twig contenant une section pour
-    nos vues. Créez un block pour le contenu et un autre pour le JS
+1.  Créez un template *master_page.html.twig* contenant une section pour nos vues. **Ce sera notre master page**. Créez un block pour le contenu et un autre pour le JS
 
+
+```twig
 <html>
-
-<body>
-
-<header>
-
-**Voici la section header**
-
-</header>
-
-<main>
-
-**Voici la section main**
-
-**{% block contenuMain %}{% endblock %}**
-
-</main>
-
-<footer>
-
-**Voici la section footer**
-
-</footer>
-
-</body>
-
-**{% block javascripts %}{% endblock %}**
-
+    <body>
+        <header>
+            Voici la section header
+        </header>
+        <main>
+            Voici la section main
+            {% block contenuMain %}{% endblock %}
+        </main>
+        <footer>
+            Voici la section footer
+        </footer>
+    
+    </body>
+    {% block javascripts %}{% endblock %}
 </html>
+```
 
-2.  **Créez une vue** exemple1_affichage_master_page.html.twig **qui
-    hérite du template** master_page.html.twig
+2.  **Créez un template** *exemple1_affichage_master_page.html.twig* **qui hérite du template** master_page.html.twig
 
-{% extends '/exemples_ajax/master_page.html.twig' %}
+```twig
+{% extends '/exemples_ajax/master_page.html.twig' %}
 
-{% block contenuMain %}
+{% block contenuMain %}
+<!-- on mettra cet script dans un block  -->
 
-<!-- on mettra cet script dans un block  -->
-
-<!-- formulaire à envoyer  -->
-
-<form id="leFormulaire" method="POST">
-
-    <input type="text" name="nom" />
-
-    <input type="submit" id="envoyerNom" value="Envoyer" />
-
-    <div id="divMessage"></div>
-
+<!-- formulaire à envoyer  -->
+<form id="leFormulaire" method="POST">
+    <input type="text" name="nom" />
+    <input type="submit" id="envoyerNom" value="Envoyer" />
+    <div id="divMessage"></div>
 </form>
+{% endblock %}
+```
 
-{% endblock %}
+3.  Rajoutez **le code Ajax** dans un bloc **javascripts** dans la même vue, le code doit faire appel à une action dans le controller qui gére la petition Ajax.
 
-3.  Rajoutez le code Ajax dans un bloc **javascripts** dans la même vue,
-    le code doit faire appel à une action dans le controller qui gére la
-    petition Ajax.
+```twig
+{% block javascripts %}
+<!-- AJAX - AXIOS dans la page, sans avoir un script externe -->
 
-{% block javascripts %}
-
-<!-- AJAX - AXIOS dans la page, sans avoir un script externe -->
-
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    envoyerNom.addEventListener("click", function (event) {
+        event.preventDefault();
 
-    envoyerNom.addEventListener("click", function (event) {
+        console.log(document.getElementById("leFormulaire"));
 
-        event.preventDefault();
-
-        console.log(document.getElementById("leFormulaire"));
-
-        axios({
-
-            url: '{{path ("exemple1_traitement")}}',
-
-            method: 'POST',
-
-            headers: { 'Content-Type': 'multipart/form-data' },
-
-            data: new FormData(document.getElementById("leFormulaire"))
-
-        })
-
-        .then(function (response) {
-
-                // response.data est un objet qui correspond à l'array associatif envoyé dans le controller
-
-                // JsonResponse a transformé l'array en JSON. Axios transforme le JSON en objet JS
-
-                // (et on utilise ici la clé "leMessage")
-
-                document.getElementById("divMessage").innerHTML = response.data.leMessage;
-
-                console.log(response);
-
-        })
-
-        .catch(function (error) {
-
-                console.log(error);
-
-        });
-
-    });    
-
+        axios({
+            url: '{{path ("exemple1_traitement")}}',
+            method: 'POST',
+            headers: { 'Content-Type': 'multipart/form-data' },
+            data: new FormData(document.getElementById("leFormulaire"))
+        })
+        .then(function (response) {
+                // response.data est un objet qui correspond à l'array associatif envoyé dans le controller
+                // JsonResponse a transformé l'array en JSON. Axios transforme le JSON en objet JS
+                // (et on utilise ici la clé "leMessage")
+                document.getElementById("divMessage").innerHTML = response.data.leMessage;
+                console.log(response);
+        })
+        .catch(function (error) {
+                console.log(error);
+        });
+    });    
 </script>
+{% endblock %}
+```
 
-{% endblock %}
 
 Notez que dans le code Ajax on doit réaliser l'opération pertinente
 avec les données reçues du serveur (ex : afficher dans un div)
 
 4.  Créez l'action qui affiche la vue qu'on vient de créer
 
-// exemple d'utilisation d'AJAX avec de blocs ("master page")
-
-/**
-
- * @Route ("/exemples/ajax/axios/exemple1/affichage/master/page");
-
- */
-
-public function exemple1AffichageMasterPage()
-
+```php
+// exemple d'utilisation d'AJAX avec de blocs ("master page")
+#[Route ("/exemples/ajax/axios/exemple1/affichage/master/page")]
+public function exemple1AffichageMasterPage()
 {
-
-    return $this->render("/exemples_ajax_axios/exemple1_affichage_master_page.html.twig");
-
+    return $this->render("/exemples_ajax_axios/exemple1_affichage_master_page.html.twig");
 }
+```
 
 5.  Créez l'action qui traite la commande AJAX
 
-Dans cette action, renvoyez votre réponse JSON. Pour ce faire, au lieu
-d'envoyer un objet Response ou le rendu d'une vue, vous allez utiliser
-un objet JSonResponse. Par exemple :
+Dans cette action, renvoyez votre réponse JSON. Pour ce faire, au lieu d'envoyer un objet Response ou le rendu d'une vue, vous allez utiliser un objet JSonResponse. Par exemple :
 
-/**
-
- * @Route ("/exemples/ajax/axios/exemple1/traitement/master/page");
-
- */
-
-// action qui traite la commande AJAX, elle n'a pas une vue associée
-
-public function exemple1TraitementMasterPage(Request $requeteAjax)
-
+```php
+#[Route ("/exemples/ajax/axios/exemple1/traitement/master/page")]
+// action qui traite la commande AJAX, elle n'a pas une vue associée
+public function exemple1TraitementMasterPage(Request $requeteAjax)
 {
-
-    $valeurNom = $requeteAjax->get('nom');
-
-    $arrayReponse = ['message' => 'Bienvenu, ' . $valeurNom];
-
-    return new JsonResponse($arrayReponse);
-
+    $valeurNom = $requeteAjax->get('nom');
+    $arrayReponse = ['message' => 'Bienvenu, ' . $valeurNom];
+    return new JsonResponse($arrayReponse);
 }
+```
 
-#### Exercice 1 : faites un jeu de deviner un chiffre en utilisant Ajax en Symfony (utilisez le controller AjaxExemples)
+![](./images/axios1.png)
 
-#### Exercice 2 : créez une autre master page et deux vues qui en héritent. La première contient le jeu que vous venez de réaliser et la deuxième contient trois boutons. Chaque bouton affiche la photo d'un animal sans recharger la page.
 
-Ajax et Axios avec script externe au Twig (sans Webpack)
---------------------------------------------------------
+#### Exercices : Ajax avec Axios
 
-Si on veut utiliser un script externe JS dans une vue, le script ne
-pourra pas utiliser la fonction **« path »** pour générer les routes de
-cible AJAX. Les fonctions de twig telles que **path** fonctionnent
-uniquement **dans les fichiers TWIG**. Ceci est un problème typique
-qu'on peut résoudre en utilisant le module **FOSJsRoutingBundle**.
+1. Faites un jeu de deviner un chiffre en utilisant Ajax en Symfony (utilisez le controller AjaxExemples)
 
-Un exemple pratique est réalisé dans le projet
-**projetFormulairesSymfony5**, dans le
-controller ExemplesAjaxAxiosController :
+2. Créez une autre master page et deux vues qui en héritent. La première contient le jeu que vous venez de réaliser et la deuxième contient trois boutons. Chaque bouton affiche la photo d'un animal sans recharger la page.
 
-Actions :
 
--   exemple1AffichageMasterPageScriptExterne
+## 21.16. Ajax et Axios avec script externe au Twig (sans Webpack)
 
--   exemple1TraitementMasterPageScriptExterne
+
+Si on veut **utiliser un script externe JS dans une vue**, le script lui-même ne pourra pas utiliser la fonction **path** pour générer les routes  cible AJAX. Les fonctions de twig telles que **path** fonctionnent uniquement **dans les fichiers TWIG**. Ceci est un problème typique qu'on peut résoudre en utilisant le module **FOSJsRoutingBundle**.
+
+Rajoutez le au projet :
+
+```console
+composer require friendsofsymfony/jsrouting-bundle
+```
+
+Un exemple pratique **et expliqué** est réalisé dans le projet **ProjetFormulairesSymfony**, dans le **controller ExemplesAjaxAxiosController**. Commencez par la vue et puis les actions du controller.
 
 Vue :
 
 -   exemple1_affichage_master_page_script_externe.html
 
-**Important** : dans les routes qui seront accédées par ce bundle
-(regardez le code dans le controller) vous devez rajouter le paramètre
-**{"expose"=true}**. Le code du projet inclut déjà cette option.
+Actions:
 
-/**
+-   exemple1AffichageMasterPageScriptExterne
+-   exemple1TraitementMasterPageScriptExterne
 
- * @Route ("/exemples/ajax/axios/exemple1/traitement/master/page/script/externe",
 
- **options={"expose"=true}**, name="exemple1_traitement_externe");]
+![](./images/axios3.png)
 
-  {#section-5 .ListParagraph}
+
+<br>
+
+**Important** : dans les routes qui seront accédées par ce bundle (regardez le code dans le controller) vous devez rajouter le paramètre **{"expose"=true}** (utilisez des annotations pour ces routes). Le code du projet inclut déjà cette option.
+
+

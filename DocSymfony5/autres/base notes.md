@@ -5664,7 +5664,6 @@ Pour créer un formulaire et le traiter :
 **
 **
 
-# TILL HERE
 
 Traitement des données du formulaire (explication de base)
 ----------------------------------------------------------
@@ -5766,7 +5765,7 @@ return $this->render
 
 }
 
-2.  **Templates (un pour afficher le formulaire et l'autre pour
+1.  **Templates (un pour afficher le formulaire et l'autre pour
     afficher le résultat du traitement)**
 
 {# affichage_formulaire_livre.html.twig #}
@@ -5783,7 +5782,7 @@ return $this->render
 
 {{ dump (livre) }}
 
-3.  **Classe du formulaire**
+1.  **Classe du formulaire**
 
 class LivreType extends AbstractType {
 
@@ -5903,9 +5902,9 @@ Bonnes pratiques pour créer de formulaires en Symfony
 > ("vues"). Il nous reste alors que les rajouter dans les fichiers
 > twigs (en HTML)
 
-2.  Utilisez **une même action pour créer le formulaire et le traiter**
+1.  Utilisez **une même action pour créer le formulaire et le traiter**
 
-3.  Pour définir l'action et la méthode (différente, par exemple, pour
+2.  Pour définir l'action et la méthode (différente, par exemple, pour
     un update et un delete), vous pouvez envoyer de paramètres à
     **form_start** dans le fichier twig
 
