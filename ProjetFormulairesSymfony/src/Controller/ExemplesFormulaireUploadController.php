@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExemplesFormulaireUploadController extends AbstractController
 {
-#[Route ("/exemples/formulaire/upload/exemple")]
+    #[Route ("/exemples/formulaire/upload/exemple")]
     public function exemple (Request $request){
         // créer une nouvelle entité vide
         $pays = new Pays();
@@ -36,7 +36,7 @@ class ExemplesFormulaireUploadController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($pays);
             $em->flush();
-            return new Response ("fichier uploaded et BD mise à jour!");
+            return new Response ("fichier uploaded dans le dossier indiqué dans l'action, BD mise à jour!");
         }
         else {
             return $this->render ("/exemples_formulaires_upload/affichage.html.twig",

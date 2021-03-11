@@ -42,6 +42,26 @@ class Aeroport
      */
     private $description;
 
+    // crée par nous mêmes, ainsi que le constructeur (vérifiez!)
+    public function hydrate(array $init)
+    {
+        foreach ($init as $key => $value) {
+            $method = "set" . ucfirst($key);
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
+        }
+    }
+
+    // constructeur modifié pour faire appel à hydrate
+    public function __construct($arrayInit = [])
+    {
+        // appel au hydrate
+        $this->hydrate($arrayInit);
+    }
+
+
+
     public function getId(): ?int
     {
         return $this->id;

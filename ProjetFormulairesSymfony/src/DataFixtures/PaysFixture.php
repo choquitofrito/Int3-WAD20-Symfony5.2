@@ -14,7 +14,7 @@ class PaysFixture extends Fixture
         for ($i = 0; $i < 20; $i++) {
             $pays = new Pays();
             $pays->setNom("Belgique" . $i);
-            $pays->setLienImage("belgique" . $i . ".jpg");
+            // on n'a pas d'image encore : $pays->setLienImage("belgique" . $i . ".jpg");
 
             $manager->persist($pays);
         }
