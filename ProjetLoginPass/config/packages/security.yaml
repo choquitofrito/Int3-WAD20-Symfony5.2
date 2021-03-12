@@ -22,7 +22,9 @@ security:
                 authenticators:
                     - App\Security\FormulaireLoginAuthenticator
             logout:
-                path: app_logout
+                path: logout
+                target: /apres/logout 
+
                 # where to redirect after logout
                 # target: app_any_route
 

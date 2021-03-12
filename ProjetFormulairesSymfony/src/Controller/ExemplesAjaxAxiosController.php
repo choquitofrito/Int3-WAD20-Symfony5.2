@@ -79,6 +79,7 @@ class ExemplesAjaxAxiosController extends AbstractController
     #[Route("/exemples/ajax/axios/exemple/affichage/objets/repo")]
     public function exempleAffichageObjetsRepo()
     {
+
         return $this->render('/exemples_ajax_axios/exemple_affichage_objets_repo.html.twig');
     }
 
@@ -88,8 +89,6 @@ class ExemplesAjaxAxiosController extends AbstractController
     {
         return $this->render('/exemples_ajax_axios/exemple_affichage_objets_dql.html.twig');
     }
-
-
 
     // 1. action de traitement du AJAX, on utilise les méthodes du repository (findBy, findAll, etc...)
     // nous devons serialiser le résultat (le transformer en json dans ce cas) et envoyer une Reponse normale
@@ -131,7 +130,7 @@ class ExemplesAjaxAxiosController extends AbstractController
         // les références à d'autres entités: JSON.parse ne pourra pas l'interpreter ...
 
         // ... mais si on change getResult par getArrayResult on recevra un array 
-        // contenant (dans ce cas) la réprésentation d'array de chaque entité 
+        // contenant (dans ce cas) la représentation d'array de chaque entité 
         // contenant uniquement les propriétés de base propres à l'objet 
         // (pas les "rélations" ni d'autres propriétés)
         $aeroports = $query->getArrayResult();
@@ -141,7 +140,7 @@ class ExemplesAjaxAxiosController extends AbstractController
 
         // dd ($resultat);
 
-        // Notez que JSON.parse n'arrivera à interpreter la réponse si vous faites dump ou 
+        // Notez que JSON.parse n'arrivera à interpréter la réponse si vous faites dump ou 
         // echo ici, car votre réponse ne sera plus du pur JSON
         // dump ($objetLivre);
 

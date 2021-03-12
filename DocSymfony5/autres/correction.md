@@ -74,9 +74,9 @@
   - [11.6. Le modèle : les relations](#116-le-modèle--les-relations)
     - [11.6.1. Relation Many-To-One](#1161-relation-many-to-one)
     - [11.6.2. Explication du code généré par l'assistant](#1162-explication-du-code-généré-par-lassistant)
-      - [Exercices : création d'entités et de relations](#exercices--création-dentités-et-de-relations)
+      - [Exercices : création d'entités et de rélations](#exercices--création-dentités-et-de-rélations)
     - [11.6.3. Relation Many-To-Many](#1163-relation-many-to-many)
-      - [Exercices : création d'une relation de plusieurs à plusieurs](#exercices--création-dune-relation-de-plusieurs-à-plusieurs)
+      - [Exercices : création d'une rélation de plusieurs à plusieurs](#exercices--création-dune-rélation-de-plusieurs-à-plusieurs)
     - [11.6.4. Relation One-To-One](#1164-relation-one-to-one)
     - [11.6.5. Relation reflexive (self-association)](#1165-relation-reflexive-self-association)
       - [a) Relation reflexive d'un à plusieurs](#a-relation-reflexive-dun-à-plusieurs)
@@ -2460,7 +2460,7 @@ Si on voulait **changer l'adresse** on peut toujours créer de méthodes pour ce
 
 Dans une application web, les classes qui contiennent les données de l'application s'appellent **entités** (les classes de notre diagramme de classes) et on doit les définir.
 
-Normalement une entité serait définie à la main dans un fichier contenant une classe (ex: entité Personne -> classe Personne). On doit créer, en plus, une classe Repository pour gérer la persistance de l'entité dans la BD. Ça implique qu'on doit créer deux fichiers pour chaque classe du diagramme... un grand boulot ! Mais on peut se simplifier énormément la vie en utilisant un ORM...
+Normalement une entité serait définie à la main dans un fichier contenant une classe (ex: entité Personne -> classe Personne). On doit créer, en plus, une classe Repository pour gérer la persistence de l'entité dans la BD. Ça implique qu'on doit créer deux fichiers pour chaque classe du diagramme... un grand boulot!. Mais on peut se simplifier énormément la vie en utilisant un ORM...
 
 <br>
 
@@ -2472,7 +2472,7 @@ Le **DBAL** est un ensemble de librairies basées sur PDO qui facilite l'accès 
 
 **Doctrine** permet de créer une **correspondance entre les classes** de notre application (*domaine des objets*) et **les tableaux d'une BD** (*domaine de la BD*)
 
-On peut créer les entités facilement avec un assistant et puis lancer la création automatique de la BD.
+On peut créer les entités fácilement avec un assistant et puis lancer la création automatique de la BD.
 
 **Exemple**: nous avons une classe *Evenement* dans notre diagramme. On utilisera l'assistant de Doctrine (console) pour créer l'entité *Evenement*. Doctrine crée :
 
@@ -2561,9 +2561,9 @@ Si vous engagez les services d'un hébergeur vous devez configurer la BD selon c
 
 ## 11.4. Création des entités et mise à jour de la BD
 
-La BD est faite. On doit implémenter maintenant le diagramme de classes : les Entities.
+La BD est faite. On doit implementer maintenant le diagramme de classes : les Entities.
 
-Nous allons créer une Entity pour chaque classe dans le diagramme de classes, et puis créer les relations (associations ou héritage toujours) entre elles.
+Nous allons créer une Entity pour chaque classe dans le diagramme de classes, et puis créer les rélations (associations ou héritage toujours) entre elles.
 
 **Note**: Dans certains cas il peut y avoir de classes qui restent uniquement dans le domaine des objets : on ne crée pas un tableau dans la BD car on n'a pas besoin de stocker ses données dans la BD.
 
@@ -2580,7 +2580,7 @@ L'assistant créera les fichiers **/Entity/Livre.php** (la classe entité!) et *
 **/Entity/Livre.php** et **/Repository/LivreRepository.php** et recommencez.
 
 
-**Note:** On apprendra à éditer les entités dans la section 11.4 pour éviter de devoir recommencer à chaque fois qu'on se trompe, mais pour le moment recommencer est la meilleure option
+**Note:** On apprendra à editer les entités dans la section 11.4 pour éviter de devoir recommencer à chaque fois qu'on se trompe, mais pour le moment recommencer est la meilleure option
 
 
 Ouvrez le fichier Livre.php et observez qu'il s'agit d'une classe normale qui représente un livre et qui **contient des annotations qui décrivent certains de caractéristiques des champs**. **Ces annotations seront utilisées par Doctrine pour générer automatiquement la base de données selon les types de notre choix**. Pour plus d'information sur les types de doctrine, allez sur :
@@ -2885,7 +2885,7 @@ pas mettre une collection d'exemplaires dans une BD relationnelle ! ;)
 
 <br>
 
-#### Exercices : création d'entités et de relations
+#### Exercices : création d'entités et de rélations
 
 1)  On va considérer qu'un Client de la bibliothèque a une Adresse (rue, numero, codePostal, ville, client) et qu'une adresse peut correspondre à plusieurs clients (ex: co-habitants dans un appart) 
 
@@ -2895,7 +2895,7 @@ Créez la classe Client pour représenter les clients et la classe Adresse pour 
 
 ![](./images/diagramme-relations1.png)
 
-3 Pren des exemples du cours d'UML et implémentez les entités avec Doctrine dans un nouveau projet. Si vous êtes en train de planifier un projet pour vous, prenez plusieurs entités de votre schéma et implémentez-les avec Doctrine. Implémentez les associations aussi
+3 Pren des exemples du cours d'UML et implémentez les entités avec Doctrine dans un nouveau projet. Si vous êtes en train de planifier un projet pour vous, prenez plusieurs entités de votre schéma et implémentez-les avec Doctrine. Implementez les associations aussi
 
 <br>
 
@@ -2909,15 +2909,16 @@ Qui équivaut à ce schéma UML (POO) :
 
 ![](./images/many-to-many%20UML.png)
 
-Nous sommes dans une association de plusieurs à plusieurs qui contient des attributs d'association. Symfony a son propre mécanisme pour
-implémenter ces associations (<many-to-many>), toutefois on n'utilisera pas ce mécanisme **parce qu'il ne permet pas d'inclure d'attributs dans l'association !**
+Nous sommes dans une association de plusieurs à plusieurs qui contient
+d'attributs d'association. Symfony a son propre mécanisme pour
+implementer ces associations (<many-to-many>), toutefois on n'utilisera pas ce mécanisme **parce qu'il ne permet pas d'inclure d'attributs dans l'association !**
 
 Mais la solution est simple : on peut transformer l'association dans
 deux associations de one-to-many :
 
 ![](/images/many-to-many-transform.png)
 
-#### Exercices : création d'une relation de plusieurs à plusieurs
+#### Exercices : création d'une rélation de plusieurs à plusieurs
 
 Implémentez vous-même ce modèle dans **ProjetModeleSymfony** pour avoir la relation entre les Clients et les Exemplaires !
 
@@ -2933,7 +2934,7 @@ Considérons qu'on a juste besoin de connaitre qui sont les clients qui ont empr
 
 **Important :**
 
-Nous allons créer un **nouveau projet**  qui contiendra uniquement des exemples des relations moins habituelles que le *One-To-Many (= Many-toOne)*, *Many-to-Many* et *One-to-one** qui se trouveront dans **ProjetModelSymfony**. 
+Nous allons créer un **nouveau projet**  qui contiendra uniquement des exemples des rélations moins habituelles que le *One-To-Many (= Many-toOne)*, *Many-to-Many* et *One-to-one** qui se trouveront dans **ProjetModelSymfony**. 
 
 **L'utilisation de ce projet un exemple/exercice sera toujours indiquée à l'avance**
 
@@ -2952,7 +2953,7 @@ php bin/console doctrine:database:create
 
 1.  Créez les entités *Client* et *Exemplaire* **dans ProjetRelationsSymfony** 
 
-2.  Créez une propriété du type *relation* et choisissez **Many-to-many**
+2.  Créez une proprieté du type *relation* et choissisez **Many-to-many**
 
 ```console
 C:\xampp\htdocs\Int3-WAD20-Symfony5.2\ProjetRelationsSymfony>php bin/console make:entity
@@ -3013,7 +3014,7 @@ What type of relationship is this?
  Next: When you're ready, create a migration with php bin/console make:migration 
 ```
 
-Créez et lancez une migration. Observez les changements dans le code des entités ainsi que dans le schéma de la BD: Doctrine crée un nouveau tableau mais il n'y a pas moyen de rajouter des attributs dans la relation (ne pensez même pas à le faire directement dans phpMyAdmin!!!)
+Créez et lancez une migration. Observez les changements dans le code des entités ainsi que dans le schéma de la BD: Doctrine crée un nouveau tableau mais il n'y a pas moyen de rajouter des attributs dans la rélation (ne pensez même pas à le faire directement dans phpMyAdmin!!!)
 
 <br>
 
@@ -3286,9 +3287,9 @@ Créez à la main quelques enregistrements dans la base de données (Bibliothequ
 
 Par défaut il existe les méthodes suivantes (héritées) :
 
--   **findOneBy** : cherche des objets avec un filtre, renvoie seulement le premier objet qui atteint les conditions
+-   **findOneBy** : cherche des objets avec un filtre, renvoie seulement  le premier objet qui atteint les conditions
 
--   **findBy** : pareil que findOneBy mais renvoie tous les objets qui atteignent les conditions du filtre. findBy renvoie **toujours un array** même si il y a qu'un objet qui remplit les conditions du filtre
+-   **findBy** : pareil que findOneBy mais renvoie tous les objets qui atteignent les conditions du filtre. findBy renvoie **toujours un array** même si il y a qu'un objet qui atteing le filtre
 
 -   **find** : sélection par id. Renvoie un seul objet
 
@@ -3402,7 +3403,11 @@ Pour accéder à un objet dans la vue, utilisez la syntaxe "."
 
 ## 12.2. INSERT et UPDATE
 
-Quand on crée un objet (ex : Livre) il n'a aucune relation avec la BD: il est dans les **domaine des objets**. Si on lance la méthode **persist** sur cet objet, **l'objet sera lié au domaine de la BD**  mais aucune requête sera lancée pour le moment, l'objet ne sera pas encore dans la BD. Nous pouvons alors :
+Quand on crée un objet (ex : Livre) il n'a aucune relation avec la BD:
+il est dans les **domaine des objets**. Si on lance la méthode
+**persist** sur cet objet, **l'objet sera lié au domaine de la BD** 
+mais aucune requête sera lancée pour le moment, l'objet ne sera pas
+encore dans la BD. Nous pouvons alors :
 
 1.  Créer un objet
 
@@ -3413,9 +3418,14 @@ Quand on crée un objet (ex : Livre) il n'a aucune relation avec la BD: il est d
 
 4.  Lancer **flush** pour l'enregistrer/mettre à jour dans la BD
 
-L'opération **flush applique dans la BD les changements qu'on a réalisés dans le domaine des objets** (ex : obtenir un livre de la BD, le modifier dans le domaine des objets et le réenregistrer dans la BD).
+L'opération **flush applique dans la BD les changements qu'on a
+réalisés dans le domaine des objets** (ex : obtenir un livre de la BD,
+le modifier dans le domaine des objets et le réenregistrer dans la BD).
 
-Les méthodes **persist** et **flush** n'appartiennent pas à la classe Repository, ils font partie du Entity Manager de Doctrine. On discutera ces deux méthodes dans un contexte plus global (unité de travail) dans la section "Persistence" plus bas dans ce tutoriel.
+Les méthodes **persist** et **flush** n'appartiennent pas à la classe
+Repository, ils font partie du Entity Manager de Doctrine. On discutera
+ces deux méthodes dans un contexte plus global (unité de travail) dans
+la section "Persistence" plus bas dans ce tutoriel.
 
 Voyons quelques exemples d'insertion et mise à jour à continuation.
 
@@ -3491,16 +3501,23 @@ public function exempleDelete()
 
 2.  Créez une méthode qui insère deux Livres
 
-3.  Pour nous faciliter la création des entités et ne pas devoir affecter les propriétés avec les méthodes Set, modifiez les constructeurs de vos entités pour qu'il puissent recevoir un array contenant les paramètres pour construire chaque entité. Créez une méthode hydrate pour chaque entité. Cette méthode sera appelée si le constructeur reçoit un array de couples propriété-valeur (voir le cours d'hydratation).
+3.  Pour nous faciliter la création des entités et ne pas devoir
+    affecter les propriétés avec les méthodes Set, modifiez les
+    constructeurs de vos entités pour qu'il puissent recevoir un array
+    contenant les paramètres pour construire chaque entité. Créez une
+    méthode hydrate pour chaque entité. Cette méthode sera appelée si le
+    constructeur reçoit un array de couples propriété-valeur (voir le
+    cours d'hydratation).
 
 
 <br>
 
 # 13. Le modèle : Persistance
 
-Les actions qu'on réalise sur les entités (modification, mise à jour...) sont regroupées par Doctrine dans une **unité de travail (Unit of Work)**. Quand on fait un select de la BD, les entités obtenues seront aussi incluses dans l'unité de travail.
+Les actions qu'on réalise sur les entités (modification, mise à
+jour...) sont regroupées par Doctrine dans une **unité de travail (Unit of Work)**. Quand on fait un select de la BD, les entités obtenues seront aussi incluses dans l'unité de travail.
 
-L'unité de travail contient l'état d'un ensemble des entités, en plus de réaliser de requêtes à la BD. Elle est en charge de maintenir la **cohérence entre le modèle et la BD**
+L'unité de travail contient l'état d'un ensemble des entités, en plus de  réaliser de requêtes à la BD. Elle est en charge de maintenir la **cohérence entre le modèle et la BD**
 
 Documentation :
 
@@ -3824,7 +3841,7 @@ use Doctrine\ORM\Mapping\DiscriminatorMap;
 
 ![](./images/heritage2.png)
 
-Bien que nous avons trois entités au total, la méthode de **Single Table crée une seule table** contenant une colonne (discr) qui indiquera à quelle classe fille l'enregistrement correspond dans la BD (dans notre cas le colonne contient "AuteurH" ou "ClientH")
+Bien que nous avons trois entités au total, la méthode de **Single Table crée une seule table** contenant une colonne (discr) qui indiquera à quelle classe fille correspond  l'enregistrement dans la BD (dans notre cas le colonne contient "AuteurH" ou "ClientH")
 
 Les **régles** à suivre sont :
 
@@ -3886,7 +3903,7 @@ Nous devons uniquement créer un Client et l'insérer, Doctrine remplira tant le
 
 ## 16.2. Class Table Inheritance
 
-Nous n'allons pas développer cette méthode maintenant mais vous avez la documentation ici :
+Nous n'allons pas developper cette méthode maintenant mais vous avez la documentation ici :
 
 <https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/inheritance-mapping.html#class-table-inheritance>
 
@@ -3966,7 +3983,7 @@ class LivreFixture extends Fixture
 php bin/console doctrine:fixtures:load --append
 ```
 
-**--append** permet de lancer la fixture sans effacer les données existantes dans les tableaux. Si vous l'enlevez-vous effacerez la totalité du contenu de votre BD (Symfony vous prévient quand-même)
+**--append** permet de lancer la fixture sans effacer les données existantes dans les tableaux. Si vous l'enlevez-vous effacerez la totalité du contenu de votre BD (Symfony vous previent quand-même)
 
 Ici on a qu'une fixture mais on pourrait avoir plein.
 
@@ -4167,7 +4184,7 @@ Ici, la collection d'Exemplaires remplie.
     #[Route ("/exemples/dql/exemple/fetch/join")]
     public function exempleFetchJoin(){
         $em = $this->getDoctrine()->getManager();
-        // On rajoute l'entité qui est en relation (exemplaires) dans le SELECT
+        // On rajoute l'entité qui est en rélation (exemplaires) dans le SELECT
         $query = $em->createQuery ('SELECT livre, exemplaires FROM App\Entity\Livre livre '
                 . 'JOIN livre.exemplaires exemplaires');
         $resultat = $query->getResult();
@@ -4281,7 +4298,7 @@ En utilisant DQL :
 8)  Obtenez tous les livres qui contient un texte dans le titre reçu
     comme paramètre dans l'URL
 
-9)  Obtenez tous les emprunts réalisés pendant la première quinzaine de mars de 2021 en utilisant DQL. On veut afficher le titre du livre, la date de l'emprunt et le nom et le prénom du client
+9)  Obtenez tous les emprunts réalisés pendant la prémiere quinzaine de mars de 2021 en utilisant DQL. On veut afficher le titre du livre, la date de l'emprunt et le nom et le prénom du client
 
 10) **Exercez-vous** en réalisant toute sorte de requêtes, essayez les possibilités de Doctrine :
 
@@ -4295,7 +4312,8 @@ En utilisant DQL :
 # 19. Accès à la BD avec DQL en utilisant les classes Repositoires
 
 
-Tel qu'on a déjà mentionné dans la section "Selection", quand on crée une entité sa classe Repository est créée aussi. Cette classe contient les méthodes par défaut qu'on a déjà utilisés (find, findBy, findOneBy, etc...). On va maintenant rajouter **de méthodes faits par nous capables de réaliser de requêtes plus complexes**.
+Tel qu'on a déjà mentionné dans la section "Selection", quand on crée une entité sa classe Repository est créée aussi. Cette classe contient les méthodes par défaut qu'on a déjà utilisés (find, findBy, findOneBy,
+etc...). On va maintenant rajouter **de méthodes faits par nous capables de réaliser de requêtes plus complexes**.
 
 Le but est de simplifier les actions du controller qui, au lieu de devoir contenir la logique de requêtes complexes, appelleront aux actions des repositoires.
 
@@ -4366,7 +4384,8 @@ Observez qu'il n'y a pratiquement rien à faire dans l'action...
 # 20. Accès à la BD avec Query Builder
 
 
-**Query Builder est une API qui permet de générer des requêtes de sélection complexes qui renvoient des objets** (requêtes de regroupement, jointures, sous-requêtes...) et pas juste des arrays. En fait Query Builder est un générateur de DQL pour faciliter la création de requêtes, mais DQL est préféré.
+**Query Builder est une API qui permet de générer des requêtes de séléction complexes qui renvoient des objets** (requêtes de regroupement, jointures, sous-requêtes...) et pas juste des arrays. En fait Query Builder est un générateur de DQL pour faciliter la création
+de requêtes, mais DQL est préféré.
 
 On pourra réaliser les fonctions de DQL mais en utilisant une notation complètement orientée objet (avec ses avantages et ses inconvénients)
 
