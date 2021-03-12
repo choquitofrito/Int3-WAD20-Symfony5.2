@@ -118,7 +118,7 @@
 - [21. Formulaires en Symfony](#21-formulaires-en-symfony)
   - [21.1. Création d'un formulaire indépendant](#211-création-dun-formulaire-indépendant)
   - [21.2. Création une classe de formulaire](#212-création-une-classe-de-formulaire)
-  - [21.3. Création d'un formulaire pre-rempli avec les données d'une entité](#213-création-dun-formulaire-pre-rempli-avec-les-données-dune-entité)
+  - [21.3. Création d'un formulaire pré-rempli avec les données d'une entité](#213-création-dun-formulaire-pré-rempli-avec-les-données-dune-entité)
   - [21.4. Action et Propriétés des champs du formulaire](#214-action-et-propriétés-des-champs-du-formulaire)
   - [21.5. Boutons dans les formulaires (bonnes pratiques)](#215-boutons-dans-les-formulaires-bonnes-pratiques)
       - [Exercice : Créez des boutons de submit dans les vues qui rendent les formulaires des exemples précédents](#exercice--créez-des-boutons-de-submit-dans-les-vues-qui-rendent-les-formulaires-des-exemples-précédents)
@@ -181,9 +181,11 @@
 
 <br>
 
+corocoasdc
+
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
 
--   Installez **Composer**
+- Installez **Composer**
 
 - Installez **Git**
 
@@ -191,7 +193,7 @@
 
 - Installez **Visual Studio Code**
 
-Puis, installez ces extensions :
+Puis, installex ces extensions :
 
   [Intelephense](https://marketplace.visualstudio.com/items?itemName=bmewburn.vscode-intelephense-client)
 
@@ -243,7 +245,7 @@ symfony server:start
 
 - Testez le bon fonctionnement du serveur en regardant les messages sur la console et en tapant l'adresse suivante dans le navigateur : http://localhost:8000/
 
-- Ouvrez le dossier de ce projet en Visual Studio et créez un fichiero de workspace.
+- Ouvrez le dossier de ce projet en Visual Studio et créez un fichier de workspace.
 
 <br>
 
@@ -370,7 +372,7 @@ l'annotation)
 Une route indiquera alors une **action à lancer (méthode d'une classe)
 qui se trouve dans un controller (la classe, dans un fichier .php)**
 
-**Note:** on a choisit d'inclure le nom du controller dans la route. Ce n'est pas obligatoire, la route précéndate aurait pu être :
+**Note:** on a choisit d'inclure le nom du controller dans la route. Ce n'est pas obligatoire, la route précédente aurait pu être :
 
     #[Route('/louloulou/accueil')]
 
@@ -1021,7 +1023,7 @@ La documentation complete sur les vues en Symfony se trouve ici :
 
 ## 6.1. Création d'un template Twig
 
-On va créer un template Twig qui generera notre vue. Le template reçoit un tableau qui a été créé dans le controller et l'affichera. Normalement le controller accédera à une base de données, mais pour simplifier notre exemple on crée juste un tableau. Faisons un exemple en partant de zéro:
+On va créer un template Twig qui génèrera notre vue. Le template reçoit un tableau qui a été créé dans le controller et l'affichera. Normalement le controller accédera à une base de données, mais pour simplifier notre exemple on crée juste un tableau. Faisons un exemple en partant de zéro:
 
 1.  **Créez un controller** ExemplesTwigController
 ```console
@@ -1056,7 +1058,7 @@ public function exemple1 (){
 1.  Créez le **template twig** : templates/<nom_du_controller>/<nom_du_template>
 
 Ici il s'agit de **templates/exemples_twig/exemple_1.html.twig**
-Attention à la tansformation vers snake case!
+Attention à la transformation vers snake case!
 
 Le nom du fichier du template sera le nom spécifié dans l'appel à render du controller
 
@@ -1079,7 +1081,7 @@ Créez une deuxième action afficheclient et un template qui affiche "vive la Be
 ## 6.2. Les variables TWIG
 
 
-Twig peut utiliser des **variables**, ce qui nous permet d'accéder d'une façon très simple aux données envoyéés au template par le controller. Pour accéder u **vaable** nous devons utiliser cette notation :
+Twig peut utiliser des **variables**, ce qui nous permet d'accéder d'une façon très simple aux données envoyées au template par le controller. Pour accéder u **vaable** nous devons utiliser cette notation :
 
 ```twig
 {{ nom }}
@@ -2162,16 +2164,13 @@ de figure.
 
 ## 10.5. Injection de paramètres dans le service (I)
 
-Nous pouvons rajouter de paramètres aux services en utilisant
-*services.yaml*. Dans ce fichier on configure la manière dont les
+Nous pouvons rajouter de paramètres aux services en utilisant *services.yaml*. Dans ce fichier on configure la manière dont les
 services deviendront accessibles dans nos controllers.
 
 **Exemple** : un service Bonjour qui affiche "bonjour à tous" dans la langue parametrée dans services.yaml
 
-D'abord on doit créer le service. Si on veut que le service soit
-paramétré **on rajoute un paramètre dans le constructeur** **et on le
-stocke dans une propriété** (on peut avoir autant de paramètres qu'on
-veut) :
+D'abord on doit créer le service. Si on veut que le service soit paramétré **on rajoute un paramètre dans le constructeur** **et on le
+stocke dans une propriété** (on peut avoir autant de paramètres qu'on veut) :
 
 
 ```php
@@ -3280,7 +3279,7 @@ Documentation: <https://symfony.com/doc/3.3/doctrine.html>
 
 ## 12.1. SELECT
 
-Créez à la main quelques enregistrements dans la base de données (Bibliotheque, table Livres) car nous allons réaliser quelques requêtes de sélection. 
+Créez à la main quelques enregistrements dans la base de données (Bibliotheque, table Livres) car nous allons réaliser quelques requêtes de selection. 
 
 (ou importez le fichier *ProjetModelSymfony\src\Entity\sql*)
 
@@ -4586,7 +4585,7 @@ En Symfony nous avons plusieurs options pour créer un formulaire :
 **Exemple :** Si on crée un formulaire pour insérer un Client, il sera associé à l'entité Client
 
 
-3. Créer **un formulaire qui est associé à une entité du modèle mais auquel on rajoute/enleve de champs**. Les champs manquants de l'entité auront la valeur null. Si le formulaire a de champs en trop, on pourra traiter ces infos de façon independante à la classe.
+3. Créer **un formulaire qui est associé à une entité du modèle mais auquel on rajoute/efface de champs**. Les champs manquants de l'entité auront la valeur null. Si le formulaire a de champs en trop, on pourra traiter ces infos de façon indépendante à la classe.
 
 **Exemple :** On crée un formulaire pour insérer un Client et on rajoute un champ "Je suis d'accord avec les conditions du site"
 
@@ -4803,7 +4802,7 @@ Il nous manque le **submit**, on le verra dans les sections suivantes.
 Nous n'allons pas rajouter un bouton de submit dans la classe du
 formulaire **car ce n'est pas une bonne pratique.**
 
-## 21.3. Création d'un formulaire pre-rempli avec les données d'une entité
+## 21.3. Création d'un formulaire pré-rempli avec les données d'une entité
 
 Vous pouvez créer un formulaire pré-rempli avec les données d'une
 entité très facilement. Pour ce faire, il suffit de créer l'entité avant et l'envoyer comme deuxième paramètre à la méthode **createForm**. Voici un exemple :
@@ -4916,7 +4915,7 @@ Nous utiliserons un array de paramètres et la méthode **generateUrl** pour gé
 
 <br>
 
-Si on veut reutiliser un même formulaire pour réaliser plusieurs actions (ex : mettre à jour un livre ou rajouter un livre) **on ne doit pas créer les boutons dans la classe du formulaire mais dans la vue où on génére le form**. Si on le crée dans la classe on sera coincés car l'étiquette du bouton sera fixée (on casse le principe de réutilisation du code!).
+Si on veut réutiliser un même formulaire pour réaliser plusieurs actions (ex : mettre à jour un livre ou rajouter un livre) **on ne doit pas créer les boutons dans la classe du formulaire mais dans la vue où on génère le form**. Si on le crée dans la classe on sera coincés car l'étiquette du bouton sera fixée (on casse le principe de réutilisation du code!).
 
 On ne doit pas non plus rajouter le bouton dans le controller car on serait en train de mélanger présentation (ex : la classe du bouton) avec la logique (on casse le principe de "separation of concerns"!).
 
@@ -4929,7 +4928,7 @@ La **meilleure option est de créer le bouton de submit en HTML dans la vue**. V
 {{ form_end (formulaireLivre) }}
 ```
 
-Cette méthode nous permet de reutiliser le formulaire pour plein
+Cette méthode nous permet de re-utiliser le formulaire pour plein
 d'actions, on devra juste créer les boutons dans chaque vue.
 
 #### Exercice : Créez des boutons de submit dans les vues qui rendent les formulaires des exemples précédents
@@ -5004,7 +5003,7 @@ Pour créer un formulaire et le traiter :
 
 5.  Créez une **action qui génère et traite le formulaire**
 
-C'est tout!!! Les formulaires sont horribles mais il suffira de rajouter le style. Symfony facilite enormement l'utilisation de Webpack ou Foundation.
+C'est tout!!! Les formulaires sont horribles mais il suffira de rajouter le style. Symfony facilite énormément l'utilisation de Webpack ou Foundation.
 
 <br>
 
@@ -5060,9 +5059,9 @@ public function exempleLivre (Request $req){
 
 Pour comprendre l'action on doit savoir qu'**elle peut être  appelée dans deux cas de figure** :
 
-a)  Une premiere fois, **quand on tape l'action dans l'URL ou on redirige vers cette action**. Dans ce cas, le formulaire doit être **rendu (affiché dans la vue)**
+a)  Une première fois, **quand on tape l'action dans l'URL ou on redirige vers cette action**. Dans ce cas, le formulaire doit être **rendu (affiché dans la vue)**
 
-b)  On **appele cette même action en cliquant sur un bouton submit** et on doit traiter le contenu reçu (dans ce cas on va juste afficher un objet crée à partir du contenu du formulaire)
+b)  On **appelle cette même action en cliquant sur un bouton submit** et on doit traiter le contenu reçu (dans ce cas on va juste afficher un objet crée à partir du contenu du formulaire)
 
 Dans les **deux cas de figure on crée une entité vide et un objet formulaire**. Pour savoir si on se trouve dans le cas a) ou b) à l'interieur de l'action on doit **vérifier l'objet Request**. 
 
@@ -5425,7 +5424,7 @@ On va créer une entité (Pays) et un formulaire qui nous permettra de faire upl
 
 1.  **Créez l'entité** (Pays, contenant le **nom** du pays et un champ **lienImage** pour stocker **le lien** de l'image. Les deux sont du type string)
 
-**IMPORTANT: effacez la specification des types (paramètres et retour) dans les méthodes set et get de lienImage**
+**IMPORTANT: effacez la spécification des types (paramètres et retour) dans les méthodes set et get de lienImage**
 
 Faites la migration.
 
@@ -5681,7 +5680,7 @@ public function exemple1Traitement(Request $requeteAjax)
 }
 ```
 
-Cette action reçoit un objet Request. On peut accèder aux éléments du formulaire en utilisant **get**. Dans cet exemple, l'action renvoie un array à traiter dans le code JS. Pour envoyer des arrays ou des objets à JS depuis PHP on doit les transformer en **JSON**. On verra d'autres exemples (envoyer des objets) par la suite.
+Cette action reçoit un objet Request. On peut accéder aux éléments du formulaire en utilisant **get**. Dans cet exemple, l'action renvoie un array à traiter dans le code JS. Pour envoyer des arrays ou des objets à JS depuis PHP on doit les transformer en **JSON**. On verra d'autres exemples (envoyer des objets) par la suite.
 
 ![](./images/axios1.png)
 
@@ -6053,6 +6052,7 @@ ExemplesAjaxController)**
 2. Créez une autre master page et deux vues qui en héritent. La première contient le jeu que vous venez de réaliser et la deuxième contient trois boutons. Chaque bouton affiche la photo d'un animal sans recharger la page.
 
 <br>
+
 
 # 22. Response JSON en Symfony
 

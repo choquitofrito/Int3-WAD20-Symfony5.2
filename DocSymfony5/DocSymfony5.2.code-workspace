@@ -5,6 +5,20 @@
 		}
 	],
 	"settings": {
-		"cSpell.language": ",fr"
+		"cSpell.language": ",fr",
+		"cSpell.words": [
+			"construct",
+			"controller",
+			"controllers",
+			"endfor",
+			"form",
+			"get",
+			"javascripts",
+			"symfony",
+			"templates",
+			"twig",
+			"twigs",
+			"upload"
+		]
 	}
 }
