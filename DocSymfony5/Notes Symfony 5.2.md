@@ -148,12 +148,11 @@
   - [24.1. Configuration de la sécurité et création d'un formulaire de login](#241-configuration-de-la-sécurité-et-création-dun-formulaire-de-login)
   - [24.2. Création d'un formulaire d'inscription](#242-création-dun-formulaire-dinscription)
   - [24.3. Logout](#243-logout)
-- [till here](#till-here)
 - [25. Accès à l'objet app.user](#25-accès-à-lobjet-appuser)
-- [Authentication et Rôles](#authentication-et-rôles)
-  - [Gestion de rôles](#gestion-de-rôles)
-  - [Contrôle d'accès par rôles](#contrôle-daccès-par-rôles)
-    - [Dans security.yaml](#dans-securityyaml)
+  - [26. Authentication et Rôles](#26-authentication-et-rôles)
+  - [26.1. Gestion de rôles](#261-gestion-de-rôles)
+  - [26.2. Contrôle d'accès par rôles](#262-contrôle-daccès-par-rôles)
+    - [26.2.1. Dans security.yaml](#2621-dans-securityyaml)
     - [Dans le controller](#dans-le-controller)
     - [Dans les vues](#dans-les-vues)
   - [Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre](#gestion-de-lerreur-access-denied-exception-en-utilisant-une-classe-propre)
@@ -6053,7 +6052,6 @@ ExemplesAjaxController)**
 
 <br>
 
-
 # 22. Response JSON en Symfony
 
 ## 22.1. Renvoi JSON d'un array d'objets obtenu avec les méthodes d'un repo  
@@ -6064,7 +6062,7 @@ La séquence peut être résumée en :
 
 **obtenir avec find (ou autre) -> serialize -> renvoyer un objet Response contenant du JSON**
 
-**Exemple** : obtenir une liste d'aeroports et les afficher dans un div dans la vue
+**Exemple** : obtenir une liste des aeroports et les afficher dans un div dans la vue
 
 **Code commenté :**
 
@@ -6089,7 +6087,7 @@ La séquence peut être résumée en :
 
 **obtenir avec find (ou autre) -> getArrayResult -> renvoyer un objet JsonResponse**
 
-**Exemple** : obtenir une liste d'aeroports et les afficher dans un div
+**Exemple** : obtenir une liste des aeroports et les afficher dans un div
 
 **Code :**
 
@@ -6135,7 +6133,7 @@ MAILER_DSN=gmail://monUserGoogle:monPass@default
 Créez un controller **MailController** et cette action d'exemple:
 
 **Note:**
-Vous devez activer l'accès à des applications moins-securisées dans votre compte Gmail.
+Vous devez activer l'accès à des applications moins-sécurisées dans votre compte Gmail.
 
 https://support.google.com/accounts/answer/6010255?hl=fr#zippy=%2Csi-le-param%C3%A8tre-autoriser-les-applications-moins-s%C3%A9curis%C3%A9es-est-activ%C3%A9-pour-votre-compte
 
@@ -6582,281 +6580,199 @@ trouve dans **SecuriteController**.
     {
         dd("Hasta la vista, baby");
     }
+<
 ```
 
-# till here
+<br>
+
 
 # 25. Accès à l'objet app.user
 
-Si vous utilisez le système d'authentication de Symfony
-Une fois l'utilisateur est logué vous pouvez obtenir son objet **User**
-associé :
+Si vous utilisez le système d'authentication de Symfony, une fois l'utilisateur est logué vous pouvez obtenir son objet **User** associé :
 
 1.  Dans le controller
 
+```php
 $this->getUser()
+```
 
-2.  Dans la vue
+1.  Dans la vue
 
+```twig
 app.user
+```
 
 Les deux méthodes renvoient l'objet User représentant l'utilisateur
 qui es connecté ou **null** si personne n'a fait login.
 
-L'objet User contient **toutes les propriétés et on peut les accéder en
-utilisant les gets et sets**.
+L'objet User contient **toutes les propriétés et on peut les accéder en utilisant les gets et sets**.
 
 Par exemple :
 
+```twig
 {{ dump (app.user) }}
+```
 
 Ces deux instructions donnent les même résultat car app.user.username
 est juste un raccourci de Symfony pour user.getUsername()
 
+```twig
 {{ dump (app.user.getUsername()) }}
-
 {{ dump (app.user.username) }}
+```
 
-Des actions d'exemple se trouvent dans le projet "ProjetLoginPass",
-controller SecurityController
+Des actions d'exemple se trouvent dans le projet **ProjetLoginPass**, controller **SecurityController**
 
-Authentication et Rôles 
-========================
 
-Gestion de rôles
-----------------
+## 26. Authentication et Rôles 
 
-Nous allons traiter la gestion de rôles en Symfony et on va utiliser
-comme base le projet qu'on vient de créer, **ProjetLoginPass**. Nous
-voulons profiter de toute la partie d'authentification qui reste la
-même et qu'on ne veut pas refaire.
+## 26.1. Gestion de rôles
 
-a.  Clonez le projet **ProjetLoginPass** de github dans un dossier
-    **ProjetLoginPassRoles** avec cette ligne :
+Nous allons traiter la gestion de rôles en Symfony et on va utiliser comme base le projet qu'on vient de créer, **ProjetLoginPass**. Nous
+voulons profiter de toute la partie d'authentification qui reste la même et qu'on ne veut pas refaire.
 
-git clone https://github.com/choquitofrito/ProjetLoginPass.git
-ProjetLoginPassRoles
->
-composer install
+1.  Faites une copie complete du projet **ProjetLoginPass** de github dans un dossier
+    **ProjetLoginPassRoles**
 
-b.  Effacez les migrations (dans le dossier Migrations, elles
-    correspondent à l'autre projet), modifiez votre fichier **.env**
-    pour pointer vers une autre base de données
-    **projetloginpassroles.**
+2.  Changez le nom de la BD `**projetloginpassroles**. Effacez les migrations (dans le dossier Migrations, elles correspondent à l'autre projet)    
 
-c.  Juste pour enrichir le projet et montrer que c'est faisable,
-    rajouter une propriété **nom** à l'entité User
+3.  Juste pour enrichir le projet et montrer que c'est faisable, rajouter une propriété **nom** à l'entité User
 
+```console
 php bin/console make:entity User
+```
 
-d.  Rajoutez un champ **TextType** (importez-le!) au formulaire et
-    effacez la section "agree terms" dans
-    **FormRegistrationFormType.php** pour pouvoir saisir le nom aussi
-    dans le form d'inscription
+4.  Rajoutez un champ **TextType** (importez-le!) au formulaire et effacez la section "agree terms" dans **FormRegistrationFormType.php** pour pouvoir saisir le nom aussi dans le form d'inscription. Effacez le champ **agreeTerms**
 
-    ...
 
-->add('email')
+```php
+.
+.
+        $builder
+            ->add('email')
+            ->add('nom',TextType::class)
+            // ->add('agreeTerms', CheckboxType::class, [
+            //     'mapped' => false,
+            //     'constraints' => [
+            //         new IsTrue([
+            //             'message' => 'You should agree to our terms.',
+            //         ]),
+            //     ],
+            // ])
+.
+.
+```
 
-            **->add ('nom', TextType::class)**
+5.  Editez le formulaire d'inscription (vue **registration/registration.html.twig**). Rajoutez la génération du champ du formulaire **nom**
 
-**            **->add('plainPassword', PasswordType::class, [
-
-      
-
-...
-
-e.  Editez le formulaire d'inscription (vue
-    **registration/registration.html.twig**)
-
-    Rajoutez la génération du champ du formulaire **nom**
-
-{{ form_row(registrationForm.nom) }}
 
 Et effacez la génération du champ **agreeTerms**
 
+```php
+{{ form_start(registrationForm) }}
+{{ form_row(registrationForm.email) }}
+{{ form_row(registrationForm.nom) }}
+{{ form_row(registrationForm.plainPassword, {
+label: 'Password'
+}) }}
+{# {{ form_row(registrationForm.agreeTerms) }} #}
+```
+
+
 Vous pouvez tester ce formulaire. Il manque uniquement la fonctionnalité
-de rajouter de rôles mais on ne fera pas ça ici. Vous pouvez toujours
-éditer les rôles plus tard à la main ou en utilisant la méthode
-**setRoles** de l'entité!
+de rajouter de rôles mais on ne la fera pas ça ici. Vous pouvez toujours éditer les rôles plus tard à la main ou en utilisant la méthode **setRoles** de l'entité!
 
-f.  Créez la BD même manière que dans le projet précèdent
-
+6.  Créez et migrez la BD
+```php
 php bin/console doctrine:database:create
->
 php bin/console make:migration
->
 php bin/console doctrine:migrations:migrate
+```
 
-g.  Remplacez la fixture par celle-ci, qui rajoute des Users avec de
+7.  Remplacez la fixture par celle-ci, qui rajoute des Users avec de
     rôles (comprenez le code!)
 
+```php
 class UserFixtures extends Fixture
-
 {
-
     
-
     private $passwordEncoder;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-
     {
-
          $this->passwordEncoder = $passwordEncoder;
-
     }
-
     
-
     public function load(ObjectManager $manager)
-
     {
-
         // on va créer 5 admins et 5 clients+gestionnaires
-
         for ($i = 0; $i < 5 ; $i++){
-
             $user = new User();
-
-            $user->setEmail 
-
-("newuser".$i."@lala.com"); // user1@lala.com, user2@lala.com etc....
-
-            $user->setPassword
-
-($this->passwordEncoder->encodePassword(
-
-                 $user,
-
-                 'lePassword'.$i // lepassword1, lepassword2, etc...
-
-             ));
-
-            $user->setNom("nom".$i);
-
-            $user->setRoles(['ROLE_ADMIN']);
-
-            $manager->persist ($user);
-
-        }
-
-        for ($i = 0; $i < 5 ; $i++){
-
-            $user = new User();
-
-            $user->
-
-setEmail ("autreuser".$i."@lala.com"); // user1@lala.com, user2@lala.com etc....
-
+            $user->setEmail ("newuser".$i."@lala.com"); // user1@lala.com, user2@lala.com etc....
             $user->setPassword($this->passwordEncoder->encodePassword(
-
                  $user,
-
                  'lePassword'.$i // lepassword1, lepassword2, etc...
-
              ));
-
             $user->setNom("nom".$i);
-
-            $user->setRoles(['ROLE_CLIENT','ROLE_GESTIONNAIRE']);
-
+            $user->setRoles(['ROLE_ADMIN']);
             $manager->persist ($user);
-
         }
-
+        for ($i = 0; $i < 5 ; $i++){
+            $user = new User();
+            $user->setEmail ("autreuser".$i."@lala.com"); // user1@lala.com, user2@lala.com etc....
+            $user->setPassword($this->passwordEncoder->encodePassword(
+                 $user,
+                 'lePassword'.$i // lepassword1, lepassword2, etc...
+             ));
+            $user->setNom("nom".$i);
+            $user->setRoles(['ROLE_CLIENT','ROLE_GESTIONNAIRE']);
+            $manager->persist ($user);
+        }
         $manager->flush();
-
     }
-
 }
+```
 
-h.  Lancer les fixtures pour la remplir. Dans ce projet on crée
-    plusieurs types d'user (voir **DataFixtures/UserFixtures**). Selon
-    le système de rôles de Symfony, vous pouvez choisir vous-mêmes les
-    noms des rôles en sachant que le nom du rôle doit commencer par
-    **ROLE_** (ex: ROLE_CLIENT, ROLE_ADMIN, ROLE_PARTICIPANT...)
 
+1.  Lancer les fixtures pour la remplir. **UserFixtures** crée plusieurs types d'user. Selon le système de rôles de Symfony, vous pouvez choisir vous-mêmes les noms des rôles en sachant que le nom du rôle doit commencer par **ROLE_** (ex: ROLE_CLIENT, ROLE_ADMIN, ROLE_PARTICIPANT...)
+
+```php
 php bin/console doctrine:fixtures:load
+```
+(ne rajoutez pas --append car vous voulez carrément effacer le tableau User)
 
-(pas --append car vous voulez carrément effacer le tableau User)
+**Note** : Une autre option pour remplir les users (plus élaborée, possible alternative à la fixture et qui n'est pas convenable ici) est de créer un user ayant un rôle ROLE_SUPER_ADMIN qui puisse accéder à la gestion de tous les utilisateurs en utilisant un formulaire. Cet user aura accès à une route qui affiche un deuxième formulaire d'inscription/modification permettant le choix/modification du rôle des utilisateurs. Attention car la sécurité de votre site peut être en jeu !
 
-**Note** : Une autre option pour remplir les users (plus élaborée,
-possible alternative à la fixture et qui n'est pas convenable ici)
-est de créer un user ayant un rôle ROLE_SUPER_ADMIN qui puisse
-accéder à la gestion de tous les utilisateurs en utilisant un
-formulaire. Cet user aura accès à une route qui affiche un deuxième
-formulaire d'inscription/modification permettant le
-choix/modification du rôle des utilisateurs. Attention car la sécurité
-de votre site peut être en jeu !
+<br>
 
-Contrôle d'accès par rôles
----------------------------
+## 26.2. Contrôle d'accès par rôles
 
-Puis vous pouvez restreindre l'accès à certains rôles de trois
-manières :
+Puis vous pouvez restreindre l'accès à certains rôles de trois manières :
 
 1.  dans **security.yaml**
 
-2.  dans un controller
+2.  dans un **controller**
 
-3.  dans une vue
+3.  dans une **vue**
 
 On va développer ici un exemple de chaque méthode
 
-### Dans security.yaml 
 
-On peut restreindre l'accès à de grandes sections de notre site (ex:
-partie admin) avec **le control d'accès dans**
-**config/packages/security.yaml.** C'est assez simple mais il faut
-connaitre un minimum les expressions régulières ou adapter les exemples
-ci-dessous à vos besoins
+### 26.2.1. Dans security.yaml 
+
+On peut restreindre l'accès à de grandes sections de notre site (ex: partie admin) avec **le control d'accès dans** **config/packages/security.yaml.** C'est assez simple mais il faut connaitre un minimum les expressions régulières ou adapter les exemples ci-dessous à vos besoins
 
 <https://symfony.com/doc/current/security.html#security-authorization-access-control>
 
-1.  **Créez un controller** GestionController et ses vues
-    correspondantes. On utilisera ces actions pour vérifier le bon
-    fonctionnement des restrictions qu'on fera plus tard dans
-    security.yaml
+1.  **Créez un controller** GestionController et ses vues correspondantes. On utilisera ces actions pour vérifier le bon fonctionnement des restrictions qu'on fera plus tard dans security.yaml
 
-class GestionController extends AbstractController
+```php
 
-{
+```
 
-    // ces routes sont accessibles uniquement pour certains roles
+```twig
 
-    // car on l'a fixé dans security.yaml
-
-    /**
-
-     * @Route("/gestion/action1")
-
-     */
-
-    public function action1()
-
-    {
-
-        return $this->render('gestion/action1.html.twig');
-
-    }
-
-    /**
-
-     * @Route("/gestion/action2")
-
-     */
-
-    public function action2()
-
-    {
-
-        return $this->render('gestion/action2.html.twig');
-
-    }
-
-}
-
+```
 (gestion/action1.html.twig, le code sera pareil pour action2. Le dump
 affiche les rôles)
 
@@ -6870,7 +6786,7 @@ Voici action 1
 
 {% endblock %}
 
-2.  **Créez les restrictions dans security.yaml**
+1.  **Créez les restrictions dans security.yaml**
 
     Les deux actions de ce controller doivent être uniquement par un
     utilisateur ayant le role ROLE_GESTIONNAIRE. C'est dans
