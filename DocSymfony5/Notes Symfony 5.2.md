@@ -153,6 +153,7 @@
   - [26.1. Gestion de rôles](#261-gestion-de-rôles)
   - [26.2. Contrôle d'accès par rôles](#262-contrôle-daccès-par-rôles)
     - [26.2.1. Dans security.yaml](#2621-dans-securityyaml)
+- [till here](#till-here)
     - [Dans le controller](#dans-le-controller)
     - [Dans les vues](#dans-les-vues)
   - [Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre](#gestion-de-lerreur-access-denied-exception-en-utilisant-une-classe-propre)
@@ -6765,6 +6766,8 @@ On peut restreindre l'accès à de grandes sections de notre site (ex: partie ad
 <https://symfony.com/doc/current/security.html#security-authorization-access-control>
 
 1.  **Créez un controller** GestionController et ses vues correspondantes. On utilisera ces actions pour vérifier le bon fonctionnement des restrictions qu'on fera plus tard dans security.yaml
+
+# till here
 
 ```php
 
