@@ -162,13 +162,14 @@
 - [TILL HERE](#till-here)
 - [27. Pagination](#27-pagination)
 - [28. JS et CSS avec Webpack encore](#28-js-et-css-avec-webpack-encore)
-  - [28.1. Installation de Webpack Encore et de node_modules](#281-installation-de-webpack-encore-et-de-node_modules)
+  - [28.1. Installation de Webpack Encore et de Node](#281-installation-de-webpack-encore-et-de-node)
   - [28.2. Configurer Webpack Encore](#282-configurer-webpack-encore)
   - [28.3. Lancer Webpack](#283-lancer-webpack)
   - [28.4. Utiliser le code dans les vues](#284-utiliser-le-code-dans-les-vues)
   - [28.5. Encore et Bootstrap](#285-encore-et-bootstrap)
 - [29. Intégration de boutons de paiement Paypal](#29-intégration-de-boutons-de-paiement-paypal)
 - [END](#end)
+  - [jQuery](#jquery)
 - [4. Installation de packages dans un projet Symfony Flex](#4-installation-de-packages-dans-un-projet-symfony-flex)
 - [5. Symfony avec Apache. Configuration des Virtual Hosts](#5-symfony-avec-apache-configuration-des-virtual-hosts)
   - [Création d'un serveur virtuel (virtual host) en Windows](#création-dun-serveur-virtuel-virtual-host-en-windows)
@@ -2915,7 +2916,7 @@ deux associations de one-to-many :
 
 #### Exercices : création d'une relation de plusieurs à plusieurs
 
-Implémentez vous-même ce modèle dans **ProjetModeleSymfony** pour avoir la relation entre les Clients et les Exemplaires !
+Implémentez vous-même ce modèle dans **ProjetModelSymfony** pour avoir la relation entre les Clients et les Exemplaires !
 
 Si vous êtes toujours intéressé à implémenter une association de plusieurs à plusieurs **sans attributs**, suivez les exemples de la documentation de Doctrine :
 
@@ -4869,7 +4870,7 @@ Chaque champ a **un ensemble de propriétés HTML héritées de ses parents** (e
 On va créer un formulaire plus personnalisé que le précédent pour l'entité *Livre*. Rajoutez les entités *Exemplaire* et *Livre* (vous pouvez les copier d'un autre projet, mais effacez leurs relations avec les autres entités). 
 
 
-Copiez dans ce projet toutes les entités et les repos de *ProjetModeleSymfony*. Dans l'entité Livre, rajoutez **nombrePages**, **langue** et **format** (eBook, papier).
+Copiez dans ce projet toutes les entités et les repos de *ProjetModelSymfony*. Dans l'entité Livre, rajoutez **nombrePages**, **langue** et **format** (eBook, papier).
 Faites la migration.
 
 1. **Créez un formulaire** (LivreType) basé sur Livre (prenez comme exemple celui de l'entité Aeroport) et **rajoutez les types pour chaque champ**. 
@@ -7201,7 +7202,7 @@ Si une erreur s'est produite, on envoie le lastUserName et l'erreur pour que la 
 
 
 ```php
-#["/login/modal", name="app_login")
+#[Route["/login/modal", name="app_login")]
 public function login(AuthenticationUtils $authenticationUtils, Request $req): Response
 {
     // get the login error if there is one
@@ -7266,16 +7267,15 @@ Exemple pratique : projet **ProjetPaginatorNoWebpack**
 
 <https://github.com/KnpLabs/KnpPaginatorBundle>
 
+```console
 composer require knplabs/knp-paginator-bundle
+```
 
-2.  Copiez le fichier de configuration **kpn_paginator.yaml** dans
-    **config/packages**. En principe utilisez la configuration par défaut
+2.  Créez ce fichier de configuration **kpn_paginator.yaml** dans **config/packages**. En principe utilisez la configuration par défaut (vous pouvez personnaliser cette config en regardant la doc. du package)
 
 ```yaml
 knp_paginator:
-
     page_range: 5                       # number of links showed in the pagination menu (e.g: you have 10 pages, a page_range of 3, on the 5th page you'll see links to page 4, 5, 6)
-
     default_options:
         page_name: page                 # page query parameter name
         sort_field_name: sort           # sort field query parameter name
@@ -7289,38 +7289,50 @@ knp_paginator:
         filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template
 ```
 
-3.  Dans une action de votre controller, récupérez une instance du
-    paginator (service). Voici un exemple commenté de son utilisation
+3.  Dans une action de votre controller (créez un si vous n'en avez pas), récupérez une instance du paginator (service). Voici un exemple commenté (vous pouvez copier Entity/Repository/DataFixtures de ProjetModele):
 
 ```php
-class ExemplePaginationController extends AbstractController
-{
-    /**
-     * @Route("/exemple/pagination", name="exemple_pagination")
-     */
-    public function index(PaginatorInterface $paginator, Request $request)
-    {
-        $livres = $this->getDoctrine()->getRepository(Livre::class)->findAll();
-     
+<?php
 
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+// attention!
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+class ExemplePaginationController extends AbstractController {
+
+    #[Route("/exemple/pagination", name:"exemple_pagination")]
+    public function exemplePagination(PaginatorInterface $paginator, Request $request)
+    {
+
+        $livres = $this->getDoctrine()->getRepository(Livre::class)->findAll();
+        
         // Cette méthode est plus rapide que findAll
         // $livres = $this->getDoctrine()->getRepository(Livre::class)->createQueryBuilder('l')->getQuery();
 
         $numeroPage = $request->query->getInt('page', 1); // 1 par défaut, s'il n'y a pas de page dans l'URL
+
         $paginationLivres = $paginator->paginate(
             $livres,
             $numeroPage,
             5 // résultats affichés par page
         );
         return $this->render(
-            'exemple_pagination/index.html.twig',
+            'exemple_pagination/exemple_pagination.html.twig',
             ['paginationLivres' => $paginationLivres]
         );
     }
 }
 ```
 
-4.  Voici la vue correspondante :
+
+3.  Voici la vue correspondante, où on trouvera la pagination :
 
 ```twig
 {% extends 'base.html.twig' %}
@@ -7350,7 +7362,6 @@ class ExemplePaginationController extends AbstractController
 {% endblock %}
 
 {% block javascripts %}
-<script type="module" src="{{ asset ('/assets/js/main.js') }}"></script>
 {% endblock %}
 ```
 
@@ -7358,95 +7369,106 @@ class ExemplePaginationController extends AbstractController
 
 # 28. JS et CSS avec Webpack encore
 
-Si vous voulez utiliser du JS et CSS vous pourriez juste créer un
-dossier dans public et inclure vos fichiers .**js** et .**css**,
-mais la bonne pratique consiste à utiliser **Webpack**. Symfony possède l'extension **Webpack Encore**, qui facilite énormément l'installation et utilisation de Webpack.
+Si vous voulez utiliser du JS et CSS vous pourriez juste créer un dossier dans public et inclure vos fichiers .**js** et .**css**, mais la bonne pratique consiste à utiliser **Webpack**. Symfony possède l'extension **Webpack Encore**, qui facilite énormément l'installation et utilisation de Webpack.
 
 On va procéder à installer Webpack dans un projet vide et réaliser
 quelques exemples. Créez un projet **ExemplesWebpack** et un controller
-**MainController** (le projet complet est disponible dans GitHub)
+**MainController** (le projet complet est disponible dans le repo).
 
 Le but de Webpack est de **centraliser la charge de tout notre code JS et CSS dans un seul** (ou éventuellement plusieurs si on le souhaite) **fichier .js**. Webpack permet en plus de compiler, minimiser et découper en morceaux notre code pour optimiser le chargement dans l'application.
 
 Nous allons installer, configurer et utiliser Webpack Encore.
 
-## 28.1. Installation de Webpack Encore et de node_modules
+<br>
 
-1.  **Installez Webpack Encore dans votre projet**
+## 28.1. Installation de Webpack Encore et de Node
 
-**composer require encore**
 
--   Installe et habilite le module **WebpackEncoreBundle**
+1.  **Installez le module Webpack Encore dans votre projet**
 
--   Crée le dossier **assets** (à ne pas confondre avec un possible
-    dossier **/public/assets** qu'on aurait pu créer avant d'utiliser
-    Webpack Encore
+```console
+composer require symfony/webpack-encore-bundle
+```
+Cette installation ('recipe'):
 
--   Créer les fichier **assets/js/app.js** qui centralise la charge de tout le code **js** et **css**
+- Crée le dossier **/assets** (à ne pas confondre avec un possible dossier **/public/assets** qu'on aurait pu créer avant d'utiliser Webpack Encore
 
--   Crée un fichier** webpack.config.js **dans /config/packages qui contient la configuration du module
+- Crée le fichier **/assets/js/app.js** qui centralisera par défaut la charge de tout le code **js** et **css** (voir **entryPoints** plus tard, car on peut avoir plusieurs fichiers où on compile le code)
 
-2.  **Installez les dépendances JS de Webpack Encore**
+- Crée un fichier **/webpack.config.js** qui contient la configuration du module
 
-**yarn install**
->
-Cette ligne crée le dossier **node_modules** et le rajoute au
-./gitignore
+- **Installez le dépendances JS de Webpack Encore**. Lancez :
+
+```console
+yarn install
+```
+
+Cette ligne crée le dossier **node_modules** contenant les dépendances (du code .js) dont Encore a besoin. Le dossier est rajouté ./gitignore
+
+
+<br>
 
 ## 28.2. Configurer Webpack Encore
 
-Ouvrez le fichier **webpack.config.js **pour configurer Encore. Vous
+Ouvrez le fichier **/webpack.config.js** pour configurer Encore. Vous
 pouvez personnaliser Encore selon vos besoins :
 
-.**setOutputPath** : emplacement des fichiers compilés
+.**setOutputPath** : emplacement des fichiers **compilés**
 
 .**setPublicPath** : le chemin utilisé par le serveur (ex: dans le code
-des vues) pour accéder l'OutputPath
+des vues) pour accéder l'OutputPath qu'on vient de mentionner
 
 .**addEntry** **('app','./assets/js/app.js')** : on aura un
-**entry** pour chaque fichier .js qui regroupe un ensemble de code. Ici on a crée un entry portant le nom "app" qui pointe vers un fichier
-app.js
+**entry** pour **chaque fichier .js qui regroupe un ensemble de code**. Ici on a crée un entry portant le nom "app" qui pointe vers un fichier
+app.js. On peut avoir d'autres Entrys (d'autres fichiers) dont le code sera rajouté au code final.
 
 Ouvrez le fichier **app.js** et observez qu'on importe le **.css**!
-(Concrètement on importe le fichier
+(Concrètement on importe le fichier **/assets/css/app.css**)
 
-**assets/css/app.css**)
+<br>
 
 ## 28.3. Lancer Webpack 
 
 Pour compiler les assets une seule fois :
 
-**yarn encore dev**
+```console
+yarn encore dev
+```
 
-Pour lancer un daemon qui recompilera à chaque fois qu'on change le .js ou le .css :
+Pour lancer un daemon qui recompilera à chaque fois qu'on change le .js ou le .css (on va choisir cette option):
 
-**yarn encore dev --watch**
+```console
+yarn encore dev --watch
+```
+Si vous obtenez des erreurs de compilation, il se peut que vous deviez arreter et ré-demarrer le serveur
+
 
 Pour créer la version de production :
 
-**yarn encore production**
+```console
+yarn encore production
+```
 
-Encore compilera le code JS et CSS dans dossier **public/build** qui
-contiendra un nouveau
-fichier** app.js** et un **app.css** qui rassembleront tout le contenu JS et CSS
-(ainsi que les fichiers **manifest.json**,** entrypoints.json**,** runtime.js**).
+Encore compilera le code JS et CSS final dans le dossier **public/build**. Le dossier contiendra un nouveau fichier **app.js** et un **app.css** qui rassembleront tout le contenu JS et CSS (ainsi que les fichiers **manifest.json**, **entrypoints.json**, **runtime.js**) **sauf si on a crée plusieurs entries. Dans ce cas on aura plusieurs fichiers**
 
-Si on a crée plusieurs entries on aura plusieurs fichiers.
+<br>
 
 ## 28.4. Utiliser le code dans les vues
 
-Pour faciliter l'utilisation de Webpack dans les templates on a des fonctions **Helper.**
-Vous pouvez inclure ces appels dans vos blocs javascripts et css dans
-les vues.
+Pour faciliter l'utilisation de Webpack dans les templates on a des fonctions **Helper.** Vous pouvez inclure ces appels dans vos blocs **javascripts** et **css** dans les vues.
 
-Pour css : {{ encore_entry_link_tags ('app') }}
+Pour **css** : 
+```twig
+{{ encore_entry_link_tags ('app') }}
+```
+Pour **js** :
+```twig
+ {{ encore_entry_script_tags ('app') }}
+```
+La reference 'app' est configurée dans le fichier **entrypoints.json**,
+qui a été crée à partir de votre fichier **webpack.config.js**. Vous pouvez utiliser un autre nom et, Comme nous l'avons déjà dit, avoir plusieurs **entries** ('app', 'autre', 'main'...)
 
-Pour js : {{ encore_entry_script_tags ('app') }}
-
-La reference 'app' est configurée dans le fichier **entrypoints.json,
-qui a été crée à partir de votre fichier webpack.config.js**. Vous
-pouvez utiliser un autre nom et, Comme nous l'avons déjà dit, avoir
-plusieurs **entries** ('app', 'autre', 'main'...)
+<br>
 
 ## 28.5. Encore et Bootstrap
 
@@ -7454,11 +7476,11 @@ plusieurs **entries** ('app', 'autre', 'main'...)
 
 **Installez bootstrap :**
 
+```console
 yarn add bootstrap --dev
+```
 
-Quand on inclut Bootstrap avec une balise SCRIPT, le code attend que jQuery soit une variable global.
-On change le app.js pour importer bootstrap, qui se trouve dans
-node_modules :
+Quand on inclut Bootstrap avec une balise SCRIPT, le code attend que jQuery soit une variable globale. On change le **app.js** pour importer **bootstrap**, qui se trouve dans node_modules :
 
 
 ```js
@@ -7479,18 +7501,16 @@ Rajoutez-le aux modules avec :
 yarn add popper --dev
 ``` 
 
-Pour utiliser le css de bootstrap on doit d'abord l'importer :
+Pour utiliser le css de bootstrap on doit d'abord l'importer. Rajoutez dans le fichier **/assets/styles/app.css** :
 
 ```css
 @import '~bootstrap/dist/css/bootstrap.css';
 ```
 
-dans le fichier app.css
-
 Le tilde est necessaire pour referencer un fichier qui se trouve dans le
-dossier node_modules.
+dossier **node_modules**.
 
-Si vous voulez utiliser le js de boostrap, vous devez inclure :
+Si vous voulez utiliser le **js** de boostrap (pas seulement le css), vous devez inclure **dans** **app.js** :
 
 ```js
 // pour pouvoir utiliser jQuery et le JS de Bootstrap
@@ -7498,7 +7518,7 @@ import $ from 'jquery';
 import 'bootstrap'; 
 ```
 
-**dans** **app.js**. Pour les fonts :
+Pour les fonts utilisées par bootstrap :
 
 ```console
 yarn add font-awesome ---dev
@@ -7506,7 +7526,7 @@ yarn add font-awesome ---dev
 Si vous allez utiliser jQuery, vous devez l'installer aussi :
 
 ```console
-yarn add jQuery --dev
+yarn add jquery --dev
 ```
 <br>
 
@@ -7556,35 +7576,36 @@ A effacer :
 
 Pour JS :
 
-- Créer le fichier assetsget_nice_message.js
+- Créer le fichier assets\get_nice_message.js
 
+```js
 module.exports = function (exclamationCount){
-
     return "j'aime bien l'omelette". "!" . repeat (exclamationCount);
-
 }
+```
 
 (Node)
 
 ou 
-
+```js
 export default function (exclamationCount){
-
     return "j'aime bien l'omelette". "!" . repeat (exclamationCount);
-
 }
+```` 
 
 (ECMA)
 
 - Dans app.js, importez le module :
 
+```js
 const getNiceMessage = require ('./get_nice_message');
-
+```
 (Node)
 
 ou 
-
+```js
 import getNiceMessage from './get_nice_message'
+```
 
 (ECMA)
 
@@ -7595,23 +7616,15 @@ Changez aussi require pour import ()
 // any CSS you import will output into a single css file (app.css in this case)
 
 import '../css/app.css';
-
 const getNiceMessage = require ('./get_nice_message');
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-
 // import $ from 'jquery';
-
 console.log(getNiceMessage(5));
-
 ////////////////////////////////////
-
 // Installer de librairies avec YARN
-
 ////////////////////////////////////
-
 jQuery
-
 ------
 
 yarn add jquery --dev
