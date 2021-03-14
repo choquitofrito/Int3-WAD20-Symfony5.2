@@ -5457,6 +5457,8 @@ Mais nous allons développer nos propres exemples.
 
 ### 21.13.1. Stockage dans le serveur d'une seule image pour chaque entité 
 
+Nous allons utiliser le projet **ProjetFormulairesSymfony**.
+
 **Objectif :** Pouvoir faire upload d'une image pour chaque entité dans la BD.
 
 On va créer une entité (Pays) et un formulaire qui nous permettra de faire upload d'une image associée à cette entité (une image pour chaque pays). Notre action stockera le nom du pays et le lien vers l'image dans la BD, ainsi que le fichier en soi dans un dossier du serveur.
@@ -5527,7 +5529,7 @@ Cette action doit :
 -   **Stocker l'objet dans la BD**
 
 
-Voici le code de l'action :
+Voici le code de l'action (**ExemplesFormulaireUploadController**):
 
 
 ```php
