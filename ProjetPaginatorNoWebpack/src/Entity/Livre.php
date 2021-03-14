@@ -2,55 +2,18 @@
 
 namespace App\Entity;
 
+use App\Repository\LivreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\LivreRepository")
+ * @ORM\Entity(repositoryClass=LivreRepository::class)
  */
 class Livre
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $titre;
-
-    /**
-     * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
-     */
-    private $prix;
-
-    /**
-     * @ORM\Column(type="string", length=400, nullable=true)
-     */
-    private $description;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $datePublication;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $isbn;
-
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Exemplaire", mappedBy="livre",
-     *                  cascade={"persist"})
-     */
-    private $exemplaires;
-
-    // crée par nous mêmes
+    // crée par nous mêmes, ainsi que le constructeur (vérifiez!)
     public function hydrate(array $init)
     {
         foreach ($init as $key => $value) {
@@ -60,9 +23,51 @@ class Livre
             }
         }
     }
-    public function __construct()
+
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $titre;
+
+    /**
+     * @ORM\Column(type="decimal", precision=8, scale=2)
+     */
+    private $prix;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $datePublication;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $isbn;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Exemplaire::class, mappedBy="livre",cascade={"persist","remove"})
+     */
+    private $exemplaires;
+
+    // constructeur modifié pour faire appel à hydrate
+    public function __construct($arrayInit = [])
     {
         $this->exemplaires = new ArrayCollection();
+        // appel au hydrate
+        $this->hydrate($arrayInit);
     }
 
     public function getId(): ?int
@@ -75,7 +80,7 @@ class Livre
         return $this->titre;
     }
 
-    public function setTitre(?string $titre): self
+    public function setTitre(string $titre): self
     {
         $this->titre = $titre;
 
@@ -87,7 +92,7 @@ class Livre
         return $this->prix;
     }
 
-    public function setPrix(?string $prix): self
+    public function setPrix(string $prix): self
     {
         $this->prix = $prix;
 
@@ -123,7 +128,7 @@ class Livre
         return $this->isbn;
     }
 
-    public function setIsbn(?string $isbn): self
+    public function setIsbn(string $isbn): self
     {
         $this->isbn = $isbn;
 
@@ -150,8 +155,7 @@ class Livre
 
     public function removeExemplaire(Exemplaire $exemplaire): self
     {
-        if ($this->exemplaires->contains($exemplaire)) {
-            $this->exemplaires->removeElement($exemplaire);
+        if ($this->exemplaires->removeElement($exemplaire)) {
             // set the owning side to null (unless already changed)
             if ($exemplaire->getLivre() === $this) {
                 $exemplaire->setLivre(null);
@@ -161,7 +165,7 @@ class Livre
         return $this;
     }
 
-    // rajouté pour permettre l'encapsulation
+    // rajouté pour permettre l'encapsulation (section dans le notes)
     public function addExemplaireNoClass($etat, $emplacement)
     {
         $exemplaire = new \App\Entity\Exemplaire();

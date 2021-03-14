@@ -2,34 +2,35 @@
 
 namespace App\Entity;
 
+use App\Repository\ExemplaireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ExemplaireRepository")
+ * @ORM\Entity(repositoryClass=ExemplaireRepository::class)
  */
 class Exemplaire
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $etat;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Livre", inversedBy="exemplaires")
+     * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="exemplaires")
      */
     private $livre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Emprunt", mappedBy="exemplaire")
+     * @ORM\OneToMany(targetEntity=Emprunt::class, mappedBy="exemplaireEmprunte")
      */
     private $emprunts;
 
@@ -48,7 +49,7 @@ class Exemplaire
         return $this->etat;
     }
 
-    public function setEtat(?string $etat): self
+    public function setEtat(string $etat): self
     {
         $this->etat = $etat;
 
@@ -79,7 +80,7 @@ class Exemplaire
     {
         if (!$this->emprunts->contains($emprunt)) {
             $this->emprunts[] = $emprunt;
-            $emprunt->setExemplaire($this);
+            $emprunt->setExemplaireEmprunte($this);
         }
 
         return $this;
@@ -87,11 +88,10 @@ class Exemplaire
 
     public function removeEmprunt(Emprunt $emprunt): self
     {
-        if ($this->emprunts->contains($emprunt)) {
-            $this->emprunts->removeElement($emprunt);
+        if ($this->emprunts->removeElement($emprunt)) {
             // set the owning side to null (unless already changed)
-            if ($emprunt->getExemplaire() === $this) {
-                $emprunt->setExemplaire(null);
+            if ($emprunt->getExemplaireEmprunte() === $this) {
+                $emprunt->setExemplaireEmprunte(null);
             }
         }
 

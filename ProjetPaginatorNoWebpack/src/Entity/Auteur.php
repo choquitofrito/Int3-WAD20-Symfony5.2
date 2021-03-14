@@ -2,22 +2,23 @@
 
 namespace App\Entity;
 
+use App\Repository\AuteurRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\AuteurRepository")
+ * @ORM\Entity(repositoryClass=AuteurRepository::class)
  */
 class Auteur
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $nom;
 
@@ -36,7 +37,7 @@ class Auteur
         return $this->nom;
     }
 
-    public function setNom(?string $nom): self
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
 

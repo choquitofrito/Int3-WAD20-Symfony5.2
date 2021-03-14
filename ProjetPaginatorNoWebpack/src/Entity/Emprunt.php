@@ -2,22 +2,23 @@
 
 namespace App\Entity;
 
+use App\Repository\EmpruntRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\EmpruntRepository")
+ * @ORM\Entity(repositoryClass=EmpruntRepository::class)
  */
 class Emprunt
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateEmprunt;
 
@@ -27,21 +28,21 @@ class Emprunt
     private $dateRetour;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $commentaires;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="emprunts")
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="emprunts")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $client;
+    private $clientEmprunteur;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Exemplaire", inversedBy="emprunts")
+     * @ORM\ManyToOne(targetEntity=Exemplaire::class, inversedBy="emprunts")
      */
-    private $exemplaire;
+    private $exemplaireEmprunte;
 
-    
     public function getId(): ?int
     {
         return $this->id;
@@ -52,7 +53,7 @@ class Emprunt
         return $this->dateEmprunt;
     }
 
-    public function setDateEmprunt(\DateTimeInterface $dateEmprunt): self
+    public function setDateEmprunt(?\DateTimeInterface $dateEmprunt): self
     {
         $this->dateEmprunt = $dateEmprunt;
 
@@ -83,29 +84,27 @@ class Emprunt
         return $this;
     }
 
-    public function getClient(): ?Client
+    public function getClientEmprunteur(): ?Client
     {
-        return $this->client;
+        return $this->clientEmprunteur;
     }
 
-    public function setClient(?Client $client): self
+    public function setClientEmprunteur(?Client $clientEmprunteur): self
     {
-        $this->client = $client;
+        $this->clientEmprunteur = $clientEmprunteur;
 
         return $this;
     }
 
-    public function getExemplaire(): ?Exemplaire
+    public function getExemplaireEmprunte(): ?Exemplaire
     {
-        return $this->exemplaire;
+        return $this->exemplaireEmprunte;
     }
 
-    public function setExemplaire(?Exemplaire $exemplaire): self
+    public function setExemplaireEmprunte(?Exemplaire $exemplaireEmprunte): self
     {
-        $this->exemplaire = $exemplaire;
+        $this->exemplaireEmprunte = $exemplaireEmprunte;
 
         return $this;
     }
-
-    
 }

@@ -2,26 +2,22 @@
 
 namespace App\Entity;
 
+use App\Repository\AdresseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\AdresseRepository")
+ * @ORM\Entity(repositoryClass=AdresseRepository::class)
  */
 class Adresse
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $numero;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -29,7 +25,12 @@ class Adresse
     private $rue;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $numero;
+
+    /**
+     * @ORM\Column(type="string", length=10)
      */
     private $codePostal;
 
@@ -44,30 +45,34 @@ class Adresse
     private $pays;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="adresse")
+     * @ORM\OneToMany(targetEntity=Client::class, mappedBy="adresse",cascade={"persist","remove"})
      */
     private $clients;
 
-    public function __construct()
+
+    // crée par nous mêmes, ainsi que le constructeur (vérifiez!)
+    public function hydrate(array $init)
+    {
+        foreach ($init as $key => $value) {
+            $method = "set" . ucfirst($key);
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
+        }
+    }
+    
+    // constructeur modifié pour faire appel à hydrate
+    public function __construct($arrayInit = [])
     {
         $this->clients = new ArrayCollection();
+        // appel au hydrate
+        $this->hydrate($arrayInit);
+    
     }
-
+  
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getNumero(): ?int
-    {
-        return $this->numero;
-    }
-
-    public function setNumero(?int $numero): self
-    {
-        $this->numero = $numero;
-
-        return $this;
     }
 
     public function getRue(): ?string
@@ -82,12 +87,24 @@ class Adresse
         return $this;
     }
 
-    public function getCodePostal(): ?int
+    public function getNumero(): ?string
+    {
+        return $this->numero;
+    }
+
+    public function setNumero(?string $numero): self
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    public function getCodePostal(): ?string
     {
         return $this->codePostal;
     }
 
-    public function setCodePostal(int $codePostal): self
+    public function setCodePostal(string $codePostal): self
     {
         $this->codePostal = $codePostal;
 
@@ -138,8 +155,7 @@ class Adresse
 
     public function removeClient(Client $client): self
     {
-        if ($this->clients->contains($client)) {
-            $this->clients->removeElement($client);
+        if ($this->clients->removeElement($client)) {
             // set the owning side to null (unless already changed)
             if ($client->getAdresse() === $this) {
                 $client->setAdresse(null);
