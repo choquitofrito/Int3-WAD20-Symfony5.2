@@ -117,15 +117,16 @@
 - [20. Accès à la BD avec Query Builder](#20-accès-à-la-bd-avec-query-builder)
 - [21. Formulaires en Symfony](#21-formulaires-en-symfony)
   - [21.1. Création d'un formulaire indépendant](#211-création-dun-formulaire-indépendant)
-  - [21.2. Création d'un formulaire qui est associé à une entité](#212-création-dun-formulaire-qui-est-associé-à-une-entité)
+  - [21.2. Création d'un formulaire associé à une entité](#212-création-dun-formulaire-associé-à-une-entité)
+      - [Exercice : création d'un formulaire associé à une entité](#exercice--création-dun-formulaire-associé-à-une-entité)
   - [21.3. Création d'un formulaire pré-rempli avec les données d'une entité](#213-création-dun-formulaire-pré-rempli-avec-les-données-dune-entité)
   - [21.4. Action et Propriétés des champs du formulaire](#214-action-et-propriétés-des-champs-du-formulaire)
   - [21.5. Boutons dans les formulaires (bonnes pratiques)](#215-boutons-dans-les-formulaires-bonnes-pratiques)
-      - [Exercice : Créez des boutons de submit dans les vues qui rendent les formulaires des exemples précédents](#exercice--créez-des-boutons-de-submit-dans-les-vues-qui-rendent-les-formulaires-des-exemples-précédents)
-  - [21.6. Rendu du formulaire dans la vue](#216-rendu-du-formulaire-dans-la-vue)
-  - [21.7. Résumé : Création et Personnalisation de base d'un formulaire](#217-résumé--création-et-personnalisation-de-base-dun-formulaire)
-  - [21.8. Traitement des données du formulaire](#218-traitement-des-données-du-formulaire)
       - [Exercice :](#exercice-)
+  - [21.6. Rendu du formulaire dans la vue](#216-rendu-du-formulaire-dans-la-vue)
+  - [21.7. Résumé : Création et personnalisation de base d'un formulaire](#217-résumé--création-et-personnalisation-de-base-dun-formulaire)
+  - [21.8. Traitement des données du formulaire](#218-traitement-des-données-du-formulaire)
+      - [Exercice :](#exercice--1)
   - [21.9. Bonnes pratiques pour créer de formulaires en Symfony](#219-bonnes-pratiques-pour-créer-de-formulaires-en-symfony)
   - [21.10. Style de base pour les formulaires](#2110-style-de-base-pour-les-formulaires)
   - [21.11. Formulaires concernant plusieurs entités](#2111-formulaires-concernant-plusieurs-entités)
@@ -158,14 +159,16 @@
   - [26.3. Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre](#263-gestion-de-lerreur-access-denied-exception-en-utilisant-une-classe-propre)
   - [26.4. Fenêtre modale pour le login (Ajax)](#264-fenêtre-modale-pour-le-login-ajax)
     - [Adaptation à Ajax et fenêtre modale](#adaptation-à-ajax-et-fenêtre-modale)
+- [TILL HERE](#till-here)
 - [27. Pagination](#27-pagination)
-- [JS et CSS avec Webpack encore](#js-et-css-avec-webpack-encore)
-  - [Installation de Webpack Encore et de node_modules](#installation-de-webpack-encore-et-de-node_modules)
-  - [Configurer Webpack Encore](#configurer-webpack-encore)
-  - [Lancer Webpack](#lancer-webpack)
-  - [Utiliser le code dans les vues](#utiliser-le-code-dans-les-vues)
-- [Encore et Bootstrap](#encore-et-bootstrap)
-- [Intégration de boutons de paiement Paypal](#intégration-de-boutons-de-paiement-paypal)
+- [28. JS et CSS avec Webpack encore](#28-js-et-css-avec-webpack-encore)
+  - [28.1. Installation de Webpack Encore et de node_modules](#281-installation-de-webpack-encore-et-de-node_modules)
+  - [28.2. Configurer Webpack Encore](#282-configurer-webpack-encore)
+  - [28.3. Lancer Webpack](#283-lancer-webpack)
+  - [28.4. Utiliser le code dans les vues](#284-utiliser-le-code-dans-les-vues)
+  - [28.5. Encore et Bootstrap](#285-encore-et-bootstrap)
+- [29. Intégration de boutons de paiement Paypal](#29-intégration-de-boutons-de-paiement-paypal)
+- [END](#end)
 - [4. Installation de packages dans un projet Symfony Flex](#4-installation-de-packages-dans-un-projet-symfony-flex)
 - [5. Symfony avec Apache. Configuration des Virtual Hosts](#5-symfony-avec-apache-configuration-des-virtual-hosts)
   - [Création d'un serveur virtuel (virtual host) en Windows](#création-dun-serveur-virtuel-virtual-host-en-windows)
@@ -4643,7 +4646,7 @@ Vous avez un autre exemple pour un formulaire GET juste après dans le même con
 
 
 
-## 21.2. Création d'un formulaire qui est associé à une entité
+## 21.2. Création d'un formulaire associé à une entité
 
 Si vous voulez qu'un formulaire soit lié à une entité vous devez créer une classe qui represente ce formulaire.
 
@@ -4800,8 +4803,13 @@ On peut rendre le formulaire complète ou par parties, en utilisant un thème (B
 
 Il nous manque le **submit**, on le verra dans les sections suivantes.
 
-Nous n'allons pas rajouter un bouton de submit dans la classe du
+Nous n'allons pas rajouter un bouton de submit **dans la classe** du
 formulaire **car ce n'est pas une bonne pratique.**
+
+#### Exercice : création d'un formulaire associé à une entité
+
+1. Créez une entité *Evenement* (nom, description, dateEvenement) et un formulaire associé
+   
 
 <br>
 
@@ -4861,11 +4869,9 @@ Avant de créer une action pour générer ce formulaire on va rajouter la métho
 
 2. **Méthode et Action**
 
-Pour finir le formulaire, on peut spécifier l'action à réaliser pour le submit (même avant créer le bouton) ainsi que la méthode (GET ou POST). Nous avons deux possibilités :
+Pour finir le formulaire, on peut spécifier l'action à réaliser par le submit (même avant créer le bouton) ainsi que la méthode (GET ou POST). Nous avons deux possibilités :
 
-a)  Définir l'action **dans la classe du formulaire** (LivreType.php). C'est facile mais on ne pourra utiliser le formulaire pour exécuter d'autres actions !
-
-**Important :** Cette méthode est à éviter mais elle facilite la compréhension des bonnes pratiques
+**a)**  Définir l'action **dans la classe du formulaire** (LivreType.php). C'est facile mais on ne pourra utiliser le formulaire pour exécuter d'autres actions ! C'est une **mauvaise pratique en génèral**, on préfère la méthode b)
 
 ```php
 .
@@ -4888,7 +4894,7 @@ a)  Définir l'action **dans la classe du formulaire** (LivreType.php). C'est fa
 }
 ```
 
-b)  **Définir l'action et la méthode dans le controller** lors de la création de l'objet formulaire avec les options de **createForm**. Cette option est **plus souple** car elle nous permet de réutiliser le formulaire pour lancer d'autres actions :
+**b)**  **Définir l'action et la méthode dans le controller** lors de la création de l'objet formulaire avec les options de **createForm**. Cette option est **plus souple** car elle nous permet de réutiliser le formulaire pour lancer d'autres actions :
 
 **Dans la classe du formulaire il n'y a pas d'action ni de méthode :**
 
@@ -4912,6 +4918,7 @@ public function exempleLivre()
 
 Nous utiliserons un array de paramètres et la méthode **generateUrl** pour générer le code HTML qui correspond à une route qui porte un "name". Si la route n'a pas de "name" on peut juste mettre un path, mais c'est moins souple car la modification d'un path dans le routing impliquera modifier une par une toutes les appels à cette action.
 
+<br>
 
 
 ## 21.5. Boutons dans les formulaires (bonnes pratiques)
@@ -4934,7 +4941,9 @@ La **meilleure option est de créer le bouton de submit en HTML dans la vue**. V
 Cette méthode nous permet de re-utiliser le formulaire pour plein
 d'actions, on devra juste créer les boutons dans chaque vue.
 
-#### Exercice : Créez des boutons de submit dans les vues qui rendent les formulaires des exemples précédents
+#### Exercice : 
+
+1. Créez une entité *Personnage* (*nom, prenom, dateNaissance*). Créez un formulaire associé à cette entité et un form. Créez un template contenant un bouton *Enregistrer* 
 
 <br>
 
@@ -4992,7 +5001,7 @@ Par défaut Symfony rend les champs qui ne sont pas spécifies Pour éviter le r
 
 <br>
 
-## 21.7. Résumé : Création et Personnalisation de base d'un formulaire
+## 21.7. Résumé : Création et personnalisation de base d'un formulaire
 
 Pour créer un formulaire et le traiter :
 
@@ -5014,12 +5023,14 @@ C'est tout!!! Les formulaires sont horribles mais il suffira de rajouter le styl
 
 Pour **recevoir et traiter** les données introduites dans un formulaire nous devons créer une action dans un controller. L'action traitera la requête (reçoit un objet **Request**).
 
-Voici un exemple complet et son explication.
+Pour le moment on a fait des forms et on les a affiché, mais on ne s'est pas occupé de traiter les données quand on fait submit.
+On pourrait créer alors une action pour afficher le form et une autre pour traiter les données, mais ça complexifierait le controller (trop d'actions!)
 
+Selon les bonnes pratiques de Symfony, **on affiche le form et on le traite dans une même action**.
 
-**Exemple** : Rendu et réception d'un formulaire 
+**Exemple** : Rendu et réception d'un formulaire (classe *Livre*) dans une seule action
 
-N'ayez pas peur, l'explication se trouve dans le code et après le code.
+Ce code peut paraitre compliqué mais ce ne l'est pas. 
 
 ```php
 #[Route ("/exemples/formulaires/traitement/exemple/livre" name:"exemple_livre")]
@@ -5028,26 +5039,30 @@ N'ayez pas peur, l'explication se trouve dans le code et après le code.
 public function exempleLivre (Request $req){
     // 1. Création d'une entité vide
     $livre = new Livre();
-    // 2. Création du formulaire du type souhaité
+
+    // 2. Création du formulaire du type souhaité (pas 'affichage'!)
+    // pour héberger les données de l'entité
     $formulaireLivre = $this->createForm (LivreType::class, $livre,
             ['action'=> $this->generateUrl ("exemple_livre"),
                 'method'=>'POST']);
     
     
-    // 3. Analyse de l'objet Request
+    // 3. Analyse de l'objet Request du navigateur
     $formulaireLivre->handleRequest($req);
     
-    // 4. Vérification: on vient d'un submit ou pas?
+    // 4. Vérification: handleRequest indique qu'on vient d'un submit ou pas? Si on vient d'un submit, handleRequest remplira les données de l'entité avec les données du $_POST (ou $_GET, selon le type de form)
     
-    // si oui, on traite le formulaire et on remplit l'entité
+    // si submit et données valides, on entre dans l'if
     if ($formulaireLivre->isSubmitted() && $formulaireLivre->isValid()){
-        // Remplissage de l'entité avec les données du formulaire
-        
-        
-        // $livre = $formulaireLivre->getData(); // pas besoin, le submit remplit l'entite
+        // Ici, les données de l'entité seront 'magiquement' remplies
+
+        // on peut toujours accèder aux données du form à la main
+        // (utile quand le form contient plus ou moins de champs que l'entité)
+        // $data = $formulaireLivre->getData(); 
         
         // Rendu d'une vue où on affiche les données
-        // Normalement on faire CRUD ici ou une autre opération...
+        // Normalement on fera CRUD ici, ou une autre opération...
+        
         return $this->render ('/exemples_formulaires_traitement/traitement_formulaire_livre.html.twig',
                             ['livre'=> $livre]);
     }
@@ -5167,7 +5182,7 @@ class LivreType extends AbstractType {
 
     **On utilisera getData pour les champs du formulaire qui n'existent pas dans l'entité** (et dans le traitement des champs de certains types particuliers).
 
-**Exemple** : formulaire pour Aeroport (nom, code) qui contient aussi un champ « description » qui n'appartient pas à l'entité *Aeroport*. Pour obtenir les données de la description dans le traitement du formulaire on utilise getData :
+**Exemple** : formulaire pour *Aeroport* (nom, code) qui contient aussi un champ « description » qui n'appartient pas à l'entité *Aeroport*. Pour obtenir les données de la description dans le traitement du formulaire on utilise *getData* :
 
 ```php
 $form->get('description')->getData();
@@ -5183,7 +5198,7 @@ Si on arrive à l'action sans avoir fait un submit (exemple : tapez l'URL de l'a
 
 #### Exercice : 
 
-Faites le code pour traiter un formulaire associé à l'entité Aeroport
+Créez le code pour traiter un formulaire associé à l'entité Aeroport
 
 <br>
 
@@ -5196,10 +5211,19 @@ Faites le code pour traiter un formulaire associé à l'entité Aeroport
 
 2.  Utilisez **une même action pour créer le formulaire et le traiter**
 
-3.  Pour définir l'action et la méthode (différente, par exemple, pour un update et un delete), vous pouvez envoyer de paramètres à **form_start** dans le fichier twig
+3.  Pour définir **l'action et la méthode**, vous pouvez:
+
+a) Les définir dans le controller (exemples précédentes)
+```php
+    $formulaireLivre = $this->createForm (LivreType::class, $livre,
+            ['action'=> $this->generateUrl ("rajouter_livre"),
+                'method'=>'POST']);
+```
+
+b) Les définir dans le twig dans **form_start** 
 
 ```twig
-{{ form_start(form, {'action': path('rajouter'),'method': 'POST'})}}
+{{ form_start(form, {'action': path('rajouter_livre'),'method': 'POST'})}}
 ```
 
 **Attention :** Le **path** sera le **name** d'une route
@@ -5584,6 +5608,8 @@ memory_limit=128M
 
 4.  Il peut avoir aussi un problème si la connexion du client est lente et l'upload prend plus du temps spécifié dans **max_input_time** (**php.ini**). Ce paramètre indique le temps maximum permis pour analyser les données du POST ou GET: c'est le temps qui passe entre l'appel au script PHP et le début de son exécution. Dans la configuration de XAMPP la valeur est -1, il n'y a pas de limite de temps.
 
+
+<br>
 
 
 ## 21.14. AJAX en Symfony avec Axios
@@ -6962,6 +6988,8 @@ Si vous avez gardé le template de login original, modifiez le lien pour le logo
 You are logged in as {{ app.user.username }}, <a href="{{ path('logout') }}">Logout</a>
 
 ```
+<br>
+
 ## 26.4. Fenêtre modale pour le login (Ajax)
 
 
@@ -7211,6 +7239,7 @@ logged: {{ app.user.username }}
 
 <br>
 
+# TILL HERE
 
 
 # 27. Pagination
@@ -7224,149 +7253,108 @@ Exemple pratique : projet **ProjetPaginatorNoWebpack**
 composer require knplabs/knp-paginator-bundle
 
 2.  Copiez le fichier de configuration **kpn_paginator.yaml** dans
-    **config/packages**. En principe utilisez la configuration par
-    défaut
+    **config/packages**. En principe utilisez la configuration par défaut
 
+```yaml
 knp_paginator:
 
     page_range: 5                       # number of links showed in the pagination menu (e.g: you have 10 pages, a page_range of 3, on the 5th page you'll see links to page 4, 5, 6)
 
     default_options:
-
         page_name: page                 # page query parameter name
-
         sort_field_name: sort           # sort field query parameter name
-
         sort_direction_name: direction  # sort direction query parameter name
-
         distinct: true                  # ensure distinct results, useful when ORM queries are using GROUP BY statements
-
         filter_field_name: filterField  # filter field query parameter name
-
         filter_value_name: filterValue  # filter value query parameter name
-
     template:
-
         pagination: '@KnpPaginator/Pagination/sliding.html.twig'     # sliding pagination controls template
-
         sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # sort link template
-
         filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template
+```
 
 3.  Dans une action de votre controller, récupérez une instance du
     paginator (service). Voici un exemple commenté de son utilisation
 
+```php
 class ExemplePaginationController extends AbstractController
-
 {
-
     /**
-
      * @Route("/exemple/pagination", name="exemple_pagination")
-
      */
-
     public function index(PaginatorInterface $paginator, Request $request)
-
     {
-
         $livres = $this->getDoctrine()->getRepository(Livre::class)->findAll();
-
-        
+     
 
         // Cette méthode est plus rapide que findAll
-
         // $livres = $this->getDoctrine()->getRepository(Livre::class)->createQueryBuilder('l')->getQuery();
 
         $numeroPage = $request->query->getInt('page', 1); // 1 par défaut, s'il n'y a pas de page dans l'URL
-
         $paginationLivres = $paginator->paginate(
-
             $livres,
-
             $numeroPage,
-
             5 // résultats affichés par page
-
         );
-
         return $this->render(
-
             'exemple_pagination/index.html.twig',
-
             ['paginationLivres' => $paginationLivres]
-
         );
-
     }
-
 }
+```
 
 4.  Voici la vue correspondante :
 
+```twig
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello ExemplePaginationController!{% endblock %}
 
 {% block stylesheets %}
-
 <link href="{{ asset ('/assets/css/bootstrap.min.css') }}" rel="stylesheet">
-
 {% endblock %}
 
 {% block body %}
 
 {% for livre in paginationLivres %}
-
 <div class="">
 
     {{ livre.titre }}<br>
-
     {{ livre.description }}
 
 </div>
-
 {% endfor %}
 
 {# inclusion de la pagination  #}
-
 <div class="paginationLivres">
-
     {{ knp_pagination_render (paginationLivres) }}
-
 </div>
 
 {% endblock %}
 
 {% block javascripts %}
-
 <script type="module" src="{{ asset ('/assets/js/main.js') }}"></script>
-
 {% endblock %}
+```
 
-JS et CSS avec Webpack encore
-=============================
+<br>
+
+# 28. JS et CSS avec Webpack encore
 
 Si vous voulez utiliser du JS et CSS vous pourriez juste créer un
 dossier dans public et inclure vos fichiers .**js** et .**css**,
-mais la bonne pratique consiste à utiliser **Webpack**. Symfony possède
-l'extension **Webpack Encore**, qui facilite énormément l'installation
-et utilisation de Webpack.
+mais la bonne pratique consiste à utiliser **Webpack**. Symfony possède l'extension **Webpack Encore**, qui facilite énormément l'installation et utilisation de Webpack.
 
 On va procéder à installer Webpack dans un projet vide et réaliser
 quelques exemples. Créez un projet **ExemplesWebpack** et un controller
 **MainController** (le projet complet est disponible dans GitHub)
 
-Le but de Webpack est de **centraliser la charge de tout notre code JS
-et CSS dans un seul** (ou éventuellement plusieurs si on le souhaite)
-**fichier .js**. Webpack permet en plus de compiler, minimiser et
-découper en morceaux notre code pour optimiser le chargement dans
-l'application.
+Le but de Webpack est de **centraliser la charge de tout notre code JS et CSS dans un seul** (ou éventuellement plusieurs si on le souhaite) **fichier .js**. Webpack permet en plus de compiler, minimiser et découper en morceaux notre code pour optimiser le chargement dans l'application.
 
 Nous allons installer, configurer et utiliser Webpack Encore.
 
-Installation de Webpack Encore et de node_modules
---------------------------------------------------
+## 28.1. Installation de Webpack Encore et de node_modules
 
 1.  **Installez Webpack Encore dans votre projet**
 
@@ -7378,11 +7366,9 @@ Installation de Webpack Encore et de node_modules
     dossier **/public/assets** qu'on aurait pu créer avant d'utiliser
     Webpack Encore
 
--   Créer les fichier **assets/js/app.js** qui centralise la charge de
-    tout le code **js** et **css**
+-   Créer les fichier **assets/js/app.js** qui centralise la charge de tout le code **js** et **css**
 
--   Crée un fichier** webpack.config.js **dans /config/packages qui
-    contient la configuration du module
+-   Crée un fichier** webpack.config.js **dans /config/packages qui contient la configuration du module
 
 2.  **Installez les dépendances JS de Webpack Encore**
 
@@ -7391,8 +7377,7 @@ Installation de Webpack Encore et de node_modules
 Cette ligne crée le dossier **node_modules** et le rajoute au
 ./gitignore
 
-Configurer Webpack Encore
--------------------------
+## 28.2. Configurer Webpack Encore
 
 Ouvrez le fichier **webpack.config.js **pour configurer Encore. Vous
 pouvez personnaliser Encore selon vos besoins :
@@ -7403,8 +7388,7 @@ pouvez personnaliser Encore selon vos besoins :
 des vues) pour accéder l'OutputPath
 
 .**addEntry** **('app','./assets/js/app.js')** : on aura un
-**entry** pour chaque fichier .js qui regroupe un ensemble de code. Ici
-on a crée un entry portant le nom "app" qui pointe vers un fichier
+**entry** pour chaque fichier .js qui regroupe un ensemble de code. Ici on a crée un entry portant le nom "app" qui pointe vers un fichier
 app.js
 
 Ouvrez le fichier **app.js** et observez qu'on importe le **.css**!
@@ -7412,15 +7396,13 @@ Ouvrez le fichier **app.js** et observez qu'on importe le **.css**!
 
 **assets/css/app.css**)
 
-Lancer Webpack 
----------------
+## 28.3. Lancer Webpack 
 
 Pour compiler les assets une seule fois :
 
 **yarn encore dev**
 
-Pour lancer un daemon qui recompilera à chaque fois qu'on change le .js
-ou le .css :
+Pour lancer un daemon qui recompilera à chaque fois qu'on change le .js ou le .css :
 
 **yarn encore dev --watch**
 
@@ -7435,8 +7417,7 @@ fichier** app.js** et un **app.css** qui rassembleront tout le contenu JS et CSS
 
 Si on a crée plusieurs entries on aura plusieurs fichiers.
 
-Utiliser le code dans les vues
-------------------------------
+## 28.4. Utiliser le code dans les vues
 
 Pour faciliter l'utilisation de Webpack dans les templates on a des fonctions **Helper.**
 Vous pouvez inclure ces appels dans vos blocs javascripts et css dans
@@ -7451,11 +7432,9 @@ qui a été crée à partir de votre fichier webpack.config.js**. Vous
 pouvez utiliser un autre nom et, Comme nous l'avons déjà dit, avoir
 plusieurs **entries** ('app', 'autre', 'main'...)
 
-Encore et Bootstrap
-===================
+## 28.5. Encore et Bootstrap
 
-**Note:** la procédure qui suit à été utilisez pour inclure bootstrap
-dans le projet **ProjetPaginatorWebpack**
+**Note:** la procédure qui suit à été utilisez pour inclure bootstrap dans le projet **ProjetPaginatorWebpack**
 
 **Installez bootstrap :**
 
@@ -7465,51 +7444,60 @@ Quand on inclut Bootstrap avec une balise SCRIPT, le code attend que jQuery soit
 On change le app.js pour importer bootstrap, qui se trouve dans
 node_modules :
 
-**import $ from 'jquery';**
 
-**import 'bootstrap';**
+```js
+import $ from 'jquery';
+import 'bootstrap';
+```
 
 Bootstrap a besoin de  **popper.js** :
 
 Installez le avec npm :
 
+```console
 npm install --save popper.js
+```
 
 Rajoutez-le aux modules avec :
-
+```console
 yarn add popper --dev
+``` 
 
 Pour utiliser le css de bootstrap on doit d'abord l'importer :
 
-**@import '~bootstrap/dist/css/bootstrap.css';**
+```css
+@import '~bootstrap/dist/css/bootstrap.css';
+```
 
-**dans le fichier app.css**
+dans le fichier app.css
 
 Le tilde est necessaire pour referencer un fichier qui se trouve dans le
 dossier node_modules.
 
 Si vous voulez utiliser le js de boostrap, vous devez inclure :
 
+```js
 // pour pouvoir utiliser jQuery et le JS de Bootstrap
-
 import $ from 'jquery';
-
 import 'bootstrap'; 
+```
 
 **dans** **app.js**. Pour les fonts :
 
+```console
 yarn add font-awesome ---dev
-
+```
 Si vous allez utiliser jQuery, vous devez l'installer aussi :
 
+```console
 yarn add jQuery --dev
+```
+<br>
 
-Intégration de boutons de paiement Paypal
-=========================================
+# 29. Intégration de boutons de paiement Paypal
 
-Si vous voulez utiliser Paypal dans une application en production vous
-devez comprendre complètement le système de paiements et savoir très
-bien ce que vous faites :).
+
+Si vous voulez utiliser Paypal dans une application en production vous devez comprendre complètement le système de paiements et savoir très bien ce que vous faites :).
 
 La façon la plus simple d'intégrer Paypal dans votre site est
 d'utiliser les Smart Payment Buttons, car vous devez uniquement
@@ -7522,34 +7510,29 @@ indiquer quoi faire dans le cas de succès ou échec d'un paiement
 etc...)
 
 Suivez ces instructions pour pouvoir faire un test. Créez d'abord un
-projet symfony contenant au moins une vue où vous allez insérer le code
-proposé par Paypal. Vous avez un exemple dans
+projet symfony contenant au moins une vue où vous allez insérer le code proposé par Paypal. Vous avez un exemple dans
 **ProjetPaypalSmartButtons**.
 
 Vous devez :
 
 1.  Ouvrir compte Business en Paypal (remplir toutes les données car
-    c'est un vrai compte!)
-
-2.  Cliquer sur Tools All tools
-
-3.  Cliquez à gauche sur Integrate Paypal
-
-4.  Cliquez sur Developer Site
-
-5.  Cliquez sur Checkout
-
-6.  Cliquez sur Smart Payment Buttons Overview et comprenez le système
-
-7.  Suivez le tuto complet de Smart Payment Buttons
-
-8.  Cliquez en bas de la page sur "Add a Smart Payment Buttons
+    c'est un vrai comCliquer sur Tools All tools
+2.  Cliquez à gauche sur Integrate Paypal
+3.  Cliquez sur Developer Site
+4.  Cliquez sur Checkout
+5.  Cliquez sur Smart Payment Buttons Overview et comprenez le système
+6.  Suivez le tuto complet de Smart Payment Buttons
+7.  Cliquez en bas de la page sur "Add a Smart Payment Buttons
     integration to your website"
+8.  Suivez les instructions. Conseil : quand vous allez devoir cliquez dans **Log into the Developer Dashboard**, faites-le dans une nouvelle fenêtre (clic droit). Le code proposé par Paypal sera intégré dans la vue (voir exemple dans le le projet)
 
-9.  Suivez les instructions. Conseil : quand vous allez devoir cliquez
-    dans **Log into the Developer Dashboard**, faites-le dans une
-    nouvelle fenêtre (clic droit). Le code proposé par Paypal ser
-    intégré dans la vue (voir exemple dans le le projet)
+
+
+
+
+
+# END 
+
 
 A effacer :
 
