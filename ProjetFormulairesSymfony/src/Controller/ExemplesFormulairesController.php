@@ -81,6 +81,7 @@ class ExemplesFormulairesController extends AbstractController
 
 
     #[Route("/exemples/formulaires/exemple/aeroport/rempli")]
+    #[Route("/exemples/formulaires/exemple/aeroport/rempli")]
     public function exempleAeroportRempli()
     {
         $unAeroport = new Aeroport();
@@ -88,17 +89,18 @@ class ExemplesFormulairesController extends AbstractController
         $unAeroport->setCode("SVQ");
         $unAeroport->setDescription ("Il fait toujours beau là bas");
         // etc....
-
+    
         // on crée le formulaire du type souhaité
+        // et on envoie l'entité remplie
         $formulaireAeroport = $this->createForm(AeroportType::class, $unAeroport);
-
+    
         // on envoie un objet FormView à la vue pour qu'elle puisse 
         // faire le rendu, pas le formulaire en soi
         $vars = ['unFormulaire' => $formulaireAeroport->createView()];
-
+    
         return $this->render('/exemples_formulaires/exemple_aeroport.html.twig', $vars);
     }
-
+    
     #[Route("/exemples/formulaires/exemple/livre")]
     public function exempleLivre()
     {

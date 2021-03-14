@@ -124,13 +124,13 @@
   - [21.5. Boutons dans les formulaires (bonnes pratiques)](#215-boutons-dans-les-formulaires-bonnes-pratiques)
       - [Exercice :](#exercice-)
   - [21.6. Rendu du formulaire dans la vue](#216-rendu-du-formulaire-dans-la-vue)
-  - [21.7. Résumé : Création et personnalisation de base d'un formulaire](#217-résumé--création-et-personnalisation-de-base-dun-formulaire)
+  - [21.7. Résumé de la création et personnalisation de base d'un formulaire](#217-résumé-de-la-création-et-personnalisation-de-base-dun-formulaire)
   - [21.8. Traitement des données du formulaire](#218-traitement-des-données-du-formulaire)
       - [Exercice :](#exercice--1)
   - [21.9. Bonnes pratiques pour créer de formulaires en Symfony](#219-bonnes-pratiques-pour-créer-de-formulaires-en-symfony)
   - [21.10. Style de base pour les formulaires](#2110-style-de-base-pour-les-formulaires)
   - [21.11. Formulaires concernant plusieurs entités](#2111-formulaires-concernant-plusieurs-entités)
-  - [21.12. (IN PROGRESS) Formulaire contenant une liste déroulante d'entités filtrées](#2112-in-progress-formulaire-contenant-une-liste-déroulante-dentités-filtrées)
+  - [21.12. (à faire encore, on le laisse pour plus tard) Formulaire contenant une liste déroulante d'entités filtrées](#2112-à-faire-encore-on-le-laisse-pour-plus-tard-formulaire-contenant-une-liste-déroulante-dentités-filtrées)
   - [21.13. Upload de fichiers en utilisant un formulaire](#2113-upload-de-fichiers-en-utilisant-un-formulaire)
     - [21.13.1. Stockage dans le serveur d'une seule image pour chaque entité](#21131-stockage-dans-le-serveur-dune-seule-image-pour-chaque-entité)
     - [21.13.2. Possibles problèmes dans l'upload](#21132-possibles-problèmes-dans-lupload)
@@ -4571,25 +4571,29 @@ dd($query->getSql());
 
 # 21. Formulaires en Symfony
 
-Un formulaire est un ensemble d'éléments HTML dont leur contenu est envoyé au serveur (**action**) en exécutant un **submit**. Le serveur reçoit une requête **POST** qui contient les contenus des éléments du formulaire. En PHP, ces contenus sont accessibles à partir de la variable $_POST ou $_GET.
+Un formulaire est un ensemble d'éléments HTML dont leur contenu est envoyé au serveur (**action**) en exécutant un **submit**. Les infos sont traitées par un serveur. Le serveur reçoit une requête **POST** ou **GET** qui contient les contenus des éléments du formulaire. En PHP, ces contenus sont accessibles à partir de la variable $_POST ou $_GET.
 
 En Symfony nous avons plusieurs options pour créer un formulaire :
 
 1.  Créer tout simplement un **formulaire HTML indépendant** et obtenir les données dans une action du controller avec l'objet Request
 
-2.  Créer **un formulaire qui est associé à une entité** du modèle. Quand on fait submit on obtient une entité dans le controller 
+2.  Créer **un formulaire qui est associé à une entité** du modèle. Quand on fait submit on obtient une entité dans le controller.
+   
+**Exemple :** Si on crée un formulaire pour insérer un Client, le controller recevra un objet Client (pas besoin de chipoter dans l'array $_POST). Puis on peut, par exemple, le stocker dans la BD (obtenir **Entity Manager** + **persist** + **flush** et voilà!)
 
-**Exemple :** Si on crée un formulaire pour insérer un Client, il sera associé à l'entité Client
+3. Créer **un formulaire qui est associé à une entité du modèle mais auquel on rajoute/efface certains champs**. Les champs manquants de l'entité auront la valeur null. Si le formulaire a de champs en trop, on pourra traiter ces infos de façon indépendante à la classe (avec **getData**, on verra plus tard). 
 
-
-3. Créer **un formulaire qui est associé à une entité du modèle mais auquel on rajoute/efface certains champs**. Les champs manquants de l'entité auront la valeur null. Si le formulaire a de champs en trop, on pourra traiter ces infos de façon indépendante à la classe. Par exemple: on crée un formulaire pour insérer un Client et on rajoute un champ "Je suis d'accord avec les conditions du site"
+**Exemple**: on crée un formulaire pour insérer un Client et on rajoute un champ "Je suis d'accord avec les conditions du site". 
 
 <br>
 
 ## 21.1. Création d'un formulaire indépendant
 
-Vous pouvez créer un formulaire HTML dans votre **twig** sans aucun
-problème. Pour obtenir les données du formulaire dans une action vous allez utiliser l'objet **Request** (pareil que quand on obtient les paramètres d'URL).
+On commence par l'exemple le plus simple: un form qui n'a rien à voir avec aucune entité de l'app.
+
+Vous pouvez créer un formulaire en HTML dans votre **twig** sans aucun problème. 
+
+Pour obtenir les données du formulaire dans une action vous allez utiliser l'objet **Request** (pareil que quand on obtient les paramètres d'URL).
 
 La seule différence est que le lien pour l'action doit pointer vers une action d'un controller (en utilisant **path**)
 
@@ -4610,8 +4614,10 @@ Voici un exemple.
 ```
 Vous devez juste générer le chemin de l'action qui reçoit le formulaire en utilisant **path** avec le **name** de l'action.
 
-2. **Obtenez les valeurs dans l'action** avec $req->**request->get('nom')** 
-
+2. **Obtenez les valeurs dans l'action** avec:
+   
+a) $req->**request->get('nom')** (si le form est **POST**)<br>
+b) $req->**query->get('nom')** (si le form était **GET**)
 
 Notez que le **name** de l'action est le *action* du Formulaire
 
@@ -4639,24 +4645,29 @@ public function exempleIndependentTraitementPost(Request $req)
 
 **Note**: pensez à **get** comme "obtenir" , rien à voir avec $_GET ou $_POST!
 
-Vous avez un autre exemple pour un formulaire GET juste après dans le même controller
-
+Vous avez un autre exemple pour un formulaire GET juste après dans le même controller.
 
 <br>
 
+**Exercice**:
 
+1. Créez un form HTML (POST) indépendant contenant deux champs texte et une liste de choix. Créez une action et une vue pour traiter les infos reçues du form et les afficher
+   
+<br>
 
 ## 21.2. Création d'un formulaire associé à une entité
 
-Si vous voulez qu'un formulaire soit lié à une entité vous devez créer une classe qui represente ce formulaire.
+Si vous voulez qu'un formulaire soit lié à une entité vous devez créer **une classe qui represente ce formulaire**.
 
-Si on crée une classe formulaire pour une entité, quand on fait submit **on obtient directement une entité dans le controller qu'on pourra, par exemple, insérer directement dans une BD**.
+Cela nous permettra, quand on fera submit, **d'obtenir directement une entité de la classe associée dans le controller**.
 
-**Exemple** : un formulaire Evenement que dans le controller est directement transformé en objet Evenement, sans passer par **query** ni **request**.
+**Exemple** : un formulaire Evenement (*nom, description, dateEvenement*) associé à la classe *Evenement* est envoyé depuis la vue. Grâce au fait d'être associé à une classe, nous recevrons un objet dans le sans passer par **query** ni **request**. Cet objet peut, par exemple, être stocké dans la BD d'une façon immediate (**persist + flush**)
 
 Nous allons faire un exemple, préparons le contexte :
 
-Créez d'abord un **nouveau projet** (ex : **ProjetFormulairesSymfony**) contenant un controller (ex : **FormulairesController**). Créez une entité *Aeroport* (*nom, code, dateMiseEnService, heureMiseEnService, description*) et créez la BD (ex: **formulairesbd**) avec la migrations. Créez une fixture **AeroportFixture** pour avoir quelques données (voici une qui utilise Faker)
+Créez d'abord un **nouveau projet** (ex : **ProjetFormulairesSymfony**) contenant un controller (ex : **FormulairesController**). Créez une entité *Aeroport* (*nom, code, dateMiseEnService, heureMiseEnService, description*) et créez la BD (ex: **formulairesbd**). Faites la migration. 
+
+Importez **Faker** dans le projet. Créez et lancez une fixture **AeroportFixture** pour avoir quelques données 
 
 ```php
 <?php
@@ -4765,7 +4776,7 @@ Voici la liste de types inclus dans Symfony :
 
 Dans cette action on utilisera la méthode **createForm** pour créer une instance du formulaire (on indique le type qu'on vient de définir).
 
-Puis on utilise la méthode **createView** pour générer le code HTML qui sera envoyé à la vue. Voici le code :
+Puis on utilise la méthode **createView** pour générer le code HTML à partir de l'objet formulaire, qui sera envoyé à la vue. Voici le code :
 
 ```php
     #[Route("/exemples/formulaires/exemple/aeroport")]
@@ -4815,8 +4826,11 @@ formulaire **car ce n'est pas une bonne pratique.**
 
 ## 21.3. Création d'un formulaire pré-rempli avec les données d'une entité
 
-Vous pouvez créer un formulaire pré-rempli avec les données d'une
-entité très facilement. Pour ce faire, il suffit de créer l'entité avant et l'envoyer comme deuxième paramètre à la méthode **createForm**. Voici un exemple :
+Vous pouvez créer un formulaire pré-rempli avec les données d'une entité très facilement. Pour ce faire, il suffit de créer l'entité avant et l'envoyer comme deuxième paramètre à la méthode **createForm**. 
+
+Ceci est utile quand on veut, par exemple, mettre à jour les données d'une entité sans devoir réécrire toutes les infos.
+
+Voici un exemple isolé mais qui montre le mode de fonctionnement si vous en avez besoin :
 
 ```php
 #[Route("/exemples/formulaires/exemple/aeroport/rempli")]
@@ -4829,6 +4843,7 @@ public function exempleAeroportRempli()
     // etc....
 
     // on crée le formulaire du type souhaité
+    // et on envoie l'entité remplie
     $formulaireAeroport = $this->createForm(AeroportType::class, $unAeroport);
 
     // on envoie un objet FormView à la vue pour qu'elle puisse 
@@ -4839,7 +4854,7 @@ public function exempleAeroportRempli()
 }
 ```
 
-
+<br>
 
 ## 21.4. Action et Propriétés des champs du formulaire
 
@@ -4851,8 +4866,7 @@ Chaque champ a **un ensemble de propriétés HTML héritées de ses parents** (e
 
 **Exemple** : rajout des options dans les champs du formulaire 
 
-On va créer un formulaire plus personnalisé que le précédent pour
-l'entité Livre. Rajoutez les entités Exemplaire et Livre (vous pouvez les copier d'un autre projet, mais effacez les relations avec les autres entités tel que Categorie). 
+On va créer un formulaire plus personnalisé que le précédent pour l'entité *Livre*. Rajoutez les entités *Exemplaire* et *Livre* (vous pouvez les copier d'un autre projet, mais effacez leurs relations avec les autres entités). 
 
 
 Copiez dans ce projet toutes les entités et les repos de *ProjetModeleSymfony*. Dans l'entité Livre, rajoutez **nombrePages**, **langue** et **format** (eBook, papier).
@@ -5001,7 +5015,7 @@ Par défaut Symfony rend les champs qui ne sont pas spécifies Pour éviter le r
 
 <br>
 
-## 21.7. Résumé : Création et personnalisation de base d'un formulaire
+## 21.7. Résumé de la création et personnalisation de base d'un formulaire
 
 Pour créer un formulaire et le traiter :
 
@@ -5358,7 +5372,7 @@ Voici le code des **templates** :
 
 <br>
 
-## 21.12. (IN PROGRESS) Formulaire contenant une liste déroulante d'entités filtrées
+## 21.12. (à faire encore, on le laisse pour plus tard) Formulaire contenant une liste déroulante d'entités filtrées
 
 **Note:**: réaliser cet exemple vous devez savoir créer d'abord un **User** en utilisant le système de sécurité de Symfony.
 
