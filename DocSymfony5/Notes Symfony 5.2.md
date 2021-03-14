@@ -117,13 +117,13 @@
 - [20. Accès à la BD avec Query Builder](#20-accès-à-la-bd-avec-query-builder)
 - [21. Formulaires en Symfony](#21-formulaires-en-symfony)
   - [21.1. Création d'un formulaire indépendant](#211-création-dun-formulaire-indépendant)
-  - [21.2. Création une classe de formulaire](#212-création-une-classe-de-formulaire)
+  - [21.2. Création d'un formulaire qui est associé à une entité](#212-création-dun-formulaire-qui-est-associé-à-une-entité)
   - [21.3. Création d'un formulaire pré-rempli avec les données d'une entité](#213-création-dun-formulaire-pré-rempli-avec-les-données-dune-entité)
   - [21.4. Action et Propriétés des champs du formulaire](#214-action-et-propriétés-des-champs-du-formulaire)
   - [21.5. Boutons dans les formulaires (bonnes pratiques)](#215-boutons-dans-les-formulaires-bonnes-pratiques)
       - [Exercice : Créez des boutons de submit dans les vues qui rendent les formulaires des exemples précédents](#exercice--créez-des-boutons-de-submit-dans-les-vues-qui-rendent-les-formulaires-des-exemples-précédents)
   - [21.6. Rendu du formulaire dans la vue](#216-rendu-du-formulaire-dans-la-vue)
-  - [21.7. Résumé : création et personnalisation de base d'un formulaire](#217-résumé--création-et-personnalisation-de-base-dun-formulaire)
+  - [21.7. Résumé : Création et Personnalisation de base d'un formulaire](#217-résumé--création-et-personnalisation-de-base-dun-formulaire)
   - [21.8. Traitement des données du formulaire](#218-traitement-des-données-du-formulaire)
       - [Exercice :](#exercice-)
   - [21.9. Bonnes pratiques pour créer de formulaires en Symfony](#219-bonnes-pratiques-pour-créer-de-formulaires-en-symfony)
@@ -149,21 +149,16 @@
   - [24.2. Création d'un formulaire d'inscription](#242-création-dun-formulaire-dinscription)
   - [24.3. Logout](#243-logout)
 - [25. Accès à l'objet app.user](#25-accès-à-lobjet-appuser)
-  - [26. Authentication et Rôles](#26-authentication-et-rôles)
+- [26. Authentication et Rôles](#26-authentication-et-rôles)
   - [26.1. Gestion de rôles](#261-gestion-de-rôles)
   - [26.2. Contrôle d'accès par rôles](#262-contrôle-daccès-par-rôles)
     - [26.2.1. Dans security.yaml](#2621-dans-securityyaml)
-- [till here](#till-here)
-    - [Dans le controller](#dans-le-controller)
-    - [Dans les vues](#dans-les-vues)
-  - [Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre](#gestion-de-lerreur-access-denied-exception-en-utilisant-une-classe-propre)
-- [sera lancée après l'action logout](#sera-lancée-après-laction-logout)
-- [Fenêtre modale pour le login](#fenêtre-modale-pour-le-login)
-  - [Description générale](#description-générale)
-  - [Adaptation à Ajax et fenêtre modale](#adaptation-à-ajax-et-fenêtre-modale)
-  - [Formulaire d'enregistrement](#formulaire-denregistrement)
-- [Envoi du mail (Swift Mailer)](#envoi-du-mail-swift-mailer)
-- [Pagination](#pagination)
+    - [26.2.2. Dans le controller](#2622-dans-le-controller)
+    - [26.2.3. Restriction d'accès dans la vue](#2623-restriction-daccès-dans-la-vue)
+  - [26.3. Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre](#263-gestion-de-lerreur-access-denied-exception-en-utilisant-une-classe-propre)
+  - [26.4. Fenêtre modale pour le login (Ajax)](#264-fenêtre-modale-pour-le-login-ajax)
+    - [Adaptation à Ajax et fenêtre modale](#adaptation-à-ajax-et-fenêtre-modale)
+- [27. Pagination](#27-pagination)
 - [JS et CSS avec Webpack encore](#js-et-css-avec-webpack-encore)
   - [Installation de Webpack Encore et de node_modules](#installation-de-webpack-encore-et-de-node_modules)
   - [Configurer Webpack Encore](#configurer-webpack-encore)
@@ -178,10 +173,9 @@
   - [Création d'un serveur virtuel (virtual host) en OSX](#création-dun-serveur-virtuel-virtual-host-en-osx)
 - [(En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur](#en-cours-cette-doc-appartient-à-symfony-4-traduction-des-messages-de-succèserreur)
 
-
 <br>
 
-corocoasdc
+s
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
 
@@ -2493,7 +2487,7 @@ Pour le reste de requêtes (GROUP BY, JOIN, etc...) on créera des méthodes dan
 
 Une fois crée le code des entités et le schéma de la BD, nous pouvons accéder à la BD depuis (en géneral depuis le controller) en utilisant un objet gestionnaire de Doctrine (**entity manager**). 
 
-Tel qu'on a déjà mentionné, Doctrine fournit les méthodes pour pouvoir **obtenir les données de la BD sous forme d'objets** (au lieu d'arrays associatifs) et **stocker des objets dans la BD** (qui seront stockés sous la forme d'un enregistrement, une ligne dans un tableau). La conversion est automatique.
+Comme nous l'avons déjà dit, Doctrine fournit les méthodes pour pouvoir **obtenir les données de la BD sous forme d'objets** (au lieu d'arrays associatifs) et **stocker des objets dans la BD** (qui seront stockés sous la forme d'un enregistrement, une ligne dans un tableau). La conversion est automatique.
 
 <br>
 
@@ -4294,7 +4288,7 @@ En utilisant DQL :
 # 19. Accès à la BD avec DQL en utilisant les classes Repositoires
 
 
-Tel qu'on a déjà mentionné dans la section "Selection", quand on crée une entité sa classe Repository est créée aussi. Cette classe contient les méthodes par défaut qu'on a déjà utilisés (find, findBy, findOneBy, etc...). On va maintenant rajouter **de méthodes faits par nous capables de réaliser de requêtes plus complexes**.
+Comme nous l'avons déjà dit dans la section "Selection", quand on crée une entité sa classe Repository est créée aussi. Cette classe contient les méthodes par défaut qu'on a déjà utilisés (find, findBy, findOneBy, etc...). On va maintenant rajouter **de méthodes faits par nous capables de réaliser de requêtes plus complexes**.
 
 Le but est de simplifier les actions du controller qui, au lieu de devoir contenir la logique de requêtes complexes, appelleront aux actions des repositoires.
 
@@ -4578,31 +4572,29 @@ Un formulaire est un ensemble d'éléments HTML dont leur contenu est envoyé au
 
 En Symfony nous avons plusieurs options pour créer un formulaire :
 
-1.  Créer un **formulaire HTML indépendant** et obtenir les données dans une action du controller avec l'objet Request
+1.  Créer tout simplement un **formulaire HTML indépendant** et obtenir les données dans une action du controller avec l'objet Request
 
 2.  Créer **un formulaire qui est associé à une entité** du modèle. Quand on fait submit on obtient une entité dans le controller 
 
 **Exemple :** Si on crée un formulaire pour insérer un Client, il sera associé à l'entité Client
 
 
-3. Créer **un formulaire qui est associé à une entité du modèle mais auquel on rajoute/efface de champs**. Les champs manquants de l'entité auront la valeur null. Si le formulaire a de champs en trop, on pourra traiter ces infos de façon indépendante à la classe.
-
-**Exemple :** On crée un formulaire pour insérer un Client et on rajoute un champ "Je suis d'accord avec les conditions du site"
-
-On va mieux comprendre avec des exemple pratiques.
+3. Créer **un formulaire qui est associé à une entité du modèle mais auquel on rajoute/efface certains champs**. Les champs manquants de l'entité auront la valeur null. Si le formulaire a de champs en trop, on pourra traiter ces infos de façon indépendante à la classe. Par exemple: on crée un formulaire pour insérer un Client et on rajoute un champ "Je suis d'accord avec les conditions du site"
 
 <br>
 
 ## 21.1. Création d'un formulaire indépendant
 
-Vous pouvez créer un formulaire HTML dans votre twig sans aucun
+Vous pouvez créer un formulaire HTML dans votre **twig** sans aucun
 problème. Pour obtenir les données du formulaire dans une action vous allez utiliser l'objet **Request** (pareil que quand on obtient les paramètres d'URL).
+
+La seule différence est que le lien pour l'action doit pointer vers une action d'un controller (en utilisant **path**)
 
 <https://symfony.com/doc/current/components/http_foundation.html#accessing-request-data>
 
 Les exemples se trouveront dans  le projet **ProjetFormulairesSymfony**, controller **ExemplesFormulaireController** (La bd sera **formulairesbd**).
 
-C'est très simple. 
+Voici un exemple. 
 
 1. **Créez le form dans le twig** :
    
@@ -4613,11 +4605,10 @@ C'est très simple.
     <button type="submit">Envoyer POST</button> 
 </form>
 ```
-Vous devez juste générer le chemin de l'action qui reçoit le formulaire en utilisant **path** et le **name** de l'action.
+Vous devez juste générer le chemin de l'action qui reçoit le formulaire en utilisant **path** avec le **name** de l'action.
 
 2. **Obtenez les valeurs dans l'action** avec $req->**request->get('nom')** 
 
-**Note**: pensez à **get** comme l'action d'obtenir, rien à voir avec $_GET ou $_POST!
 
 Notez que le **name** de l'action est le *action* du Formulaire
 
@@ -4643,21 +4634,26 @@ public function exempleIndependentTraitementPost(Request $req)
 }
 ```
 
-Vous avez un autre exemple pour un formulaire GET juste après dans le code.
+**Note**: pensez à **get** comme "obtenir" , rien à voir avec $_GET ou $_POST!
+
+Vous avez un autre exemple pour un formulaire GET juste après dans le même controller
 
 
 <br>
 
 
-## 21.2. Création une classe de formulaire 
 
-Si vous voulez qu'un formulaire soit lié à une entité (ex : un formulaire Evenement que dans le controller est directement transformé en objet Evenement, sans passer par **query** ni **request**), vous devez créer une classe qui represente ce formulaire.
+## 21.2. Création d'un formulaire qui est associé à une entité
 
-Si on crée une classe formulaire pour une entité, quand on fait submit **on obtient directement une entité dans le controller qu'on pourra, par exemple, insérer directement dans une BD**
+Si vous voulez qu'un formulaire soit lié à une entité vous devez créer une classe qui represente ce formulaire.
+
+Si on crée une classe formulaire pour une entité, quand on fait submit **on obtient directement une entité dans le controller qu'on pourra, par exemple, insérer directement dans une BD**.
+
+**Exemple** : un formulaire Evenement que dans le controller est directement transformé en objet Evenement, sans passer par **query** ni **request**.
 
 Nous allons faire un exemple, préparons le contexte :
 
-Créez d'abord un **nouveau projet** (ex : **projetFormulaires**) contenant un controller (ex : **FormulairesController**). Créez une entité *Aeroport* (nom, code, dateMiseEnService, heureMiseEnService, description) et créez la BD (ex: formulairesbd) avec la migrations. Créez une fixture **AeroportFixture** pour avoir quelques données (voici une qui utilise Faker)
+Créez d'abord un **nouveau projet** (ex : **ProjetFormulairesSymfony**) contenant un controller (ex : **FormulairesController**). Créez une entité *Aeroport* (*nom, code, dateMiseEnService, heureMiseEnService, description*) et créez la BD (ex: **formulairesbd**) avec la migrations. Créez une fixture **AeroportFixture** pour avoir quelques données (voici une qui utilise Faker)
 
 ```php
 <?php
@@ -4691,11 +4687,11 @@ class AeroportFixture extends Fixture
 
 ```
 
-**Exemple** : création d'une classe de formulaire associé à une entité (Aeroport)
+**Exemple** : création d'une classe de formulaire associé à une entité (*Aeroport*)
 
-On va créer un formulaire pour l'entité Aeroport qui contiendra deux champs de texte (nom et code). Le bouton de submit sera rajouté à posteriori.
+On va créer un formulaire pour l'entité Aeroport qui contiendra deux champs de texte (*nom* et *code*). Le bouton de **submit** sera rajouté plus tard (bonnes pratiques).
 
-1.  Rajoutez les **classes** qui gèrent les **formulaires** en Symfony **dans le projet** (cette action doit se faire une seule fois para projet!)
+1.  Rajoutez les **classes** de Symfony qui gèrent les **formulaires** (création, validation, etc...) **dans le projet** (cette action doit se faire une seule fois para projet!)
 
 ```console
     composer require symfony/form
@@ -4742,12 +4738,17 @@ class AeroportType extends AbstractType
         ]);
     }
 }
-
 ```
 
-La classe qui représente le formulaire doit hériter de **AbstractType**, et possède une méthode **buildForm** qui est en charge de générer l'objet formulaire. 
+**Note**: vou pouvez créer la structure de base d'un form en lançant un assistant, mais c'est assez rudimentaire.
 
-Cette méthode reçoit un objet qui implémente la classe FormBuilderInterface (il est injecté par Symfony, nous ne créons pas cet objet par nous-mêmes), en plus d'un array d'options qui nous permettrait de personnaliser le formulaire.
+```console
+php bin/console make:form
+```
+
+La classe qui représente le formulaire doit hériter de **AbstractType**, et posséder une méthode **buildForm** qui est en charge de générer l'objet formulaire. 
+
+Cette méthode reçoit un objet qui implémente la classe **FormBuilderInterface** (il est injecté par Symfony, nous ne créons pas cet objet par nous-mêmes), en plus d'un array d'options qui nous permettrait de personnaliser le formulaire.
 
 En général, vous allez utiliser la méthode **add** de cet objet pour rajouter les champs du formulaire. Vous devez, pour chaque champ, indiquer le **name** (premier paramètre) ainsi que le **type**. Symfony possède un vaste nombre de types déjà définis qui correspondent aux type HTML, mais on peut en plus définir nos propres types pour atteindre un niveau de complexité assez élevé.
 
@@ -4801,6 +4802,8 @@ Il nous manque le **submit**, on le verra dans les sections suivantes.
 
 Nous n'allons pas rajouter un bouton de submit dans la classe du
 formulaire **car ce n'est pas une bonne pratique.**
+
+<br>
 
 ## 21.3. Création d'un formulaire pré-rempli avec les données d'une entité
 
@@ -4989,7 +4992,7 @@ Par défaut Symfony rend les champs qui ne sont pas spécifies Pour éviter le r
 
 <br>
 
-## 21.7. Résumé : création et personnalisation de base d'un formulaire
+## 21.7. Résumé : Création et Personnalisation de base d'un formulaire
 
 Pour créer un formulaire et le traiter :
 
@@ -6198,17 +6201,14 @@ Créez un projet **ProjetLoginPass**. Ce projet contiendra :
 ## 24.1. Configuration de la sécurité et création d'un formulaire de login
 
 
-On va réaliser une configuration de base de la sécurité pour pouvoir
-créer un formulaire d'inscription/login standard. Pour des options
-plus avancés (ex : changez d'utilisateur sans devoir se déconnecter
-de l'application) consultez la documentation ici :
+On va réaliser une configuration de base de la sécurité pour pouvoir créer un formulaire d'inscription/login standard. Pour des options plus avancés (ex : changez d'utilisateur sans devoir se déconnecter de l'application) consultez la documentation ici :
 
 <https://symfony.com/doc/current/security.html>
 
 <https://symfony.com/doc/current/security/form_login_setup.html>
 
 
-**Resumé de la procédure** à suivre :
+**Resumé de la procédure** à suivre (en détail juste après) :
 
 1.  **Installer le support de sécurité dans le projet**
 
@@ -6227,11 +6227,11 @@ de l'application) consultez la documentation ici :
 
 5.  **Encoder des utilisateurs et de passwords dans la BD**
 
-6.  **Vérifier** le bon fonctionnement en tapant un couple login/pass
-    valable
+6.  **Vérifier** le bon fonctionnement en tapant un couple login/pass valable
 
+<br>
 
-**Procedure**: 
+**Voici l'execution de la procedure**: 
 
 1.  **Installer le support de sécurité dans le projet**
 
@@ -6295,11 +6295,11 @@ Pour les questions posées par l'assistant on choisira :
 -   **SecuriteController** comme nom du controller (actions login et
     logout)
 
--   **Oui**, car on veut que Symfony crée aussi l'URL de logout (avec
-    l'action qui deloggera l'user, c.à.d. l'effacer de la session)
+-   **Oui**, car on veut que Symfony crée aussi l'URL de logout (avec l'action qui deloggera l'user, c.à.d. l'effacer de la session)
 
-Cette action met aussi à jour le fichier de configuration
-**config/packages/security.yaml**.
+Si vous vous trompez dans les options, effacez FormulaireLoginAuthenticator et le controller SecuriteController (avec ses templates) 
+
+Cette action met aussi à jour le fichier de configuration **config/packages/security.yaml**.
 
 Observez que le controller et le template ont été créés. Vous pouvez
 accéder à la vue contenant le formulaire de login en tapant la route
@@ -6501,7 +6501,7 @@ Suivez les instructions de l'assistant. Choisissez si :
 - Vous voulez qu'on ne puisse pas avoir de doublons dans les Users 
 - Vous voulez envoyer un lien d'authentification pour l'inscription. Dans ce cas, tapez l'adresse mail
 - Vous voulez (par défaut non) rajouter l'user id dans le lien
-- Vous voulez que les utilisateurs soient logués directement après l'inscription (comme dans la plupart de sites)
+- Vous voulez que les utilisateurs soient connectés directement après l'inscription (comme dans la plupart de sites)
 
 L'assistant créera :
 
@@ -6589,7 +6589,7 @@ trouve dans **SecuriteController**.
 
 # 25. Accès à l'objet app.user
 
-Si vous utilisez le système d'authentication de Symfony, une fois l'utilisateur est logué vous pouvez obtenir son objet **User** associé :
+Si vous utilisez le système d'authentication de Symfony, une fois l'utilisateur est connecté vous pouvez obtenir son objet **User** associé :
 
 1.  Dans le controller
 
@@ -6624,8 +6624,9 @@ est juste un raccourci de Symfony pour user.getUsername()
 
 Des actions d'exemple se trouvent dans le projet **ProjetLoginPass**, controller **SecurityController**
 
+<br>
 
-## 26. Authentication et Rôles 
+# 26. Authentication et Rôles 
 
 ## 26.1. Gestion de rôles
 
@@ -6735,7 +6736,7 @@ class UserFixtures extends Fixture
 ```
 
 
-1.  Lancer les fixtures pour la remplir. **UserFixtures** crée plusieurs types d'user. Selon le système de rôles de Symfony, vous pouvez choisir vous-mêmes les noms des rôles en sachant que le nom du rôle doit commencer par **ROLE_** (ex: ROLE_CLIENT, ROLE_ADMIN, ROLE_PARTICIPANT...)
+Lancez les fixtures. **UserFixtures** crée plusieurs types d'user. Selon le système de rôles de Symfony, vous pouvez choisir vous-mêmes les noms des rôles en sachant que le nom du rôle doit commencer par **ROLE_** (ex: ROLE_CLIENT, ROLE_ADMIN, ROLE_PARTICIPANT...)
 
 ```php
 php bin/console doctrine:fixtures:load
@@ -6765,110 +6766,113 @@ On peut restreindre l'accès à de grandes sections de notre site (ex: partie ad
 
 <https://symfony.com/doc/current/security.html#security-authorization-access-control>
 
-1.  **Créez un controller** GestionController et ses vues correspondantes. On utilisera ces actions pour vérifier le bon fonctionnement des restrictions qu'on fera plus tard dans security.yaml
+1.  **Créez un controller** GestionController et deux actions. On utilisera ces actions pour vérifier le bon fonctionnement des restrictions qu'on fera plus tard dans security.yaml
 
-# till here
+Pour tester la route vous devez faire login avant. Observez ce qui se passe si vous n'êtes pas connectés (objet app.user vide)
 
 ```php
+<?php
 
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+
+class GestionController extends AbstractController
+{
+    // ces routes seront accessibles uniquement pour certains roles
+    // quand on le fixera ainsi dans /config/packages/security.yaml. 
+    #[Route("/gestion/action1")]
+    public function action1()
+    {
+        return $this->render('gestion/action1.html.twig');
+    }
+    #[Route("/gestion/action2")]
+    public function action2()
+    {
+        return $this->render('gestion/action2.html.twig');
+    }
+}
 ```
 
 ```twig
-
-```
-(gestion/action1.html.twig, le code sera pareil pour action2. Le dump
-affiche les rôles)
-
 {% extends 'base.html.twig' %}
 
+{% block title %}Hello GestionController!{% endblock %}
+
 {% block body %}
-
 Voici action 1
-
+{# afficher l'objet app.user #}
+{{ dump (app.user)}}
+{# afficher les rôles de cet user (vous pouvez les voir dans la BD) #}
 {{ dump (app.user.getRoles())}}
-
 {% endblock %}
+```
 
-1.  **Créez les restrictions dans security.yaml**
+2.  **Créez les restrictions dans security.yaml**
 
     Les deux actions de ce controller doivent être uniquement par un
     utilisateur ayant le role ROLE_GESTIONNAIRE. C'est dans
     **security.yaml** qu'on a fixé cette restriction :
 
+```yaml
 access_control:
-
         - { path: ^/gestion, roles: [ROLE_GESTIONNAIRE] }
+```
 
 Faites logout. Faites login avec un user de chaque type (regardez la
-BD) et essayez de lancer les actions gestion/action1 et
-gestion/action2 (depuis l'URL). Observez les résultats selon l'user
-qui est connecté : seulement les users ayant le ROLE_GESTIONNAIRE
-pourront lancer ces actions. Les autres obtiennent une exception
-**Access Denied**
+BD) et essayez de lancer les actions gestion/action1 et gestion/action2 (depuis l'URL). Observez les résultats selon l'user qui est connecté : seulement les users ayant le ROLE_GESTIONNAIRE pourront lancer ces actions. Les autres obtiennent une exception **Access Denied**
 
-### Dans le controller
 
-Si on ne veut pas créer de restrictions par routes, on peut tout
-simplement vérifier si l'utilisateur qui est connecté possède le rôle
-demandé à l'intérieur d'une action du controller.
+<br>
 
-Ex: dans une action, permettre l'accès à l'action uniquement au role
-ROLE_CLIENT
+### 26.2.2. Dans le controller
 
+Si on ne veut pas créer de restrictions par routes, on peut tout simplement **vérifier si l'utilisateur qui est connecté possède le rôle demandé** à l'intérieur d'une action du controller.
+
+**Exemple**: 
+
+Dans une action, permettre l'accès à l'action uniquement au role ROLE_CLIENT
+
+```php
 $this->denyAccessUnlessGranted(["ROLE_CLIENT"]);
+```
 
 Si l'user n'a aucun de ces rôles il y aura une exception.
 
-Créez le controller **AutreController** et ses vues, en rajoutant le
-code qui vérifie le rôle :
+Créez le controller **AutreController** et ses vues, en rajoutant le code qui vérifie le rôle :
 
-/**
+```php
+#[Route("/autre/action1")]
+public function action1()
+{
+    // deux rôles peuvent avoir l'accès
+    // mais il y a un bug! this->denyAccessUnlessGranted(['ROLE_CLIENT','ROLE_ADMIN']);
 
-     * @Route("/autre/action1")
+    $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
-     */
+    return $this->render('autre/action1.html.twig');
+}
 
-    public function action1()
 
-    {
+#[Route("/autre/action2")]
+public function action2()
+{
 
-// deux rôles peuvent avoir l'accès mais il y a un bug! 
->
-//
-this->denyAccessUnlessGranted(['ROLE_CLIENT','ROLE_ADMIN']);
+    // deux rôles peuvent avoir l'accès
+    // mais il y a un bug! this->denyAccessUnlessGranted(['ROLE_CLIENT','ROLE_ADMIN']);
 
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+    $this->denyAccessUnlessGranted('ROLE_GESTIONNAIRE');
 
-        return $this->render('autre/action1.html.twig');
+    // si pas d'exception...
+    return $this->render('autre/action2.html.twig');
+}
+```
+Si l'utilisateur ne possède pas le rôle fixé dans l'action, **une exception sera lancée.** Pour tester le bon fonctionnement faites d'abord logout. Faites login avec un user de chaque type (regardez la BD) et essayez de lancer les actions *autre/action1* et *autre/action2* (depuis l'URL). Observez les résultats selon l'user qui est connecté.
 
-    }
+<br>
 
-    /**
-
-     * @Route("/autre/action2")
-
-     */
-
-    public function action2()
-
-    {
-
-        $this->denyAccessUnlessGranted('ROLE_GESTIONNAIRE');
-
-        // si pas d'exception...
-
-        return $this->render('autre/action2.html.twig');
-
-    }
-
-Si l'utilisateur ne possède pas le rôle fixé dans l'action, **une
-exception sera lancée.** Pour tester le bon fonctionnement faites
-d'abord logout. Faites login avec un user de chaque type (regardez la
-BD) et essayez de lancer les actions autre/action1 et autre/action2
-(depuis l'URL). Observez les résultats selon l'user qui est
-connecté.
-
-### Dans les vues
+### 26.2.3. Restriction d'accès dans la vue
 
 Vous pouvez aussi vérifier les rôles dans les vues pour afficher/masquer
 le code de votre choix selon le rôle de l'utilisateur qui est connecté
@@ -6876,152 +6880,117 @@ en utilisant **is_granted**.
 
 Créez une nouvelle action **action 3** qui ne limite pas par rôle :
 
-    /**
+```php
+#[Route("/autre/action3")]
+public function action3()
+{
+    // cette fois on va controller l'accès dans la vue
+    return $this->render('autre/action3.html.twig');
+}
+```
 
-     * @Route("/autre/action3")
+Et contrôlez le rôle dans la vue :
 
-     */
+```twig
+{% extends 'base.html.twig' %}
 
-    public function action3()
+{% block title %}Hello AutreController!{% endblock %}
 
-    {
-
-        // on va controller l'accès dans la vue
-
-        return $this->render('autre/action3.html.twig');
-
-    }
-
-Et controlez le rôle dans la vue :
+{% block body %}
 
 {% if is_granted('ROLE_ADMIN') %}
-
-    La vie de l'admin est dure
-
-    {# ex: <a href="{{ path ('effacer_user') }}">effacer</a> #}
-
+La vie de l'admin est dure
+{# ex: <a href="{{ path ('effacer_user') }}">effacer</a> #}
 {% else %}
-
-    La vie est belle
-
+La vie est belle
 {% endif %}
+{{ dump (app.user)}}
+{{ dump (app.user.getRoles())}}
+{% endblock %}
+```
 
-Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre
----------------------------------------------------------------------------------
+
+## 26.3. Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre
 
 Pour **personnaliser l'action à réaliser** en cas **d'erreur d'accès
 par rôle** vous devez utiliser une classe propre.
 
-1.  **Créer une classe** (ici c'est **Security/
-    GestionnaireErreurAcces.php**) **contenant une action où on fixera
-    l'action à réaliser**. Voici un exemple où, **dans le cas d'une
-    erreur d'accès**, on redirige vers login (notez que la redirection
-    se fait de manière différente quand on se trouve à l'extérieur du
-    controller)
+1.  **Créer une classe** (ici c'est **Security/GestionnaireErreurAcces.php**) **contenant une action où on fixera l'action à réaliser**. Voici un exemple où, **dans le cas d'une erreur d'accès**, on redirige vers login (notez que la redirection se fait de manière différente quand on se trouve à l'extérieur du controller)
 
+```php
 <?php 
 
-namespace AppSecurity;
+namespace App\Security;
 
-use SymfonyComponentHttpFoundationRequest;
-
-use SymfonyComponentHttpFoundationResponse;
-
-use SymfonyComponentHttpFoundationRedirectResponse;
-
-use SymfonyComponentRoutingGeneratorUrlGeneratorInterface;
-
-use SymfonyComponentSecurityCoreExceptionAccessDeniedException;
-
-use SymfonyComponentSecurityHttpAuthorizationAccessDeniedHandlerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
 class GestionnaireErreurAcces implements AccessDeniedHandlerInterface
-
 {
-
     private $router;
 
     public function __construct (UrlGeneratorInterface $router){
-
         $this->router = $router;
 
     }
-
     public function handle(Request $request, AccessDeniedException $accessDeniedException)
-
     {
-
         // choisissez la route vers laquelle y aller. Ici on a choisi app_login
-
         return new RedirectResponse ($this->router->generate ("app_login")); 
-
     }
-
 }
+```
 
-2.  Rajouter la clé **access_denied_handler** dans **security.yaml**
-    qui pointe vers la classe qu'on vient de créer (indentation !!!)
+2.  Rajouter la clé **access_denied_handler** dans **security.yaml** qui pointe vers la classe qu'on vient de créer (indentation !!!)
 
+```yaml
             logout:
-
-                path: /logout
-
+                path: logout
                 target: /apres/logout 
+                # where to redirect after logout
+                # target: app_any_route
+            access_denied_handler: App\Security\GestionnaireErreurAcces
 
-                # target est le name l'action qui 
+```
+Si vous avez gardé le template de login original, modifiez le lien pour le logout (app_logout devient **logout** ou un autre nom choisit par vous dans la section de logout déjà expliquée):
 
-# sera lancée après l'action logout
+```twig
+You are logged in as {{ app.user.username }}, <a href="{{ path('logout') }}">Logout</a>
 
-            
-access_denied_handler: AppSecurityGestionnaireErreurAcces
+```
+## 26.4. Fenêtre modale pour le login (Ajax)
 
-Fenêtre modale pour le login
-============================
 
-Description générale 
----------------------
+Cette section explique plus en profondeur le comportement du système de login/pass qu'on peut créer automatiquement avec **make:auth**, ainsi que les bases pour modifier ce système en utilisant une **fenêtre modale et Ajax**.
 
-Cette section explique plus en profondeur le comportement du système de
-login/pass qu'on peut créer automatiquement avec **make:auth**, ainsi
-que les bases pour modifier ce système en utilisant une **fenêtre modale
-et ajax**.
+On part du principe que vous avez déjà créé votre entité user et le système de login avec make:auth (voir les sections précédentes).
 
-On part du principe que vous avez déjà créé votre entité user et le
-système de login avec make:auth (voir les sections précédentes).
+L'action login créé par Symfony rend toujours la vue qui affiche le login ($this->render).
 
-L'action login créé par Symfony rend toujours la vue qui affiche le
-login ($this->render).
+Avec la configuration par défaut de Symfony, cette action sera lancée dans deux cas de figure :
 
-Avec la configuration par défaut de Symfony, cette action sera lancée
-dans deux cas de figure :
+- **GET** : **quand on tape /login dans l'URL** du navigateur ou, normalement, quand on génère la route **avec un href**
 
-- **GET** : **quand on tape /login dans l'URL** du navigateur ou,
-normalement, quand on génère la route **avec un href**
+- **POST** : quand on fait **submit** dans un formulaire dont l'action pointe vers la route de cette action.
 
-- **POST** : quand on fait **submit** dans un formulaire dont l'action
-pointe vers la route de cette action.
-
-Dans le code généré par Symfony pour le form de login **il n'y a pas
-d'attribut "action".** Ça implique que quand on clique sur le bouton
-de submit on chargera à nouveau la même route (dans ce cas ça sera
-/login). Plusieurs actions de la classe de notre Authenticator seront
-lancées **avant de lancer le code de cette action.**
+Dans le code généré par Symfony pour le form de login **il n'y a pas d'attribut "action".** Ça implique que quand on clique sur le bouton de submit on chargera à nouveau la même route (dans ce cas ça sera */login*). Plusieurs actions de la classe de notre Authenticator seront lancées **avant de lancer le code de cette action.**
 
 **En résumé** :
 
-1.  si on tape /login dans **l'URL**, l'action fait un rendu de la vue
-    login.html.twig. La vue envoie deux paramètres au controller : le
+1.  si on tape /login dans **l'URL**, l'action fait un rendu de la vue login.html.twig. La vue envoie deux paramètres au controller : le
     dernier utilisateur connecté avec succès et un message correspondant
     à l'erreur qui s'est produite dans le dernier essai de connexion
 
 2.  si on fait **submit** et le **login est ok** on charge
-    **onAuthenticatioSuccess** et **puis le code de l'action login**,
+    **onAuthenticationSuccess** et **puis le code de l'action login**,
     **sauf** si à l'intérieur de la méthode onAuthenticatioSuccess on
     redirige vers une autre action.
 
-**Note**: sachez que cette action sera aussi appelée si on crée un form
-d'enregistrement et on choisit d'être logué automatiquement après
-l'enregistrement
+**Note**: sachez que cette action sera aussi appelée si on crée un form d'enregistrement et on choisit d'être connecté automatiquement après l'enregistrement
 
 3.  si on fait **submit** et le **login n'est pas ok** on charge
     **onAuthenticationFailure**. Si cette action n'existe pas on charge
@@ -7031,362 +7000,220 @@ l'enregistrement
     cette action est optionnelle, mais onAuthenticationSuccess est
     obligatoire.
 
-Tel qu'on a déjà mentionné, dans le code généré par défaut par Symfony
+Comme nous l'avons déjà dit, dans le code généré par défaut par Symfony
 l'action login envoie toujours deux valeurs à la vue :
 
 1. **lastUsername** : contient le nom du dernier utilisateur qui s'est
-logué correctement
+connecté correctement
 
 2. **error** : objet qui contient des infos sur l'erreur qui s'est
 produit (email inexistant, crédentielles invalides...)
 
-Ces infos sont utilisées dans le template par défaut, mais bien
-évidemment vous pouvez les utiliser comment vous voulez.
+Ces infos sont utilisées dans le template par défaut, **mais bien évidemment vous pouvez les utiliser comment vous voulez** en changeant le template!
 
-Adaptation à Ajax et fenêtre modale
------------------------------------
 
-Dans plein de cas on va vouloir utiliser une fenêtre modale pour le
-login (ou même pour d'autres actions). Considérons un cas pratique :
 
-1)  On est sur un site contenant une nav avec un lien
-    "login/inscription" à l'intérieur. On clique et on "ouvre la
-    fenêtre". Cette "fenêtre" est juste un div caché qui se trouve
-    quelque part dans la page (header.html.twig, par exemple). Dans ce
-    div on inclut la vue du formulaire de login
+### Adaptation à Ajax et fenêtre modale
 
-2)  Quand on remplit le login on aura deux cas de figure possibles
+Dans plein de cas on va vouloir utiliser une fenêtre modale pour le login (ou même pour d'autres actions). Considérons un cas générique :
 
-    a.  Login ok : on ferme le div et on est dans l'accueil. On modifie
-        quoi que ce soit dans la page pour montrer à l'utilisateur
-        qu'il s'est logué correctement (ex: icône dans la nav). On
-        peut aussi rediriger, mais on va devoir le faire avec JS
-        (explication plus tard)
+1)  On est sur un site contenant une **nav** qui contient un lien *login/inscription* à l'intérieur. On clique et une fenêtre modale apparait. Cette fenêtre est juste un div caché qui se trouve quelque part dans la page (header.html.twig, par exemple). 
+C'est ici où on inclura notre template de login login.html.twig, mais adapté au contexte et contenant AJAX.
 
-    b.  Login pas ok : on affiche un message d'erreur dans un div qui
-        était vide et qui se trouve dans le code du div de login (la
-        "fenêtre modale")
+1)  Quand on remplit le login on aura deux cas de figure possibles
 
-Pour ce faire on a besoin d'AJAX. Pour nous faciliter la tâche on
-utilisera Axios. Voici l'ensemble d'actions pour créer un exemple de
-ce système.
+    **a**.  **Login ok** : on ferme le div et on est dans l'accueil (ou index). On modifie quoi que ce soit dans la page avec AJAX pour montrer à l'utilisateur qu'il s'est connecté correctement (ex: icône dans la nav). On peut aussi rediriger, mais on va devoir le faire avec JS (explication plus tard)
 
-Le code final se trouve dans **ProjetLoginPassModal**, et
-l'authentification fait partie d'un projet existant.
+    **b**.  **Login pas ok** : on affiche un message d'erreur dans un div qui était vide et qui se trouve dans le code du div de login (la "fenêtre modale")
 
-1)  Inclure la vue login.html.twig créé par Symfony dans le bon
-    emplacement (ici, dans le header.twig.html à l'emplacement
-    correspondant). Utilisez include (twig). On peut adapter le code
-    selon nos besoins. Logiquement on doit remplacer l'ancien contenu
-    du template.
+Pour ce faire on a besoin d'AJAX. Pour nous faciliter la tâche on utilisera Axios. 
 
-<!-- include la vue du login  -->
->
-{% include "security/login.html.twig" %}
->
-<!-- <form>
->
+
+**Voici la procédure pour la création de la fenêtre modale si vous voulez l'utiliser dans un projet**. Sachant que la procedure dépend fortement du template à utiliser, on montre une procédure générique.
+
+
+1. Inclure la vue **login.html.twig** créé par Symfony là où se trouve le code de la fenêtre modale. Remplacez le code original de la fenêtre modale (ex: un div quelque par  dans le template). Utilisez include (twig) dans ce div pour inclure *login.html.twig*. 
+On peut adapter le code selon nos besoins. 
+
+```twig
+.
+.
+.
+<div id="modal_window_div_container">
+<!-- ancien code de la fenêtre modale, maintenant en commentaires  
+<form>
     <div class="form-group">
-
+    .
+    .
+    </div>
+</form> 
+-->
+{# nouveau code: notre template de login #}
+{% include "security/login.html.twig" %}
+</div>
 .
-
 .
-
-(ce code ne nous sert plus à rien. Juste adaptez le css si vous avez
-besoin)
-
-2)  Dans la vue du login, **créer des id** un pour le bouton et un autre
-    pour le form car on va utiliser Ajax et on doit rajouter un
-    événement et créer un objet FormData
-
-<form id="formLogin">    // pas d'action ni de méthode, on utilise
-Axios
-
 .
+```
 
-<button class="btn btn-lg btn-primary" type="submit" id="btnLogin">
 
-3)  Créer un **div** pour afficher les **messages d'erreur**
+
+2. Dans le template **login.html.twig** du login, **créer des id**: un pour le **bouton** et un autre pour le **Form** car on va utiliser Ajax et on doit rajouter un événement et créer un objet FormData.
+
+```twig
+<form id="formLogin">   <!-- pas d'action ni de méthode, on utilise Axios -->
+.
+.
+    <button class="btn btn-lg btn-primary" type="submit" id="btnLogin">
+```
+
+
+3. Toujours dans le même template, rajoutez aussi un **div** pour afficher les **messages d'erreur**
+
+```twig
+<!-- pour afficher l'erreur -->
+<div id="divMessageErreur">
+<!-- vide par défaut -->
+</div>
+```
+<br>
+
+4. Toujours dans le même template, **importer axios et faire un appel ajax** à l'action login **en lui envoyant le form**. La route est **(**"app_login"). Si vous utilisez un fichier externe .js au lieu de twig vous allez devoir utiliser le **FOSJsRoutingBundle**, mais ici on n'a pas besoin.
+
+On peut créer un block **customjs** qui sera present seulement dans, par exemple, la master page (base.html.twig, header.html.twig... ça dépend du template). 
+
+Ce bloc peut se trouver éventuellement à l'intérieur d'un bloc **content** ou autre. 
+
+Vous devez choisir quoi faire selon ce qu'on reçoit du controller.
+Ici on affiche un message d'erreur ou on redirige (ici on peut!) vers l'accueil.
+
+Voici **login.html.twig** adapté, qui **se trouvera inclut quelque part dans le site** dans le div d'une fenêtre modale:
+
+```twig
+<!-- contenu à incruster dans le div container  -->
+
+<form id="formLogin">    
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <label for="inputEmail">Email</label>
+    <input type="email" value="" name="email" id="inputEmail" class="form-control" required
+        autofocus>
+    <label for="inputPassword">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" required>
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    <button class="btn btn-lg btn-primary" type="submit" id="btnLogin">
+        Sign in
+    </button>
+</form>
 
 <!-- pour afficher l'erreur -->
-
 <div id="divMessageErreur">
-
 <!-- vide par défaut -->
-
 </div>
 
-4)  **Importer axios et faire un appel ajax** à l'action login **en lui
-    envoyant le form**. La route est **(**"app_login"). Si vous
-    utilisez un fichier externe .js au lieu de twig vous allez devoir
-    utiliser le **FOSJsRoutingBundle**, mais ici on n'a pas besoin.
-
-    Notez qu'on a crée un block **customjs**. On est déjà dans un bloc
-    **content**, car la vue qui inclut le le header.html.twig
-    (index.html.twig) se trouve dans ce bloc déjà. Il n'y a pas de
-    problèmes si on imbrique les blocs. Bien sûr, cette structure est
-    juste un exemple.
-
-    Vous devez choisir quoi faire selon ce qu'on reçoit du controller.
-    Ici on affiche un message d'erreur ou on redirige (ici on peut!)
-    vers l'accueil :
-
+{% block customjs %}
+<!-- ce bloc est imbriqué dans le bloc qui a l'include -->
+<!-- pas besoin de parent car ce code est inclut dans le base.html.twig avec include  -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
 <script>
-
-   document.getElementById("btnLogin").addEventListener("click", function (event) {
-
+    document.getElementById("btnLogin").addEventListener("click", function (event) {
         event.preventDefault();
-
         axios({
-
             url: '{{ path ("app_login") }}',
-
             method: 'POST',
-
             headers: { 'Content-Type': 'multipart/form-data' },
-
             data: new FormData(document.getElementById("formLogin"))
-
         })
-
         .then(function (response) {
-
-                // si erreur
-
-                if (response.data.error != undefined) {
-
-                    divMessageErreur.innerHTML = response.data.error;
-
-                }
-
-                // si pas d'erreur
-
-                else {
-
-                    console.log ('connexion ok login');
-
-                    window.location.href = "{{ path ('accueil') }}";
-
-                }
-
+                // response.data est un objet qui correspond à l'array associatif envoyé dans le controller
+                // JsonResponse a transformé l'array en JSON. Axios transforme le JSON en objet JS
                 
-
+                // si erreur
+                if (response.data.error != undefined) {
+                    divMessageErreur.innerHTML = response.data.error;
+                }
+                // si pas d'erreur
+                else {
+                    console.log ('connexion ok login');
+                    window.location.href = "{{ path ('accueil') }}";
+                }
+                
         })
-
         .catch(function (error) {
-
                 console.log(error);
-
         });
-
     });    
-
 </script>
+{% endblock %}
+```
 
-**
-**
 
-5)  **Adapter l'action de login** (SecurityController dans le projet).
-    Cette action, dans notre cas, n'est jamais appelée dans l'URL
+5. **Adapter l'action de login** (SecurityController dans le projet).
 
-    Si une erreur s'est produite, on envoie le lastUserName et
-    l'erreur pour que la vue le traite en js. S'il n'y a pas
-    d'erreur, on envoie uniquement le lastUserName. Notez qu'on **ne
-    peut pas rediriger vers une autre action ici car on doit renvoyer
-    une response JSON!! (on a appelé avec Axios) .** Si on essaie une
-    redirection, le rendu de la vue correspondante se trouvera dans la
-    reponse du serveur mais elle ne sera pas chargée dans le navigateur.
+Cette action, dans notre cas, n'est jamais appelée dans l'URL.
 
-/**
+Si une erreur s'est produite, on envoie le lastUserName et l'erreur pour que la vue le traite en JS. S'il n'y a pas d'erreur, on envoie uniquement le lastUserName. Notez qu'on **ne peut pas rediriger vers une autre action ici car on doit renvoyer une response JSON!! (on a appelé avec Axios) .** Si on essaie une redirection, le rendu de la vue correspondante se trouvera dans la reponse du serveur mais elle ne sera pas chargée dans le navigateur.
 
- * @Route("/login/modal", name="app_login")
 
- */
-
+```php
+#["/login/modal", name="app_login")
 public function login(AuthenticationUtils $authenticationUtils, Request $req): Response
-
 {
-
     // get the login error if there is one
-
     $error = $authenticationUtils->getLastAuthenticationError();
-
     // last username entered by the user
-
     $lastUsername = $authenticationUtils->getLastUsername();
-
     $response = new JsonResponse(['lastUsername' => $lastUsername]); // cas de base : pas d'erreur 
-
     // si erreur, on envoie le message. Il faut choisir le message qu'on affiche selon l'erreur
 
     // ou tout simplement afficher login/pass incorrecte
-
     if (!is_null($error)) {
-
         $response = new JsonResponse([
-
             'error' => 'Utilisateur ou mot de passe incorrectes', //$error->getMessage(), // autrement on envoie tout un objet!
-
             'lastUsername' => $lastUsername
-
         ]);
-
     }
-
     return $response; // on renvoie la reponse dans tous les cas. Elle sera traitée en JS
-
 }
+```
 
-6)  Dans le Authenticator (FormulaireLoginAuthenticator), modifiez
-    l'action **onAuthenticationSuccess** pour qu'elle redirige vers
-    l'accueil. Dans le template de l'accueil vous pouvez incruster les
-    données de l'utilisateur là où vous voulez.
+6.  Dans le Authenticator (FormulaireLoginAuthenticator), modifiez l'action **onAuthenticationSuccess** pour qu'elle redirige vers l'accueil. Dans le template de l'accueil vous pouvez incruster les données de l'utilisateur là où vous voulez.
 
+```php
 public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
 
 {
 
     // if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-
     //     return new RedirectResponse($targetPath);
-
     // }
-
     // redirigez vers login: là on fera reponse JSON qui nous convient.
-
     // Contrairement à certaines docs, on ne peut pas renvoyer null ni éliminer la méthode
 
     return new RedirectResponse($this->urlGenerator->generate('accueil'));
 
-    
-
-    
-
     // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
 
     // throw new Exception('TODO: provide a valid redirect inside '.__FILE__);
-
 }
+```
 
-7)  Changer la nav ou le template de base pour afficher l'utilisateur
-    qui vient de se connecter
+7. Changer la nav ou le template de base pour afficher l'utilisateur qui vient de se connecter
 
     Ex. de base dans **header.html.twig** :
 
+```twig
 {% if app.user.username is defined %}
-
 logged: {{ app.user.username }} 
-
 {% endif %} 
+```
 
-Formulaire d'enregistrement
-----------------------------
+<br>
 
-**Le plus simple est de créer une action et une vue pour réaliser
-l'enregistrement.** Mais si vous voulez le rendre modal aussi :
->
-Adaptez le formulaire d'enregistrement est plus simple car on peut
-incruster l'action du **register** de **RegistrationController**
-quelque part dans le template. Si l'enregistrement fonctionne, on
-sera logués et dans l'accueil. Autrement un message d'erreur sera
-affiché. Il faut faire attention de rajouter l'action dans la vue
-register.html.twig car il n'a pas d'action par défaut (même
-situation que dans le formulaire de login dans les sections
-précédentes).
->
-**Il faudra quand-même adapter l'action car, en cas d'erreur,
-l'action d'enregistrement recharge la vue !** (il faudra le
-remplacer par ajax etc...)
 
-Envoi du mail (Swift Mailer)
-============================
 
-Doc: <https://symfony.com/doc/current/email.html>
->
-Doc sur Gmail et cloud:
-<https://symfony.com/doc/current/email.html#email-using-gmail>
-
-Par défaut, Symfony utilise le module Swift Mailer pour envoyer des
-mails (**projetFormulaires**).
-
-**Exemple** : envoi d'un mail en utilisant Swift Mailer :
-
-1)  Rajoutez **Swift** **Mailer** à votre projet
-
-composer require symfony/swiftmailer-bundle
-
-2)  Le fichier **packages/swiftmailer.yaml** sera mis à jour mais on
-    doit configurer les détails de la connexion dans le fichier **.env**
-
-    Le format de la connexion le plus habituel est :
-
-MAILER_URL=smtp://localhost:25?encryption=ssl&auth_mode=login&username=&password=
-
-Si vous ne disposez pas d'un serveur mail et vous voulez envoyer des
-emails en utilisant Gmail, Symfony permet de le faire en utilisant ce
-format :
-
-**MAILER_URL=gmail://user:password@localhost**
-
-Exemple :
-
-MAILER_URL=gmail://developinterface3:Gaucheret3!@localhost
-
-**Note** : le mot **gmail** n'est pas un protocole en soi. C'est juste
-un raccourci pour que Swift Mailer utilise le protocole smtp,
-sécurisation ssl, login comme méthode d'authentification et le serveur
-smtp.gmail.com
-
-3)  Créez un **controller** contenant une action qui envoie le mail et
-    les vues :
-
-    **contenu_mail.html.twig** : le contenu du mail en soi
-
-    **envoyer_mail.html.twig** : la vue à rendre par l'action (style
-    "mail envoyé" ou autre)
-
-class MailController extends AbstractController
-
-{
-
-#[Route("/mail/envoyer/mail", name="envoyer_mail")]
-
-public function envoyerMail(Swift_Mailer $mailer)
-
-{
-
-$message = (new Swift_Message ('Hello mail'))
-
-->setFrom ('developinterface3@gmail.com')
-
-->setTo ('developinterface3@gmail.com')
-
-->setBody (
-
-$this->renderView (
-
-'mail/contenu_mail.html.twig'
-
-),
-
-'text/html'
-
-);
-
-$mailer->send($message);
-
-return $this->render('mail/envoyer_mail.html.twig');
-
-}
-
-}
-
-4)  
-
-Pagination
-==========
+# 27. Pagination
 
 Exemple pratique : projet **ProjetPaginatorNoWebpack**
 
@@ -7621,7 +7448,7 @@ Pour js : {{ encore_entry_script_tags ('app') }}
 
 La reference 'app' est configurée dans le fichier **entrypoints.json,
 qui a été crée à partir de votre fichier webpack.config.js**. Vous
-pouvez utiliser un autre nom et, tel qu'on a déjà mentionné, avoir
+pouvez utiliser un autre nom et, Comme nous l'avons déjà dit, avoir
 plusieurs **entries** ('app', 'autre', 'main'...)
 
 Encore et Bootstrap

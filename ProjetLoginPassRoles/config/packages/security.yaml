@@ -24,6 +24,9 @@ security:
             logout:
                 path: logout
                 target: /apres/logout 
+                # where to redirect after logout
+                # target: app_any_route
+            access_denied_handler: App\Security\GestionnaireErreurAcces
 
                 # where to redirect after logout
                 # target: app_any_route
@@ -39,3 +42,6 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        # rajouté par nous-mêmes
+        - { path: ^/gestion, roles: [ROLE_GESTIONNAIRE] }
+

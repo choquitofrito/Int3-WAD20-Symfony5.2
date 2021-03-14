@@ -7,8 +7,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GestionController extends AbstractController
 {
-    // ces routes sont accessibles uniquement pour certains roles
-    // car on l'a fixé dans security.yaml. 
+    // ces routes seront accessibles uniquement pour certains roles
+    // quand on le fixera ainsi dans /config/packages/security.yaml. 
     #[Route("/gestion/action1")]
     public function action1()
     {
