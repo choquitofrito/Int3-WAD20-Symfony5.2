@@ -176,10 +176,9 @@
       - [Exercice : création d'un projet contenant l'application skeleton](#exercice--création-dun-projet-contenant-lapplication-skeleton)
   - [Création d'un serveur virtuel (virtual host) en OSX](#création-dun-serveur-virtuel-virtual-host-en-osx)
 - [(En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur](#en-cours-cette-doc-appartient-à-symfony-4-traduction-des-messages-de-succèserreur)
-
 <br>
 
-s
+
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
 
@@ -4666,7 +4665,7 @@ Cela nous permettra, quand on fera submit, **d'obtenir directement une entité d
 
 Nous allons faire un exemple, préparons le contexte :
 
-Créez d'abord un **nouveau projet** (ex : **ProjetFormulairesSymfony**) contenant un controller (ex : **FormulairesController**). Créez une entité *Aeroport* (*nom, code, dateMiseEnService, heureMiseEnService, description*) et créez la BD (ex: **formulairesbd**). Faites la migration. 
+Créez d'abord un **nouveau projet** (ex : **ProjetFormulairesSymfony**) contenant un controller (ex : **FormulairesController**). Créez une entité *Aeroport* (*nom, code, dateMiseEnService, heureMiseEnService, description*). Rajoutez un hydrate et modifiez le constructeur. et créez la BD (ex: **formulairesbd**). Faites la migration. 
 
 Importez **Faker** dans le projet. Créez et lancez une fixture **AeroportFixture** pour avoir quelques données 
 
@@ -4680,7 +4679,7 @@ use Doctrine\Persistence\ObjectManager;
 use Faker;
 use App\Entity\Aeroport;
 
-class AeroportFixture extends Fixture
+class AeroportFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
@@ -6083,7 +6082,7 @@ public function exemple1TraitementMasterPage(Request $requeteAjax)
 Pour finir, sachez que les fichiers .**js** et .**css** sont considérés comme des "assets" en Symfony. Pour pouvoir en rajouter dans notre projet vous devez créer les dossiers **public/assets/js** et **public/assets/css** respectivement et y placer vos fichiers. Dans vos vues, inclure les fichiers est simple :
 
 ```twig
-<script src={{ asset('/assets/js/monFichier.js')} }"></script>
+<script src={{ asset('/assets/js/monFichier.js') }}"></script>
 
 <link rel="stylesheet" href="{{ asset('/assets/css/monCss.css') }}" />
 ```

@@ -42,6 +42,26 @@ php bin/console make:entity
 Pour créer une rélation: choisir *relation* dans le type de données de l'attribut
 
 
+## Doctrine
+
+- Installer 
+
+composer require symfony/orm-pack
+composer require symfony/maker-bundle --dev
+
+- Fixtures
+
+composer require --dev doctrine/doctrine-fixtures-bundle
+
+- Obtenir un repo dans controller:
+
+```php
+$em = $this->getDoctrine()->getManager();
+// obtenir le repository
+$rep = $em->getRepository(Livre::class);
+```
+
+
 ## Clonation et installation d'un projet
 
 1. **git clone/git pull** du repo
