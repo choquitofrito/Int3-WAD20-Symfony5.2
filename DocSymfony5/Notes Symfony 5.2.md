@@ -84,9 +84,10 @@
 - [12. Le modèle : accès à la BD avec Doctrine](#12-le-modèle--accès-à-la-bd-avec-doctrine)
   - [12.1. SELECT](#121-select)
     - [12.1.1. SELECT: findOneBy](#1211-select-findoneby)
-    - [12.1.2. SELECT: findBy](#1212-select-findby)
-    - [12.1.3. SELECT: find](#1213-select-find)
-    - [12.1.4. SELECT: findAll](#1214-select-findall)
+    - [12.1.2. Serialization! (faire)](#1212-serialization-faire)
+    - [12.1.3. SELECT: findBy](#1213-select-findby)
+    - [12.1.4. SELECT: find](#1214-select-find)
+    - [12.1.5. SELECT: findAll](#1215-select-findall)
       - [Exercices : utilisation du CRUD (select)](#exercices--utilisation-du-crud-select)
   - [12.2. INSERT et UPDATE](#122-insert-et-update)
     - [12.2.1. INSERT](#1221-insert)
@@ -3327,8 +3328,10 @@ qui nous facilitent ce CRUD. Par défaut nous disposons de l'ensemble de
 méthodes de base mentionné mais **on peut rajouter d'autres méthodes
 dans nos repository pour réaliser des requêtes plus complexes**.
 
+### 12.1.2. Serialization! (faire)
 
-### 12.1.2. SELECT: findBy 
+
+### 12.1.3. SELECT: findBy 
 
 ```php
     // SELECT: findBy (chercher par un ou plusieurs champs, filtre array)
@@ -3345,7 +3348,10 @@ dans nos repository pour réaliser des requêtes plus complexes**.
         return $this->render("exemples_modele/exemple_find_by.html.twig", $vars);
     }
 ```
-### 12.1.3. SELECT: find
+
+
+
+### 12.1.4. SELECT: find
 
 ```php
     // SELECT: find (chercher par id)
@@ -3360,7 +3366,7 @@ dans nos repository pour réaliser des requêtes plus complexes**.
         return $this->render("exemples_modele/exemple_find.html.twig", $vars);
     }
 ```
-### 12.1.4. SELECT: findAll 
+### 12.1.5. SELECT: findAll 
 
 ```php 
 // SELECT: findAll (chercher par un ou plusieurs champs, filtre array)
@@ -6082,7 +6088,7 @@ public function exemple1TraitementMasterPage(Request $requeteAjax)
 Pour finir, sachez que les fichiers .**js** et .**css** sont considérés comme des "assets" en Symfony. Pour pouvoir en rajouter dans notre projet vous devez créer les dossiers **public/assets/js** et **public/assets/css** respectivement et y placer vos fichiers. Dans vos vues, inclure les fichiers est simple :
 
 ```twig
-<script src={{ asset('/assets/js/monFichier.js') }}"></script>
+<script src="{{ asset('/assets/js/monFichier.js') }}"></script>
 
 <link rel="stylesheet" href="{{ asset('/assets/css/monCss.css') }}" />
 ```
