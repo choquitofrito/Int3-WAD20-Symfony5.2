@@ -20,7 +20,7 @@
       - [Exercices : utilisation de paramètres](#exercices--utilisation-de-paramètres)
   - [5.3. L'objet Response](#53-lobjet-response)
   - [5.4. L'objet Request](#54-lobjet-request)
-  - [5.5. Types de réponses d'un controller: render, redirect, redirectToRoute et forward](#55-types-de-réponses-dun-controller-render-redirect-redirecttoroute-et-forward)
+  - [5.5. Types de réponses d'un controller: render, redirect, redirectToRoute, forward, renderView](#55-types-de-réponses-dun-controller-render-redirect-redirecttoroute-forward-renderview)
     - [5.5.1. Redirect](#551-redirect)
     - [5.5.2. RedirectToRoute](#552-redirecttoroute)
     - [5.5.3. Forward](#553-forward)
@@ -102,6 +102,7 @@
   - [16.1. Single Table Inheritance](#161-single-table-inheritance)
   - [16.2. Class Table Inheritance](#162-class-table-inheritance)
 - [17. Fixtures pour remplir la BD](#17-fixtures-pour-remplir-la-bd)
+    - [Fixtures multi-entity](#fixtures-multi-entity)
       - [Exercices :](#exercices-)
 - [18. Accès à la BD avec DQL](#18-accès-à-la-bd-avec-dql)
   - [18.1. SELECT](#181-select)
@@ -348,24 +349,42 @@ class ExemplesRoutingController extends AbstractController
     } 
 
 }
-
-
-
 ```
 La ligne:
- 
-
-        #[Route('/exemples/routing/accueil')]
-
+```php
+#[Route('/exemples/routing/accueil')]
+```
 qui crée la correspondance entre
 ce qu'on tape dans l'url :
 
 http://projet1symfony.localhost/exemples/routing/accueil
 
 et l'action à lancer (la méthode qui se trouve juste après
-l'annotation)
+l'annotation) : **afficherMessageAccueil**
 
-**afficherMessageAccueil**
+
+**IMPORTANT**: 
+
+**Si vous utilisez les annotations, attention car vous devez utiliser les doubles guillemets partout!**
+
+```php
+// notre classe hérite de AbstractController pour être un controller
+class ExemplesRoutingController extends AbstractController
+{
+    // voici la route sous la forme d'attribut PHP8
+    /**
+     * @Route("/exemples/routing/accueil")
+     */
+    public function afficherMessageAccueil ()
+    {
+        // la façon la plus simple (pas la seule!) d'envoyer un contenu au client: créer un objet Response et envoyer du HTML dans le constructeur
+        return new Response(
+            '<html><body>Je suis une action du controller ExemplesRoutingController.</body></html>'
+        );
+    } 
+
+}
+```
 
 Une route indiquera alors une **action à lancer (méthode d'une classe)
 qui se trouve dans un controller (la classe, dans un fichier .php)**
@@ -849,7 +868,7 @@ depuis le controller.
 
 <br>
 
-## 5.5. Types de réponses d'un controller: render, redirect, redirectToRoute et forward
+## 5.5. Types de réponses d'un controller: render, redirect, redirectToRoute, forward, renderView
 
 Une action dans un controller peut générer du HTML, JSON, XML, le
 téléchargement d'un fichier, une redirection vers une autre action, une
@@ -865,6 +884,8 @@ sans ou avec de paramètres
 (**name**) d'une route. On va voir des exemples dans ce chapitre
 
 **forward** permet de déléguer l'action (pas d'erreur http)
+
+**renderView** permet d'obtenir le rendu d'une vue sans les en-têtes HTML. C'est à dire c'est une action qui ne chargera pas une page (à différence de toutes les précédentes)... elle nous donne simplement le HTML qui correspond à la vue choisie. C'est utile si on utilise AJAX. 
 
 Note : Pour comprendre le fonctionnement de ces réponses, on va créer
 des actions dans un nouveau controller ExemplesReponsesController
@@ -3328,8 +3349,30 @@ qui nous facilitent ce CRUD. Par défaut nous disposons de l'ensemble de
 méthodes de base mentionné mais **on peut rajouter d'autres méthodes
 dans nos repository pour réaliser des requêtes plus complexes**.
 
+<br>
+
 ### 12.1.2. Serialization! (faire)
 
+Add doc
+
+```php
+$json = $serializer->serialize(
+    $user,
+    'json', ['groups' => ['user','entreprise' /* if you add "user_detail" here you get circular reference */]
+);
+
+// choisir quoi ignorer dans la serialisation
+
+$json_pacientes = $serializer->serialize($arr_pacientes, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['visitas']]);
+
+```
+https://symfony.com/doc/current/components/serializer.html#attributes-groups
+
+Eviter référence circulaire:
+
+https://stackoverflow.com/questions/59268438/a-circular-reference-has-been-detected-when-serializing-the-object-of-class-app
+
+<br>
 
 ### 12.1.3. SELECT: findBy 
 
@@ -4035,6 +4078,12 @@ class ClientAdresseFixture extends Fixture
     }
 }
 ```
+
+### Fixtures multi-entity 
+
+Certains Fixtures dépendent de fois d'autres. Si vous avez, par exemple, une Fixture qui relie deux entités (ex: «LinkClientsEmprunts» qui relie les Clients et les Emprunts), vous devez remplir les entités Clients et les Prêts avant de lancer la fixture qui lie les deux ("LinkClientsEmprunts"). Vous pouvez obtenir plus d'informations à ce sujet ici:
+
+https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html#loading-the-fixture-files-in-order
 
 
 #### Exercices :
@@ -6432,6 +6481,10 @@ N'oubliez pas de lancer la fixture avec :
 
 ```console
 php bin/console doctrine:fixtures:load
+```
+où
+```console
+php bin/console d:f:l
 ```
 
 **Note** : Symfony nous indique qu'il effacera la BD (purge). Choisissez **oui**.
