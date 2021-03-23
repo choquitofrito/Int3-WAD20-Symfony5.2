@@ -37,11 +37,14 @@ Routing.generate('nom_de_notre_route', {
 3. Utilisez Route.generate dans les fichiers js pour générer de routes (voir /assets/js/exemple1Ajax.js)
 -->
 
-<!-- le script pour fos_js_routing qui nous permet de générer les routes-->
+{# Chage du script pour fos_js_routing qui nous permet de générer les routes #}
+{# C'est indispensable de rajouter "options= {"expose"=true}" dans l'annotation de l'action  #}
+{# Utilisez des annotations et pas des attributs PHP pour ces actions #}
+{# Vous avez un exemple dans ExemplesAjaxAxiosController #}
 <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 
-<!-- notre script -->
+<!-- notre script, là où on utilise Route.generate -->
 <script src="{{ asset('/assets/js/exemple1Ajax.js') }}"></script>
 
 {% endblock %}

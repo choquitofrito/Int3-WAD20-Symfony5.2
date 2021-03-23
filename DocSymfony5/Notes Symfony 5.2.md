@@ -178,8 +178,8 @@
       - [Exercice : création d'un projet contenant l'application skeleton](#exercice--création-dun-projet-contenant-lapplication-skeleton)
   - [Création d'un serveur virtuel (virtual host) en OSX](#création-dun-serveur-virtuel-virtual-host-en-osx)
 - [(En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur](#en-cours-cette-doc-appartient-à-symfony-4-traduction-des-messages-de-succèserreur)
-<br>
 
+<br>
 
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
@@ -1955,6 +1955,8 @@ maintenant.
 
 # 10. Les Services
 
+**Note:**: on travaillera sur le projet Projet1Symfony
+
 ## 10.1. Concept de Service
 
 Une **application WEB utilise une énorme quantité d'objets** pour réaliser plein de fonctionnalités : connecter à une BD, envoyer un mail, connecter avec une API à un autre site, écrire/lire de fichiers dans le disque, etc...
@@ -2188,8 +2190,7 @@ services deviendront accessibles dans nos controllers.
 
 **Exemple** : un service Bonjour qui affiche "bonjour à tous" dans la langue parametrée dans services.yaml
 
-D'abord on doit créer le service. Si on veut que le service soit paramétré **on rajoute un paramètre dans le constructeur** **et on le
-stocke dans une propriété** (on peut avoir autant de paramètres qu'on veut) :
+D'abord on doit créer le service. Si on veut que le service soit paramétré **on rajoute un paramètre dans le constructeur et on le stocke dans une propriété** (on peut avoir autant de paramètres qu'on veut) :
 
 
 ```php
@@ -4019,7 +4020,7 @@ Ici on a qu'une fixture mais on pourrait avoir plein.
 
 **Note**: si vous voulez générer de valeurs plus "réalistes" vous pouvez utiliser la librairie Faker.
 
-Vous avez un exemple dans **ProjetModele** (**ClientAdresseFixture.php**) où en plus on crée les liens entre deux entités.
+Vous avez un exemple dans **ProjetModel** (**ClientAdresseFixture.php**) où en plus on crée les liens entre deux entités.
 
 ```php
 <?php
@@ -4874,7 +4875,8 @@ formulaire **car ce n'est pas une bonne pratique.**
 
 #### Exercice : création d'un formulaire associé à une entité
 
-1. Créez une entité *Evenement* (nom, description, dateEvenement) et un formulaire associé
+1. Créez une entité *Evenement* (nom, description, dateEvenement) et un formulaire associé. Testez-le avec une action et une vue.
+
    
 
 <br>
@@ -5116,7 +5118,7 @@ public function exempleLivre (Request $req){
                 'method'=>'POST']);
     
     
-    // 3. Analyse de l'objet Request du navigateur
+    // 3. Analyse de l'objet Request du navigateur, remplissage de l'entité
     $formulaireLivre->handleRequest($req);
     
     // 4. Vérification: handleRequest indique qu'on vient d'un submit ou pas? Si on vient d'un submit, handleRequest remplira les données de l'entité avec les données du $_POST (ou $_GET, selon le type de form)
@@ -5161,11 +5163,11 @@ Normalement on aura au moins **deux templates** : un pour afficher le  formulair
 
 Voici le code qui implémente ce qu'on vient de décrire : le controller, les templates et la classe du formulaire.
 
-1.  **Controller :**
+-  **Controller :**
 
 L'action ci-dessus
 
-2.  **Templates** (un pour afficher le formulaire et l'autre pour
+-  **Templates** (un pour afficher le formulaire et l'autre pour
     afficher le résultat du traitement)
 
 ```twig
@@ -5182,7 +5184,7 @@ L'action ci-dessus
 ```
 
 
-3.  **Classe du formulaire**
+1.  **Classe du formulaire**
 
 ```php
 <?php
@@ -5251,6 +5253,8 @@ class LivreType extends AbstractType {
 
     **On utilisera getData pour les champs du formulaire qui n'existent pas dans l'entité** (et dans le traitement des champs de certains types particuliers).
 
+4. Vérifier si on vient ou pas d'un submit et si le form est Valid (ici on n'a pas une validation de données (ex: un champ string dans un certain format ou un chiffre entre deux valeurs). Nos forms sont tojours Valid.
+   
 **Exemple** : formulaire pour *Aeroport* (nom, code) qui contient aussi un champ « description » qui n'appartient pas à l'entité *Aeroport*. Pour obtenir les données de la description dans le traitement du formulaire on utilise *getData* :
 
 ```php
@@ -5267,18 +5271,25 @@ Si on arrive à l'action sans avoir fait un submit (exemple : tapez l'URL de l'a
 
 #### Exercice : 
 
-Créez le code pour traiter un formulaire associé à l'entité Aeroport
+1. Créez le code pour traiter un formulaire associé à l'entité Aeroport
+
+2. Créez une entité *Client* (probablement elle existe déjà dans votre projet). Créez un formulaire et testez-le avec une action et une vue.
+
+
 
 <br>
 
 ## 21.9. Bonnes pratiques pour créer de formulaires en Symfony
+
+Dans cette section on parle des bonnes pratiques pour créer des formulaires:
 
 1.  **Ne rajoutez de boutons aux formulaires dans les classes des
     formulaires ni dans les controllers**, mais dans les templates.
 
 **Exemple** : Si vous créez un formulaire pour insérer un client dans la BD et vous créez un bouton "insérer" dans la classe du formulaire, ce formulaire ne pourra plus être utilisé pour par exemple mettre à jour le client... bien qu'il s'agit du même formulaire pour les deux actions ! Rajouter les boutons dans les controllers est aussi une mauvaise idée car vous allez mélanger logique et présentation ("vues"). Il nous reste alors que les rajouter dans les fichiers twigs (en HTML)
 
-2.  Utilisez **une même action pour créer le formulaire et le traiter**
+2.  Essayez d'utiliser **une seule action pour créer le formulaire et le traiter**, spécialement si cette action n'est pas complexe. Dans certains cas il peut arriver que l'on veuille se séparer en deux actions.
+
 
 3.  Pour définir **l'action et la méthode**, vous pouvez:
 
@@ -5306,13 +5317,20 @@ Vous pouvez appliquer du style aux formulaires en utilisant du CSS. Symfony incl
 
 <https://symfony.com/doc/current/form/form_themes.html#symfony-builtin-forms>
 
-Nous verrons plus sur le style dans la section de Webpack-Encore
+et plus concretement ici (même page):
+
+https://symfony.com/doc/current/form/form_themes.html#applying-themes-to-single-forms
+
+Nous verrons plus sur le style dans la section de Webpack-Encore, mais vous pouvez déjà utiliser cette méthodes pour un layout de base.
 
 <br>
 
 ## 21.11. Formulaires concernant plusieurs entités
 
+
 Considérons que les Genres sont aussi des entités de la BD (un **Genre** ayant *nom* et *description*). Comment faire si on veut créer un formulaire pour insérer un livre et choisir au même temps son genre dans le formulaire ? Le genre est un objet (entité) !
+
+**Note**: ces formulaires, sans une bonne planification préalable, peuvent devenir de vrais peuvent se transformer en véritables cauchemars. Assurez-vous de maîtriser les formulaires normaux avant de vous lancer dans ceux-ci.
 
 La solution est **d'utiliser** **le** **type** **EntityType**, qui nous permettra **d'envoyer une entité** de notre choix **dans le formulaire**.
 
