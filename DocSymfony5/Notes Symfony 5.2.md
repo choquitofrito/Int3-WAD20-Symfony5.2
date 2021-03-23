@@ -2059,7 +2059,9 @@ Symfony contient un service qui nous permet de gérer la session, **SessionInter
 ## 10.3. Création de nos propres services
 
 <br>
-Nous avons mentionné **qu'on peut transformer nos propres objets en services**. Pour ce faire, on doit juste créer notre classe dans le dossier **/src/Services** (à créer s'il n'existe pas encore) et suivre la même procédure que dans les exemples précédents.
+
+Nous avons mentionné **qu'on peut transformer nos propres objets en services**. 
+Pour ce faire, on doit juste créer notre classe dans le dossier **/src/Services** (à créer s'il n'existe pas encore) et suivre la même procédure que dans les exemples précédents.
 
 **Exemple** : Nous voulons un service permettant d'obtenir toutes les permutations possibles des éléments d'un array de noms (permutations = combinaisons où l'ordre compte)
 
@@ -2077,13 +2079,6 @@ namespace App\Services;
 
 class Statistiques {
     // calcule toutes les permutations possibles de valeurs d'un array
-        /**
-         * 
-         * @param type $items
-         * @param type $perms
-         * @return type array (toutes les permutations - combinaisons 
-         * ou l'ordre compte)
-         */
         function permutations($items, $perms = array( )) {
             if (empty($items)) {
                 $return = array($perms);
