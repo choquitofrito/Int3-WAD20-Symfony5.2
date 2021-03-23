@@ -2350,7 +2350,7 @@ Dans certains cas **nous utilisons un service dans un autre et le premier doit �
 Le service StatistiquesLogMail envoie un mail en plus de créer une ligne
 de log quand on fait appel à la fonction de permutations.
 
-Installez d'abord le module SwiftMailer (service de mail qu'on configura plus tard) :
+Installez d'abord le module SwiftMailer (service de mail qu'on configura plus tard). Si vous voulez apprendre à envoyer un mail d'une façon simple, allez dans la section [23. Mail](#23-mail) :
 
 ```console
 composer require symfony/swiftmailer-bundle
@@ -2358,7 +2358,7 @@ composer require symfony/swiftmailer-bundle
 
 Dans ce cas, le service a besoin d'un ou plusieurs paramètres pour être configuré (ici on va considérer le paramètre **$adresse** le destinataire du mail qui sera, par défaut, "yoyo@touloulou.com")
 
-Voici notre service, qui inclut maintenant l'envoi d'un mail. On a dû injecter le Mailer dans le constructeur et on a décidé d'envoyer l'adresse mail en paramètre.
+Voici notre service, qui inclut maintenant l'envoi d'un mail. On a dû injecter le SwiftMailer dans le constructeur et on a décidé d'envoyer l'adresse mail en paramètre.
 
 ```php
 <?php
