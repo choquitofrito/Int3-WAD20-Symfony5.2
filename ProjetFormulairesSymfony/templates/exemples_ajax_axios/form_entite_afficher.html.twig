@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{{ form_start (formulaireLivre)}}
+<button id="envoyer">Envoyer</button>
+{{ form_end (formulaireLivre)}}
+
+<div id="divContenu"></div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+envoyer.addEventListener ("click", (event) => {
+    event.preventDefault ();
+
+    axios ({
+        url : '{{ path ("exemple_axios_form_entite_traiter") }}',
+        method : 'POST',
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: new FormData (formulaireLivre)
+    })
+    .then (function (response){
+        console.log (response.data);
+        // on affiche le resultat dans le div
+        donnees = response.data;
+        console.log (donnees.livre);
+        // attention à parser le JSON si on le reçoit du controller (ex: objet serialisé)
+        divContenu.innerHTML = donnees.message + " " + donnees.noms[1] + " " + JSON.parse(donnees.livre).titre;
+
+    })
+    .catch (function (error){
+        console.log (error);
+    });
+});
+</script>
+
+
+
+{% endblock %}

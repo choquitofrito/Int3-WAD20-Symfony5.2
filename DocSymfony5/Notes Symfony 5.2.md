@@ -63,7 +63,8 @@
   - [10.4. Injecter les services dans le controller](#104-injecter-les-services-dans-le-controller)
   - [10.5. Injection de paramètres dans le service (I)](#105-injection-de-paramètres-dans-le-service-i)
   - [10.6. Utiliser un service dans un autre service](#106-utiliser-un-service-dans-un-autre-service)
-  - [10.7. Injection de paramètres dans le service (II)](#107-injection-de-paramètres-dans-le-service-ii)
+  - [10.7. Accèder au modéle dans un Service](#107-accèder-au-modéle-dans-un-service)
+  - [10.8. Injection de paramètres dans le service (II)](#108-injection-de-paramètres-dans-le-service-ii)
 - [11. Le Modèle](#11-le-modèle)
   - [11.1. Présentation de Doctrine](#111-présentation-de-doctrine)
   - [11.2. Installation de Doctrine dans un projet](#112-installation-de-doctrine-dans-un-projet)
@@ -137,12 +138,15 @@
     - [21.13.1. Stockage dans le serveur d'une seule image pour chaque entité](#21131-stockage-dans-le-serveur-dune-seule-image-pour-chaque-entité)
     - [21.13.2. Possibles problèmes dans l'upload](#21132-possibles-problèmes-dans-lupload)
   - [21.14. AJAX en Symfony avec Axios](#2114-ajax-en-symfony-avec-axios)
-  - [21.15. Utilisation de blocs dans twig avec AJAX](#2115-utilisation-de-blocs-dans-twig-avec-ajax)
+  - [21.15. Formulaire associé à une entité avec Axios](#2115-formulaire-associé-à-une-entité-avec-axios)
+      - [Explication de base:](#explication-de-base)
+  - [21.16. Utilisation de blocs dans twig avec AJAX](#2116-utilisation-de-blocs-dans-twig-avec-ajax)
       - [Exercices : Ajax avec Axios](#exercices--ajax-avec-axios)
-  - [21.16. Ajax et Axios avec script externe au Twig (sans Webpack)](#2116-ajax-et-axios-avec-script-externe-au-twig-sans-webpack)
-  - [21.17. AJAX en Symfony (Vanilla JS)](#2117-ajax-en-symfony-vanilla-js)
-  - [21.18. Utilisation de blocs dans twig avec AJAX](#2118-utilisation-de-blocs-dans-twig-avec-ajax)
+  - [21.17. Ajax et Axios avec script externe au Twig (sans Webpack)](#2117-ajax-et-axios-avec-script-externe-au-twig-sans-webpack)
+  - [21.18. AJAX en Symfony (Vanilla JS)](#2118-ajax-en-symfony-vanilla-js)
+  - [21.19. Utilisation de blocs dans twig avec AJAX](#2119-utilisation-de-blocs-dans-twig-avec-ajax)
       - [Exercices : utilisation d'AJAX Vanilla](#exercices--utilisation-dajax-vanilla)
+  - [21.20. DateTime et datepicker (Bootstrap)](#2120-datetime-et-datepicker-bootstrap)
 - [22. Response JSON en Symfony](#22-response-json-en-symfony)
   - [22.1. Renvoi JSON d'un array d'objets obtenu avec les méthodes d'un repo](#221-renvoi-json-dun-array-dobjets-obtenu-avec-les-méthodes-dun-repo)
   - [22.2. Renvoi JSON d'un array d'objets obtenu avec DQL](#222-renvoi-json-dun-array-dobjets-obtenu-avec-dql)
@@ -2340,7 +2344,29 @@ class ExemplesServiceUtiliseService extends AbstractController
 
 <br>
 
-## 10.7. Injection de paramètres dans le service (II)
+
+## 10.7. Accèder au modéle dans un Service
+
+C'est exactement la même chose que la section précédente, mais vu que c'est une opération fréquente, on met un exemple ici.
+Le service à injecter est **EntityManagerInterface**... et voilà!
+
+```php
+namespace App\Services;
+
+use Doctrine\ORM\EntityManagerInterface;
+
+class EnumsJsonService {
+    public function __construct (EntityManagerInterface $em){  
+        $this->em = $em;
+    }
+
+
+
+```
+
+
+
+## 10.8. Injection de paramètres dans le service (II)
 
 
 Dans certains cas **nous utilisons un service dans un autre et le premier doit être paramétré**.
@@ -5706,7 +5732,7 @@ Axios est une librairie que nos simplifie les appels AJAX. Vous pouvez parfaitem
 
 Créez un controller **ExemplesAjaxFormDataController** (code original dans le projet **ProjetFormulairesSymfony**). Ce controller contiendra uniquement quelques exemples d'appel Ajax. Plus tard on réalisera des exemples plus pratiques basés sur la BD du projet.
 
-Dans cet exemple on envoie de données en utilisant AJAX **sans utiliser un formulaire**. Nous avons juste les contrôles. Dans la section suivante on utilisera un formulaire complet.
+Dans cet exemple on envoie de données en utilisant AJAX **sans utiliser un formulaire associé à une entité**, juste un formulaire simple. 
 
 1.  **Créez une vue contenant un formulaire. Cette vue contiendra aussi le code AJAX**
 
@@ -5798,8 +5824,155 @@ Cette action reçoit un objet Request. On peut accéder aux éléments du formul
 ![](./images/axios1.png)
 
 
+## 21.15. Formulaire associé à une entité avec Axios 
 
-## 21.15. Utilisation de blocs dans twig avec AJAX
+Voici un exemple. Lisez **très attentivement** les commentaires dans le code.
+Tous les points importants sont commentés.
+
+Le but ici est d'avoir un formulaire associé à une entité que, une fois il est envoyé, nous sert à remplir directement une entité dans le controller.
+C'est la procedure normale, mais plus élaborée à cause d'avoir utilisé AJAX et FormData
+
+#### Explication de base:
+
+1. Une vue affiche un formulaire **associé a une entité** (une action pour afficher)
+2. La vue envoie le formulaire au controller (une nouvelle action pour le traitement, pas la même comme d'habitude)
+3. Le controller traite les données du FormData et, grâce à **handleRequest**, il remplit l'entité vide. 
+On ne doit pas extraire directement les valeurs de l'objet Request car certains types (ex: Dates) provoqueront des erreurs (les forms envoient de strings, mais l'entité a besoin d'un objet DateTime... handleRequest fait le travail pour nous)
+
+Une fois qu'on à l'entité: 
+
+4. Le controller renvoie du JSON ou le rendu d'une vue(mais sans chagger d'URL, bien sûr). Ce contenu sera normalement incrusté dans un div après.
+Si le controller renvoie des objets en JSON, il faut les **serialiser** dans le controller et les deserialiser dans la vue (JSON.parse) (voir code) 
+5. La vue est rendue
+
+**Extra**: Si l'entité du formulaire est liée à une autre et vous avez besoin de la clé étrangere, vous devez utiliser EntityType dans le formulaire d'affichage, puis cacher (ou pas) ce champ de liason. Le but est de l'envoyer sans que ça soit visible. C'est cas n'est pas réalisé dans l'exemple qui suit.
+
+Voici le code (**ProjetFormulairesSymfony**)
+
+La **vue**: form_entite_afficher.html
+
+```twig
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{{ form_start (formulaireLivre)}}
+<button id="envoyer">Envoyer</button>
+{{ form_end (formulaireLivre)}}
+
+<div id="divContenu"></div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+envoyer.addEventListener ("click", (event) => {
+    event.preventDefault ();
+
+    axios ({
+        url : '{{ path ("exemple_axios_form_entite_traiter") }}',
+        method : 'POST',
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: new FormData (formulaireLivre)
+    })
+    .then (function (response){
+        console.log (response.data);
+        // on affiche le resultat dans le div
+        donnees = response.data;
+        console.log (donnees.livre);
+        // attention à parser le JSON si on le reçoit du controller (ex: objet serialisé)
+        divContenu.innerHTML = donnees.message + " " + donnees.noms[1] + " " + JSON.parse(donnees.livre).titre;
+
+    })
+    .catch (function (error){
+        console.log (error);
+    });
+});
+</script>
+
+
+
+{% endblock %}
+```
+
+Le **controller** : ExemplesAjaxAxiosController
+
+```php
+#[Route("/exemples/ajax/axios/form/entite/afficher", name: "exemple_axios_form_entite_afficher")]
+public function exempleAjaxAxiosFormEntiteAfficher(Request $req)
+{
+    // si on veut le pré-remplir on peut remplir cette entité. 
+    // Autrement on peut l'envoyer vide ou juste envoyer null dans le paramètre dans createForm
+    $livre = new Livre();
+
+    // ATTENTION!: il faut donner un id au formulaire pour pouvoir le manipuler avec JS!!
+    $formulaireLivre = $this->createForm(
+        LivreType::class,
+        $livre,
+        [    // pas d'action. On gére le click avec JS et on fait l'appel AXIOS
+            'method' => 'POST',
+            'attr' => ['id' => 'formulaireLivre']
+        ],
+    );
+
+    // ici la vue de l'affichage est une vue complete (recharge URL). Si cette action avait été appelée par 
+    // AJAX, on aurait pu faire $this->renderView pour renvoyer uniquement le rendu de la vue 
+    // et l'incruster dans un DIV
+    $vars = ['formulaireLivre' => $formulaireLivre->createView()];
+    return $this->render("/exemples_ajax_axios/form_entite_afficher.html.twig", $vars);
+}
+
+
+#[Route("/exemples/ajax/axios/form/entite/traiter", name: "exemple_axios_form_entite_traiter")]
+public function exempleAjaxAxiosFormEntiteTraiter(Request $req, SerializerInterface $serializer)
+{
+    // ATTENTION à comment créer l'entité à partir du FormData!!!
+    // Quand on utilise un FormData on doit passer par handleRequest, car FormData envoie tout en string
+    // et nous avons besoin de DateTime pour le Dates. HandleRequest fait l'hydrate proprement pour nous
+    // C'est le même code que quand on traite un form sans Ajax, mais ici l'affichage
+    // et le traitement sont separés
+
+    $livre = new Livre();
+
+    // On crée un objet formulaire pour traiter les données, mais ici on n'affiche rien
+    $formulaireLivre = $this->createForm(
+        LivreType::class,
+        $livre,
+        [    // pas d'action. On gére le click avec JS et on fait l'appel AXIOS
+            'method' => 'POST',
+            'attr' => ['id' => 'formulaireLivre']
+        ],
+    );
+
+    $formulaireLivre->handleRequest($req);
+    
+    // Maintenant il faut envoyer quoi qui ce soit à la page qui appelle. Deux cas de figures standards,
+    // où le controller renvoie: 
+    
+    // 1. Juste de données: un simple JSON (messages, objets....) à incruster dans un div de form_entite_afficher.html.twig. 
+    // Pas de recharge d'URL
+    
+    // Note: Si on avait besoin de l'entité en JSON on doit la serialiser avant de l'envoyer: 
+    $livreJson = $serializer->serialize($livre, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['exemplaires']]);
+    
+    return new JsonResponse([
+        'message' => 'Tout ok!',
+        'noms' => ['Lola', 'Iza'],
+        'livre'=> $livreJson
+        ]);
+        
+    // 2. Le rendu d'une autre view, à incruster dans un div de form_entite_afficher.html.twig. 
+    // Pas de recharge d'URL non plus!
+    // return $this->renderView ("/exemples_ajax_axios/autre.html.twig", $vars) 
+        
+    }
+
+```
+
+## 21.16. Utilisation de blocs dans twig avec AJAX
 
 Il s'agit juste d'une combinaison de master page + AJAX, rien de
 nouveau.
@@ -5917,7 +6090,9 @@ public function exemple1TraitementMasterPage(Request $requeteAjax)
 2. Créez une autre master page et deux vues qui en héritent. La première contient le jeu que vous venez de réaliser et la deuxième contient trois boutons. Chaque bouton affiche la photo d'un animal sans recharger la page.
 
 
-## 21.16. Ajax et Axios avec script externe au Twig (sans Webpack)
+
+
+## 21.17. Ajax et Axios avec script externe au Twig (sans Webpack)
 
 
 Si on veut **utiliser un script externe JS dans une vue**, le script lui-même ne pourra pas utiliser la fonction **path** pour générer les routes  cible AJAX. Les fonctions de twig telles que **path** fonctionnent uniquement **dans les fichiers TWIG**. Ceci est un problème typique qu'on peut résoudre en utilisant le module **FOSJsRoutingBundle**.
@@ -5951,7 +6126,7 @@ Actions:
 
 <br>
 
-## 21.17. AJAX en Symfony (Vanilla JS)
+## 21.18. AJAX en Symfony (Vanilla JS)
 
 **Objectif** : utiliser AJAX dans un template Twig
 
@@ -6038,7 +6213,7 @@ public function exemple1Traitement(Request $requeteAjax)
 <br>
 
 
-## 21.18. Utilisation de blocs dans twig avec AJAX
+## 21.19. Utilisation de blocs dans twig avec AJAX
 
 Il s'agit juste d'une combinaison de master page + AJAX, rien de
 nouveau.
@@ -6165,6 +6340,36 @@ ExemplesAjaxController)**
 2. Créez une autre master page et deux vues qui en héritent. La première contient le jeu que vous venez de réaliser et la deuxième contient trois boutons. Chaque bouton affiche la photo d'un animal sans recharger la page.
 
 <br>
+
+
+## 21.20. DateTime et datepicker (Bootstrap)
+
+Si vous utilisez **datepicker** de Bootstrap, vous devez mettre d'accord le format de l'objet du formulaire et celui de datepicker, qui ne s'expriment pas de la même façon. Ça peut devenir horrible mais voici une façon directe de faire si vous utilisez un format standard.
+
+Dans la vue, avec l'objet **datepicker**:
+```js
+$.datepicker.setDefaults({dateFormat: 'dd-mm-yy'}); // format de visualisation
+$('.js-datepicker').datepicker();
+```
+Dans le controller, dans le **formulaire**:
+```php
+->add(
+    'fechaNacimiento',
+    DateType::class,
+    [
+
+        'widget' => 'single_text',
+        'format' => 'dd-MM-yyyy',
+        'html5' => false,
+        'attr' => ['class' => 'js-datepicker'],
+    ]
+)
+```
+Observez que pour exprimer la même chose on doit utiliser deux encodages différents.
+**format** dans le formulaire exprime le format qui est attendu par Symfony pour créer l'objet DateTime. On a exprimé la même chose dans **datepicker**, mais le plugin et le framework utilisent des normes différentes!
+
+
+
 
 # 22. Response JSON en Symfony
 

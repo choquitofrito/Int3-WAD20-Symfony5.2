@@ -14,38 +14,115 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Serializer;
+
+// attention, ne pas les oublier!
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class ExemplesAjaxAxiosController extends AbstractController
 {
 
     // exemple simple d'utilisation d'Ajax (Axios)
 
-    #[Route ("/exemples/ajax/axios/exemple1/affichage" )]
+    #[Route("/exemples/ajax/axios/exemple1/affichage")]
     public function exemple1Affichage()
     {
         return $this->render("/exemples_ajax_axios/exemple1_affichage.html.twig");
     }
 
-    #[Route ("/exemples/ajax/axios/exemple1/traitement",name:"exemple1_traitement" )]
+    #[Route("/exemples/ajax/axios/exemple1/traitement", name: "exemple1_traitement")]
     // action qui traite la commande AJAX, elle n'a pas une vue associée
     public function exemple1Traitement(Request $requeteAjax)
     {
 
         $valeurNom = $requeteAjax->get('nom');
-        $arrayReponse = ['leMessage' => 'Bienvenu, ' . $valeurNom,
-                        'autreCle' => 'je suis une autre valeur'];
+        $arrayReponse = [
+            'leMessage' => 'Bienvenu, ' . $valeurNom,
+            'autreCle' => 'je suis une autre valeur'
+        ];
         return new JsonResponse($arrayReponse);
     }
 
 
+    #[Route("/exemples/ajax/axios/form/entite/afficher", name: "exemple_axios_form_entite_afficher")]
+    public function exempleAjaxAxiosFormEntiteAfficher(Request $req)
+    {
+        // si on veut le pré-remplir on peut remplir cette entité. 
+        // Autrement on peut l'envoyer vide ou juste envoyer null dans le paramètre dans createForm
+        $livre = new Livre();
+
+        // ATTENTION!: il faut donner un id au formulaire pour pouvoir le manipuler avec JS!!
+        $formulaireLivre = $this->createForm(
+            LivreType::class,
+            $livre,
+            [    // pas d'action. On gére le click avec JS et on fait l'appel AXIOS
+                'method' => 'POST',
+                'attr' => ['id' => 'formulaireLivre']
+            ],
+        );
+
+        // ici la vue de l'affichage est une vue complete (recharge URL). Si cette action avait été appelée par 
+        // AJAX, on aurait pu faire $this->renderView pour renvoyer uniquement le rendu de la vue 
+        // et l'incruster dans un DIV
+        $vars = ['formulaireLivre' => $formulaireLivre->createView()];
+        return $this->render("/exemples_ajax_axios/form_entite_afficher.html.twig", $vars);
+    }
+
+
+    #[Route("/exemples/ajax/axios/form/entite/traiter", name: "exemple_axios_form_entite_traiter")]
+    public function exempleAjaxAxiosFormEntiteTraiter(Request $req, SerializerInterface $serializer)
+    {
+         // ATTENTION à comment créer l'entité à partir du FormData!!!
+        // Quand on utilise un FormData on doit passer par handleRequest, car FormData envoie tout en string
+        // et nous avons besoin de DateTime pour le Dates. HandleRequest fait l'hydrate proprement pour nous
+        // C'est le même code que quand on traite un form sans Ajax, juste qu'ici l'affichage
+        // et le traitement sont separés
+
+        $livre = new Livre();
+
+        // On crée un objet formulaire pour traiter les données, mais ici on n'affiche rien
+        $formulaireLivre = $this->createForm(
+            LivreType::class,
+            $livre,
+            [    // pas d'action. On gére le click avec JS et on fait l'appel AXIOS
+                'method' => 'POST',
+                'attr' => ['id' => 'formulaireLivre']
+            ],
+        );
+
+        $formulaireLivre->handleRequest($req);
+        
+        // Maintenant il faut envoyer quoi qui ce soit à la page qui appelle. Deux cas de figures standards,
+        // où le controller renvoie: 
+        
+        // 1. Juste de données: un simple JSON (messages, objets....) à incruster dans un div de form_entite_afficher.html.twig. 
+        // Pas de recharge d'URL
+        
+        // Note: Si on avait besoin de l'entité en JSON on doit la serialiser avant de l'envoyer: 
+        $livreJson = $serializer->serialize($livre, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['exemplaires']]);
+        
+        return new JsonResponse([
+            'message' => 'Tout ok!',
+            'noms' => ['Lola', 'Iza'],
+            'livre'=> $livreJson
+            ]);
+            
+        // 2. Le rendu d'une autre view, à incruster dans un div de form_entite_afficher.html.twig. 
+        // Pas de recharge d'URL non plus!
+        // return $this->renderView ("/exemples_ajax_axios/autre.html.twig", $vars) 
+            
+        }
+        
+
     // exemple d'utilisation d'AJAX avec de blocs ("master page")
-    #[Route ("/exemples/ajax/axios/exemple1/affichage/master/page")]
+    #[Route("/exemples/ajax/axios/exemple1/affichage/master/page")]
     public function exemple1AffichageMasterPage()
     {
         return $this->render("/exemples_ajax_axios/exemple1_affichage_master_page.html.twig");
     }
 
-    #[Route ("/exemples/ajax/axios/exemple1/traitement/master/page")]
+    #[Route("/exemples/ajax/axios/exemple1/traitement/master/page")]
     // action qui traite la commande AJAX, elle n'a pas une vue associée
     public function exemple1TraitementMasterPage(Request $requeteAjax)
     {
@@ -59,12 +136,12 @@ class ExemplesAjaxAxiosController extends AbstractController
     // exemple d'utilisation d'AJAX avec de blocs ("master page")
     // et fichier JS externe (/public/assets/js/exemple1Ajax.js)
 
-    #[Route ("/exemples/ajax/axios/exemple1/affichage/master/page/script/externe")]
+    #[Route("/exemples/ajax/axios/exemple1/affichage/master/page/script/externe")]
     public function exemple1AffichageMasterPageScriptExterne()
     {
         return $this->render("/exemples_ajax_axios/exemple1_affichage_master_page_script_externe.html.twig");
     }
-    
+
     // action qui traite la commande AJAX, elle n'a pas une vue associée
     /**
      * @Route ("/exemples/ajax/axios/exemple1/traitement/master/page/script/externe", options= {"expose"=true}, name = "exemple1_traitement_externe")
@@ -83,7 +160,7 @@ class ExemplesAjaxAxiosController extends AbstractController
         return $this->render('/exemples_ajax_axios/exemple_affichage_objets_repo.html.twig');
     }
 
-    
+
     #[Route("/exemples/ajax/axios/exemple/affichage/objets/dql")]
     public function exempleAffichageObjetsDql()
     {
@@ -93,7 +170,7 @@ class ExemplesAjaxAxiosController extends AbstractController
     // 1. action de traitement du AJAX, on utilise les méthodes du repository (findBy, findAll, etc...)
     // nous devons serialiser le résultat (le transformer en json dans ce cas) et envoyer une Reponse normale
 
-    #[Route("/exemples/ajax/axios/exemple/affichage/objets/traitement/repo", name:"exemple_objets_traitement_repo")]
+    #[Route("/exemples/ajax/axios/exemple/affichage/objets/traitement/repo", name: "exemple_objets_traitement_repo")]
     public function exempleAffichageObjetsTraitementRepo(Request $req)
     {
 
@@ -113,7 +190,7 @@ class ExemplesAjaxAxiosController extends AbstractController
     // La méthode getArrayResult créera un array manipulable par JsonResponse
     // Dans ce cas on renvoie un JsonResponse au lieu d'une Response
 
-    #[Route("/exemples/ajax/axios/exemple/affichage/objets/traitement/dql", name:"exemple_objets_traitement_dql")]
+    #[Route("/exemples/ajax/axios/exemple/affichage/objets/traitement/dql", name: "exemple_objets_traitement_dql")]
     public function exempleAffichageObjetsTraitementDql(Request $req)
     {
 
@@ -122,7 +199,7 @@ class ExemplesAjaxAxiosController extends AbstractController
         $code = $req->get('code');
         $query->setParameter("code", '%' . $code . '%');
 
-        
+
         // avec getResult() on obtient un array contenant toutes les entités Livre 
         // qui contiennent dans son titre le texte saisi dans l'input
 
@@ -155,5 +232,4 @@ class ExemplesAjaxAxiosController extends AbstractController
         // Nous devons rajouter les % dans setParameter. Attention, il n'y a pas de ":" dans l'appel à cette fonction
 
     }
-
 }
