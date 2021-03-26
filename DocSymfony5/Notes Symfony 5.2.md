@@ -6564,7 +6564,6 @@ php bin/console make:user
 Cette commande crée l'entité, qui **doit** implémenter l'interface
 [UserInterface](https://github.com/symfony/symfony/blob/4.2/src/Symfony/Component/Security/Core/User/UserInterface.php)
 
-(Faites la migration pour que la BD soit mise à jour!)
 
 L'assistant vous demandera :
 
@@ -6755,7 +6754,7 @@ Voici un exemple :
 ```
 
 Dans le cas de succès, le code qui reste de l'action **login** ne
-sera pas lancé car on a fait un redirect. Ici vers une action de votre choix (ici *accueil*). Pour cet exemple, créez le controller **AccueilController** avec l'assistant, l'action *accueil* et une vue contenant un message de bienvenue.
+sera pas lancée car on a fait un redirect. Ici vers une action de votre choix (ici *accueil*). Pour cet exemple, créez le controller **AccueilController** avec l'assistant, l'action *accueil* et une vue contenant un message de bienvenue.
 
 Si une erreur de login s'est produite, **nous avons deux possibilités** pour le **traiter** :
 
