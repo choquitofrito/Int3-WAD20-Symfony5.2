@@ -5726,7 +5726,7 @@ memory_limit=128M
 
 <br>
 
-Nous allons montrer **comment utiliser AJAX dans un template Twig avec Axios**
+Nous allons montrer **comment utiliser AJAX dans un template Twig avec Axios**. Ici on montrera un exemple basique d'un form pas associé à une entité.
 
 Axios est une librairie que nos simplifie les appels AJAX. Vous pouvez parfaitement faire du AJAX sans cette librairie mais ici on l'utilise pour nous faciliter la tâche.
 
@@ -5826,10 +5826,11 @@ Cette action reçoit un objet Request. On peut accéder aux éléments du formul
 
 ## 21.15. Formulaire associé à une entité avec Axios 
 
-Voici un exemple. Lisez **très attentivement** les commentaires dans le code.
+Voici un exemple d'un form associé à une entité. Lisez **très attentivement** les commentaires dans le code.
 Tous les points importants sont commentés.
 
-Le but ici est d'avoir un formulaire associé à une entité que, une fois il est envoyé, nous sert à remplir directement une entité dans le controller.
+Le but ici est d'avoir un formulaire associé à une entité . Une fois il est envoyé on disposera directement d'une entité dans le controller, remplie avec les données du formulaire.
+
 C'est la procedure normale, mais plus élaborée à cause d'avoir utilisé AJAX et FormData
 
 #### Explication de base:
@@ -5839,13 +5840,12 @@ C'est la procedure normale, mais plus élaborée à cause d'avoir utilisé AJAX 
 3. Le controller traite les données du FormData et, grâce à **handleRequest**, il remplit l'entité vide. 
 On ne doit pas extraire directement les valeurs de l'objet Request car certains types (ex: Dates) provoqueront des erreurs (les forms envoient de strings, mais l'entité a besoin d'un objet DateTime... handleRequest fait le travail pour nous)
 
-Une fois qu'on à l'entité: 
+Une fois on à l'entité: 
 
-4. Le controller renvoie du JSON ou le rendu d'une vue(mais sans chagger d'URL, bien sûr). Ce contenu sera normalement incrusté dans un div après.
+4. Le controller renvoie du JSON ou le rendu d'une vue(mais sans changer d'URL, bien sûr). Ce contenu sera normalement incrusté dans un div après.
 Si le controller renvoie des objets en JSON, il faut les **serialiser** dans le controller et les deserialiser dans la vue (JSON.parse) (voir code) 
 5. La vue est rendue
 
-**Extra**: Si l'entité du formulaire est liée à une autre et vous avez besoin de la clé étrangere, vous devez utiliser EntityType dans le formulaire d'affichage, puis cacher (ou pas) ce champ de liason. Le but est de l'envoyer sans que ça soit visible. C'est cas n'est pas réalisé dans l'exemple qui suit.
 
 Voici le code (**ProjetFormulairesSymfony**)
 
@@ -5971,6 +5971,15 @@ public function exempleAjaxAxiosFormEntiteTraiter(Request $req, SerializerInterf
     }
 
 ```
+
+
+<br>
+
+**Extra**: Si l'entité du formulaire est liée à une autre et vous avez besoin de la clé étrangere, vous devez rajouter ce champ comme **EntityType** dans la classe du formulaire.
+Puis on doit le rajouter dans la vue, dans le rendu du formulaire d'affichage (ex: **{{ form_widget(form.exemplaires)}}** ).
+Ce champ pourra ou pas être caché. Le but est de l'envoyer sans que ça soit visible. 
+
+<br>
 
 ## 21.16. Utilisation de blocs dans twig avec AJAX
 
@@ -6760,7 +6769,7 @@ Si une erreur de login s'est produite, **nous avons deux possibilités** pour le
 
 **a) Utiliser le template login crée par Symfony et l'adapter à nos besoins (par défaut)**
 
-Dans cet exemple, si le couple login/pass n'est pas correcte
+Dans cet exemple, si le couple login/pass n'est pas correct
 l'action **onAuthenticationSuccess** ne sera pas lancé. Symfony
 **cherchera l'action onAuthenticationFailure** mais elle
 n'existe pas. Le code de l'action login continuera et la variable
@@ -6795,7 +6804,7 @@ public function onAuthenticationFailure(\Symfony\Component\HttpFoundation\Reques
 
 ## 24.2. Création d'un formulaire d'inscription
 
-Nous allons créer un formulaire d'inscription qui utilises une vérification par mail Assurez-vous d'avoir installé et configuré un service de mail.
+Nous allons créer un formulaire d'inscription qui utilises une vérification par mail. Assurez-vous d'avoir installé et configuré un service de mail.
 
 Vous pouvez créer un formulaire d'inscription automatiquement et le personnaliser après en suivant les instructions de cette documentation
 :
@@ -6817,7 +6826,7 @@ php bin/console make:registration-form
 Suivez les instructions de l'assistant. Choisissez si :
 
 - Vous voulez qu'on ne puisse pas avoir de doublons dans les Users 
-- Vous voulez envoyer un lien d'authentification pour l'inscription. Dans ce cas, tapez l'adresse mail
+- Vous voulez envoyer un lien d'authentification pour l'inscription par mail. Si oui, Symfony vous demandera de taper l'adresse mail
 - Vous voulez (par défaut non) rajouter l'user id dans le lien
 - Vous voulez que les utilisateurs soient connectés directement après l'inscription (comme dans la plupart de sites)
 
@@ -6854,7 +6863,16 @@ en rajoutant une propriété **nom,** et vous voulez **générer à nouveau le f
 Les outils de sécurité de Symfony nous permettent d'implémenter le
 logout très facilement :
 
-1. Rajoutez dans **config/packages/security.yaml** une section qui **indique le path à saisir dans l'URL** **quand on veut réaliser un logout (pas un name)** et **la route de l'action qui sera lancée après avoir fait le logout** (route complete, pas le name!). "Faire le logout" est, en gros, effacer l'objet User de la session. Symfony s'en chargera de le faire sans votre intervention
+1. Rajoutez dans **config/packages/security.yaml** une section qui **indique le path à saisir dans l'URL** et l'action à lancer après que Symfony finisse de gérer le logout (ex: effacer l'objet User de la session) 
+   
+Il y a deux parties à configurer: 
+
+**path**: Le **name** de l'action logout créé par Symfony dans le controller de securité (**SecuriteController**)
+
+**target** : La route (pas le name!) de l'action qui sera lancée par Symfony après l'action de logout (qui est vide la plupart de fois)
+
+
+"Faire le logout" est, en gros, effacer l'objet User de la session. Symfony s'en chargera de le faire sans votre intervention
 
 
 ```yaml
@@ -6877,7 +6895,7 @@ On peut choisir le **path** selon nos besoins.
 On doit avoir une action à lancer après le logout.
 
 
-2. Laissez vide l'action de logout (elle ne sera jamais lancée) et créez l'action à lancer après d'avoir fini le traitement du logout (effacer user, session etc...)
+1. Laissez vide l'action de logout (elle ne sera jamais lancée) et créez l'action à lancer après d'avoir fini le traitement du logout (effacer user, session etc...)
 
 **ProjetLoginPass** contient cette fonctionnalité. L'action cible se
 trouve dans **SecuriteController**.
