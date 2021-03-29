@@ -3989,8 +3989,9 @@ On va créer et lancer une fixture pour l'entité **Livre** dans le projet **Pro
 composer require --dev doctrine/doctrine-fixtures-bundle
 ```
 
-2.  **Créez la classe fixture** (nom: LivreFixture)
+2.  **Créez la classe fixture** (nom: LivreFixtures)
 
+**Attention**: le nom du fichier doit être celui de la classe ou la fixture ne sera jamais lancée (aucune erreur sera affichée!)
 
 ```php
 php bin/console make:fixture
@@ -4007,7 +4008,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Livre;
 
-class LivreFixture extends Fixture
+class LivreFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
