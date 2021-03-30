@@ -371,6 +371,14 @@ l'annotation) : **afficherMessageAccueil**
 
 **Si vous utilisez les annotations, attention car vous devez utiliser les doubles guillemets partout!**
 
+**IMPORTANT** pour l'erreur "Route Not Found": 
+
+Si vous avez une erreur de "Route not found" et vous êtes completement certaines que vos routes sont bonnes, videz la caché de Symfony et ré-essayez.
+
+```console
+php bin/console cache:clear --env dev
+```
+
 ```php
 // notre classe hérite de AbstractController pour être un controller
 class ExemplesRoutingController extends AbstractController
