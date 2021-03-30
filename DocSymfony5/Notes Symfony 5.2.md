@@ -140,6 +140,7 @@
   - [21.14. AJAX en Symfony avec Axios (formulaire indépendant)](#2114-ajax-en-symfony-avec-axios-formulaire-indépendant)
   - [21.15. Formulaire associé à une entité avec Axios](#2115-formulaire-associé-à-une-entité-avec-axios)
       - [Explication de base:](#explication-de-base)
+    - [21.15.1. Exemples extra AJAX (Axios)](#21151-exemples-extra-ajax-axios)
   - [21.16. Utilisation de blocs dans twig avec AJAX](#2116-utilisation-de-blocs-dans-twig-avec-ajax)
       - [Exercices : Ajax avec Axios](#exercices--ajax-avec-axios)
   - [21.17. Ajax et Axios avec script externe au Twig (sans Webpack)](#2117-ajax-et-axios-avec-script-externe-au-twig-sans-webpack)
@@ -184,6 +185,8 @@
 - [(En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur](#en-cours-cette-doc-appartient-à-symfony-4-traduction-des-messages-de-succèserreur)
 
 <br>
+<br>
+
 
 
 # 1. Configuration de base : Composer, Git, XDebug, Visual Studio
@@ -6007,6 +6010,12 @@ Puis on doit le rajouter dans la vue, dans le rendu du formulaire d'affichage (e
 Ce champ pourra ou pas être caché. Le but est de l'envoyer sans que ça soit visible. 
 
 <br>
+
+### 21.15.1. Exemples extra AJAX (Axios)
+
+Dans **AnnexeAxiosController** du **ProjetFormulairesSymfony** vous avez plusieurs exemples d'utilisation d'Axios, pour de situations différentes.
+
+
 
 ## 21.16. Utilisation de blocs dans twig avec AJAX
 
