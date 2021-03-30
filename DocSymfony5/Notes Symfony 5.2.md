@@ -5727,7 +5727,7 @@ memory_limit=128M
 
 <br>
 
-Nous allons montrer **comment utiliser AJAX dans un template Twig avec Axios**. Ici on montrera un exemple basique d'un form pas associé à une entité.
+Nous allons montrer **comment utiliser AJAX dans un template Twig avec Axios**. Ici on montrera un exemple basique d'un form indépendant, **pas associé à une entité**.
 
 Axios est une librairie que nos simplifie les appels AJAX. Vous pouvez parfaitement faire du AJAX sans cette librairie mais ici on l'utilise pour nous faciliter la tâche.
 
