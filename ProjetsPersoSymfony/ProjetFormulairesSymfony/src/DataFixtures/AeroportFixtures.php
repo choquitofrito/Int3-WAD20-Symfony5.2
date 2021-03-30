@@ -24,7 +24,7 @@ class AeroportFixtures extends Fixture
             // avec hydrate
             $aeroport = new Aeroport([
                 'nom' => $faker->city . " Airport",
-                'code' => $faker->postcode,
+                'code' => 'COD'. $i,
                 'dateMiseEnService' => $faker->dateTime,
                 'heureMiseEnService' => $faker->dateTime,
                 'description' => $faker->realText($faker->numberBetween(10, 30))

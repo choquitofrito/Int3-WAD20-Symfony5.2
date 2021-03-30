@@ -101,7 +101,6 @@ class ExemplesFormulaireController extends AbstractController
         dd ("fin");
     }
 
-    
     #[Route("/exemples/formulaires/affichage/traitement", name:"exemple_afficher_traiter")]
     public function exempleAffichageTraitementForm (Request $req){
         $voiture = new Voiture();
@@ -137,5 +136,6 @@ class ExemplesFormulaireController extends AbstractController
 
         
     }
+
 
 }
