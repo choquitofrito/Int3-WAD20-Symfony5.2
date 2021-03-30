@@ -137,7 +137,7 @@
   - [21.13. Upload de fichiers en utilisant un formulaire](#2113-upload-de-fichiers-en-utilisant-un-formulaire)
     - [21.13.1. Stockage dans le serveur d'une seule image pour chaque entité](#21131-stockage-dans-le-serveur-dune-seule-image-pour-chaque-entité)
     - [21.13.2. Possibles problèmes dans l'upload](#21132-possibles-problèmes-dans-lupload)
-  - [21.14. AJAX en Symfony avec Axios](#2114-ajax-en-symfony-avec-axios)
+  - [21.14. AJAX en Symfony avec Axios (formulaire indépendant)](#2114-ajax-en-symfony-avec-axios-formulaire-indépendant)
   - [21.15. Formulaire associé à une entité avec Axios](#2115-formulaire-associé-à-une-entité-avec-axios)
       - [Explication de base:](#explication-de-base)
   - [21.16. Utilisation de blocs dans twig avec AJAX](#2116-utilisation-de-blocs-dans-twig-avec-ajax)
@@ -5731,8 +5731,7 @@ memory_limit=128M
 <br>
 
 
-## 21.14. AJAX en Symfony avec Axios
-
+## 21.14. AJAX en Symfony avec Axios (formulaire indépendant)
 <br>
 
 Nous allons montrer **comment utiliser AJAX dans un template Twig avec Axios**. Ici on montrera un exemple basique d'un form indépendant, **pas associé à une entité**.
@@ -5804,7 +5803,26 @@ Dans l'appel AXIOS on envoie un objet JS contenant :
 
 -   Les **donnés (data)** : un objet JS contenant de clés et de valeurs. Ici on envoie un objet FormData (classe de JS) construit à partir du formulaire qui se trouve dans la page web
 
-2. Créez l'action qui affiche la vue **exemple1_affichage.html** dans 
+
+2. Modifiez le template **/templates/base.html.twig** pour que les scripts soient chargés après le body
+
+```twig
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
+```
+
+
+3. Créez l'action qui affiche la vue **exemple1_affichage.html** dans 
 
 ```php
 #[Route ("/exemples/ajax/axios/exemple1/affichage" )]
@@ -5814,7 +5832,7 @@ public function exemple1Affichage()
 }
 ```
 
-3.  Créez l'action qui traite la pétition AJAX
+4.  Créez l'action qui traite la pétition AJAX
 
 ```php
 #[Route ("/exemples/ajax/axios/exemple1/traitement",name:"exemple1_traitement" )]
