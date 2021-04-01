@@ -3417,13 +3417,15 @@ https://stackoverflow.com/questions/59268438/a-circular-reference-has-been-detec
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository(Livre::class);
 
-        // notez que findBy renverra toujours un array même s'il trouve 
-        // qu'un objet
+        // on doit obtenir un objet, il ne suffit pas un id
+
+
         $livres = $rep->findBy(['prix'=>20]);
         $vars = ['livres' => $livres];
         return $this->render("exemples_modele/exemple_find_by.html.twig", $vars);
     }
 ```
+
 
 
 
