@@ -8067,8 +8067,8 @@ Include conf/extra/httpd-vhosts.conf
 ```apache
 <VirtualHost *:80>
 ServerName projet1Symfony.localhost
-DocumentRoot "C:/xampp/htdocs/Symfony52/projet1/Symfonypublic"
-<Directory "C:/xampp/htdocs/Symfony52/projet1/Symfonypublic">
+DocumentRoot "C:/xampp/htdocs/Symfony52/projet1/Symfony/public"
+<Directory "C:/xampp/htdocs/Symfony52/projet1/Symfony/public">
 AllowOverride All
 Order Allow,Deny
 Allow from All

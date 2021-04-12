@@ -71,6 +71,8 @@ class ExemplesModeleController extends AbstractController
     }
 
 
+    
+
     // SELECT: findAll (chercher par un ou plusieurs champs, filtre array)
     #[Route("exemples/modele/exemple/find/all")]
     public function exempleFindAll()
