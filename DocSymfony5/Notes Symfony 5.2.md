@@ -8018,16 +8018,16 @@ Cette section explique comment heberger Symfony dans un serveur Apache local. Si
 
 Considérez qu'on a une application web qui se trouve dans le dossier
 
-    C:/xampp/htdocs/Symfony52/projet1symfony/web
+    C:/xampp/htdocs/Symfony5/projet1symfony/web
 
 Normalement on devrait saisir cette URL pour y accéder :
 
-    localhost/Symfony52/projet1symfony/web
+    localhost/Symfony5/projet1symfony/web
 
 Apache permet d'utiliser la technique de réécriture d'URL. Cela nous permettra, par exemple, d'avoir un projet
 qui se trouve dans
 
-    C:/xampp/htdocs/Symfony52/projet1symfony/web
+    C:/xampp/htdocs/Symfony5/projet1symfony/web
 
 Et en accéder en utilisant tout simplement cette URL :
 
@@ -8066,14 +8066,23 @@ Include conf/extra/httpd-vhosts.conf
 
 ```apache
 <VirtualHost *:80>
+
 ServerName projet1Symfony.localhost
-DocumentRoot "C:/xampp/htdocs/Symfony52/projet1/Symfony/public"
-<Directory "C:/xampp/htdocs/Symfony52/projet1/Symfony/public">
-AllowOverride All
-Order Allow,Deny
-Allow from All
+DocumentRoot "C:/xampp/htdocs/Symfony5/projet1/Symfony/public"
+
+<Directory "C:/xampp/htdocs/Symfony5/projet1/Symfony/public">
+    AllowOverride All
+    Order Allow,Deny
+    Allow from All
 </Directory>
+
+<Directory "C:/xampp/htdocs/Symfony5/projet1/Symfony">
+    Options FollowSymlinks
+</Directory>
+
 </VirtualHost>
+
+
 ```
 
 Pour chaque nouveau projet vous devez rajouter la première section en
@@ -8084,12 +8093,12 @@ vous devez rajouter sa **configuration** :
 
 ```apache
 <VirtualHost *:80>
-ServerName localhost
-DocumentRoot "C:/xampp/htdocs"
-<Directory "C:/xampp/htdocs">
-AllowOverride All
-Require all granted
-</Directory>
+    ServerName localhost
+    DocumentRoot "C:/xampp/htdocs"
+    <Directory "C:/xampp/htdocs">
+        AllowOverride All
+        Require all granted
+    </Directory>
 </VirtualHost>
 ```
 
@@ -8151,22 +8160,25 @@ LoadModule rewrite_module modules/mod_rewrite.so
 
 ServerName projet1Symfony.localhost
 
-DocumentRoot
-"**/Applications/XAMPP/xamppfiles/htdocs/Symfony4/projet1Symfony/public**"
+DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/public"
 
-<Directory
-"**/Applications/XAMPP/xamppfiles/htdocs/Symfony4/projet1Symfony/public**">
+<Directory "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/public">
+    AllowOverride All
+    Order Allow,Deny
+    Allow from All
+</Directory>
 
-AllowOverride All
-
-Order Allow,Deny
-
-Allow from All
-
+<Directory "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/Symfony">
+    Options FollowSymlinks
 </Directory>
 
 </VirtualHost>
+
 ```
+
+
+
+
 
 Pour chaque nouveau projet vous devez rajouter la première section en
 modifiant le ServerName, DocumentRoot et Directory.
@@ -8176,11 +8188,11 @@ vous devez rajouter cette **configuration** :
 
 ```apache
 <VirtualHost *:80>
-ServerName localhost
-DocumentRoot "**/Applications/XAMPP/xamppfiles/htdocs**"
-<Directory "**/Applications/XAMPP/xamppfiles/htdocs**">
-AllowOverride All
-Require all granted
+    ServerName localhost
+    DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs"
+    <Directory "/Applications/XAMPP/xamppfiles/htdocs">
+    AllowOverride All
+    Require all granted
 </Directory>
 </VirtualHost>
 ```
