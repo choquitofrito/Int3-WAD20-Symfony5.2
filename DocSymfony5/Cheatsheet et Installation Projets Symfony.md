@@ -1,3 +1,12 @@
+## Extensions a installer dans VS Code
+
+- PHP Intelephense
+- Twig Language 2
+- Markdown all in one
+- PHP Namespace Resolver 
+- PHP Getters & Setters
+
+
 ## Création d'un projet
 
 
@@ -6,7 +15,7 @@
 symfony new --full Projet1Symfony5
 ```
 
-## Serveur interne (on utilisera Apache)
+## Serveur interne (vous pouvez utiliser aussi Apache)
 
 - Lancer le serveur interne (depuis le dossier du projet)
 ```console
@@ -91,6 +100,24 @@ public function load(ObjectManager $manager)
         .
         .
 ```
+* Créer un fichier (ex: **dbRestartAndMigrations.bat** dans la racine du projet pour effacer les migrations et recréer toute la BD. Si vous voulez pouvoir choisir chaque pas, enlevez les options --no-interaction. À modifier selon vos besoins.
+
+```console  
+del migrations\V*
+
+php bin/console doctrine:database:drop --force --no-interaction
+php bin/console doctrine:database:create --no-interaction
+php bin/console make:migration --no-interaction
+php bin/console doctrine:migrations:migrate --no-interaction
+php bin/console doctrine:fixtures:load --no-interaction
+```
+
+* Créer un fichier dans la racine du projet pour nettoyer la cache. Lancez-le si vous remarquez que les modifications dans votre code n'ont pas d'effet dans l'execution
+
+```console
+php bin/console cache:pool:clear cache.global_clearer
+```
+
 
 
 ## Clonation et installation d'un projet qui existe dans github
@@ -120,4 +147,27 @@ php bin/console doctrine:migration:migrate
     b) Deconseillé: remplir la BD avec un **fichier SQL** (qui doit contenit uniquement des INSERT)<br>
     
 
+## Apprenez un minimum de git :
 
+Symfony crée déjà un repo. 
+
+1. Créez un repo dans github
+2. Faites un commit en local
+3. Créez une branch **main** qui sera votre branche principale (avant "master")
+```console
+git branch -M main
+```
+4. Rajoutez votre repo dans github comme repo remote de votre repo local
+```console
+git remote add origin https://github.com/choquitofrito/PreExemples.git
+```
+5. Faites push et allez sur github pour voir le résultat
+```console
+git push -u origin main
+```
+
+
+6. add y commit
+7. rajouter un repo remote
+8.  faire push vers votre repo remote
+9.  
