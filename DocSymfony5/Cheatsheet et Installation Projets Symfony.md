@@ -153,6 +153,7 @@ Symfony crée déjà un repo.
 
 1. Créez un repo dans github
 2. Faites un commit en local
+
 3. Créez une branch **main** qui sera votre branche principale (avant "master")
 ```console
 git branch -M main
@@ -166,8 +167,55 @@ git remote add origin https://github.com/choquitofrito/PreExemples.git
 git push -u origin main
 ```
 
+### Quelques commandes très basiques:
 
-6. add y commit
-7. rajouter un repo remote
-8.  faire push vers votre repo remote
-9.  
+
+Voir où on se trouve ;)
+```console
+git status
+```
+Rajouter tous les changements au stage
+```console
+git add .
+``` 
+Faire un commit 
+```console 
+git commit -m "navbar rajoutée"
+```
+
+
+
+Lister les remotes:
+```console
+git remote -v
+```
+Lister les branches:
+```console
+git branch -a
+```
+Créez une branche:
+```console
+git branch rajoutAjax
+```
+Changer de branche:
+```console
+git switch rajoutAjax
+git switch main
+.
+.
+.
+```
+Effacer une branche (local):
+```console
+git branch -d rajoutAjax
+```
+Faire un push de la branche dans le remote
+(on aura les deux branches dans local et remote)
+```console
+git push origin rajoutAjax
+```
+
+Pour git reset:
+
+https://medium.com/charlottes-digital-web/how-and-when-to-use-git-reset-ec8088e0c811
+
