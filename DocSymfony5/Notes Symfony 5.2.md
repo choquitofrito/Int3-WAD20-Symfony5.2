@@ -166,22 +166,21 @@
   - [26.3. Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre](#263-gestion-de-lerreur-access-denied-exception-en-utilisant-une-classe-propre)
   - [26.4. Fenêtre modale pour le login (Ajax)](#264-fenêtre-modale-pour-le-login-ajax)
     - [Adaptation à Ajax et fenêtre modale](#adaptation-à-ajax-et-fenêtre-modale)
-- [TILL HERE](#till-here)
 - [27. Pagination](#27-pagination)
-- [28. JS et CSS avec Webpack encore](#28-js-et-css-avec-webpack-encore)
+- [28. JS et CSS avec Webpack encore (à reviser)](#28-js-et-css-avec-webpack-encore-à-reviser)
   - [28.1. Installation de Webpack Encore et de Node](#281-installation-de-webpack-encore-et-de-node)
   - [28.2. Configurer Webpack Encore](#282-configurer-webpack-encore)
   - [28.3. Lancer Webpack](#283-lancer-webpack)
   - [28.4. Utiliser le code dans les vues](#284-utiliser-le-code-dans-les-vues)
   - [28.5. Encore et Bootstrap](#285-encore-et-bootstrap)
-- [29. Intégration de boutons de paiement Paypal](#29-intégration-de-boutons-de-paiement-paypal)
+- [29. Symfony avec Apache. Configuration des Virtual Hosts](#29-symfony-avec-apache-configuration-des-virtual-hosts)
+  - [29.1. Explication de base](#291-explication-de-base)
+  - [29.2. Création d'un serveur virtuel (virtual host) pour un projet en Windows](#292-création-dun-serveur-virtuel-virtual-host-pour-un-projet-en-windows)
+      - [Exercice : création d'un projet contenant l'application skeleton](#exercice--création-dun-projet-contenant-lapplication-skeleton)
+- [30. Intégration de boutons de paiement Paypal](#30-intégration-de-boutons-de-paiement-paypal)
 - [END](#end)
   - [jQuery](#jquery)
 - [4. Installation de packages dans un projet Symfony Flex](#4-installation-de-packages-dans-un-projet-symfony-flex)
-- [5. Symfony avec Apache. Configuration des Virtual Hosts](#5-symfony-avec-apache-configuration-des-virtual-hosts)
-  - [Création d'un serveur virtuel (virtual host) en Windows](#création-dun-serveur-virtuel-virtual-host-en-windows)
-      - [Exercice : création d'un projet contenant l'application skeleton](#exercice--création-dun-projet-contenant-lapplication-skeleton)
-  - [Création d'un serveur virtuel (virtual host) en OSX](#création-dun-serveur-virtuel-virtual-host-en-osx)
 - [(En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur](#en-cours-cette-doc-appartient-à-symfony-4-traduction-des-messages-de-succèserreur)
 
 <br>
@@ -1902,6 +1901,9 @@ services disponibles pour chaque mode.
 <br>
 
 # 8.2. Les fichiers .env et .env.local
+
+
+**Attention: https://symfony.com/blog/new-in-symfony-flex-1-2**
 
 <br>
 
@@ -7587,8 +7589,6 @@ logged: {{ app.user.username }}
 
 <br>
 
-# TILL HERE
-
 
 # 27. Pagination
 
@@ -7698,7 +7698,7 @@ class ExemplePaginationController extends AbstractController {
 
 <br>
 
-# 28. JS et CSS avec Webpack encore
+# 28. JS et CSS avec Webpack encore (à reviser)
 
 Si vous voulez utiliser du JS et CSS vous pourriez juste créer un dossier dans public et inclure vos fichiers .**js** et .**css**, mais la bonne pratique consiste à utiliser **Webpack**. Symfony possède l'extension **Webpack Encore**, qui facilite énormément l'installation et utilisation de Webpack.
 
@@ -7861,7 +7861,215 @@ yarn add jquery --dev
 ```
 <br>
 
-# 29. Intégration de boutons de paiement Paypal
+
+# 29. Symfony avec Apache. Configuration des Virtual Hosts
+
+Cette section explique comment heberger Symfony dans un serveur Apache **local**. Si vous utilisez le serveur inclut dans Symfony avec la commande **symfony serve**, passez à la section suivante.
+
+## 29.1. Explication de base
+
+Considérez qu'on a une application web qui se trouve dans le dossier
+
+    C:/xampp/htdocs/Symfony5/projet1symfony/web
+
+Normalement on devrait saisir cette URL pour y accéder :
+
+```
+    localhost/Symfony5/projet1symfony/public/index.php
+``` 
+ou
+``` 
+    localhost/Symfony5/projet1symfony/public
+```
+
+Apache permet d'utiliser la technique de réécriture d'URL. Cela nous permettra, par exemple, d'avoir un projet
+qui se trouve dans
+
+    C:/xampp/htdocs/Symfony5/projet1symfony/public
+
+Et en accéder en utilisant tout simplement cette URL :
+
+    projet1symfony.localhost
+
+Nous devons configurer cette correspondance dans le fichier
+
+    /xampp/apache/conf/extra/httpd-vhosts.conf
+
+(config. en Windows. Si on utilise OSX ou Linux le fichier se trouve ailleurs. Les indications pour ces systèmes se trouvent dans les sections qui suivent)
+
+Le nom vhosts vient du fait qu'on est en train de créer un **serveur virtuel**.
+
+C'est Apache qui transforme une URL dans autre, mais toujours selon nos
+règles.
+<br>
+
+## 29.2. Création d'un serveur virtuel (virtual host) pour un projet en Windows
+
+**Pour créer et utiliser un serveur virtual suivez ces pas** :
+
+**1**.  Activez d'abord la réécriture de l'URL dans la configuration
+    d'Apache ainsi que la lecture des serveurs virtuels dans
+    httpd-vhosts. Juste ouvrez le fichier
+    **c:/xampp/apache/conf/httpd.conf** et effacez les commentaires
+    de ces deux lignes (si par hasard elles sont commentées)
+
+```apache
+LoadModule rewrite_module modules/mod_rewrite.so
+Include conf/extra/httpd-vhosts.conf
+````
+
+**2**.  Modifiez (ou créez) le fichier **c:xampp\apache\conf\extra\vhosts.conf**:
+(changez le chemin et le nom du projet selon vos besoins)
+
+```apache
+<VirtualHost *:80>
+
+ServerName projet1Symfony.localhost
+DocumentRoot "C:/xampp/htdocs/Symfony5/projet1Symfony/public"
+
+<Directory "C:/xampp/htdocs/Symfony5/projet1Symfony/public">
+    AllowOverride All
+    Order Allow,Deny
+    Allow from All
+</Directory>
+
+<Directory "C:/xampp/htdocs/Symfony5/projet1Symfony">
+    Options FollowSymlinks
+</Directory>
+
+</VirtualHost>
+```
+
+Pour chaque nouveau projet vous devez rajouter la première section en
+modifiant le ServerName, DocumentRoot et Directory.
+
+Pour pouvoir continuer à utiliser le serveur **localhost** normalement vous devez rajouter sa **configuration** (**une seule fois, pas pour chaque projet!**):
+
+```apache
+<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot "C:/xampp/htdocs"
+    <Directory "C:/xampp/htdocs">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+**3**.  Installez **l'apache-pack** qui créera les règles d'écriture d'url
+    pour le projet (Apache en aura besoin). Dans le dossier du projet,
+    tapez :
+
+
+        composer require symfony/apache-pack
+
+(Répondez "y" pour accepter l'installation)
+
+**4**.  Rajoutez, dans le fichier **hosts**
+    
+        c:/Windows/System32/drivers/etc/hosts
+
+la ligne suivante:
+
+        127.0.0.1 projet1Symfony.localhost
+
+(Vous devez démarrer notepad comme **administrateur**, si vous utilisez Notepad++ il vous demandera de le faire automatiquement)
+
+**5**.  Redémarrez le serveur Apache et allez sur le site :
+
+http://projet1symfony.localhost/
+
+Une page de bienvenue devrait s'afficher, l'index de votre projet
+
+#### Exercice : création d'un projet contenant l'application skeleton
+
+Créez un deuxième projet projet2Symfony selon la procédure précédente
+
+<br>
+
+5.3. Création d'un serveur virtuel (virtual host) en OSX
+
+1.  Activez la lecture de httpd-vhosts dans le fichier httpd.conf:
+    ouvrez **xampp** et cliquez sur le bouton Config pour ouvrir ce
+    fichier de configuration d'Apache.
+
+    Note: Le fichier se trouve dans Applications/xampp/xamppfiles/etc
+
+    Une fois le fichier ouvert, effacez les commentaires de ces deux
+    lignes (si elles sont commentées)
+
+Include conf/extra/httpd-vhosts.conf
+
+Activez aussi la réécriture de l'URL dans la configuration d'Apache e
+
+LoadModule rewrite_module modules/mod_rewrite.so
+
+2.  Modifiez (ou créez) le fichier
+    **/Applications/XAMPP/xamppfiles/etc/extra/httpd-vhosts.conf** en
+    rajoutant :
+
+```Apache
+<VirtualHost *:80>
+
+ServerName projet1Symfony.localhost
+
+DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/public"
+
+<Directory "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/public">
+    AllowOverride All
+    Order Allow,Deny
+    Allow from All
+</Directory>
+
+<Directory "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/Symfony">
+    Options FollowSymlinks
+</Directory>
+
+</VirtualHost>
+
+```
+
+Pour chaque nouveau projet vous devez rajouter la première section en
+modifiant le ServerName, DocumentRoot et Directory.
+
+Pour pouvoir continuer à utiliser le serveur **localhost** normalement (pas seulement avec de virtual hosts pour Symfony!)
+vous devez rajouter cette **configuration** :
+
+```apache
+<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs"
+    <Directory "/Applications/XAMPP/xamppfiles/htdocs">
+    AllowOverride All
+    Require all granted
+</Directory>
+</VirtualHost>
+```
+
+1.  Dans le dossier de votre projet, installez **l'apache-pack** qui créera les règles d'écriture d'url pour le projet (Apache en aura besoin). Dans le dossier du projet, tapez :
+
+        php composer.phar require symfony/apache-pack
+
+(Répondez "y" pour accepter l'installation)
+
+4.  Rajoutez dans cette ligne dans le fichier **hosts** :
+
+        127.0.0.1 projet1Symfony.localhost localhost
+
+Pour éditer le fichier hosts :
+
+    1.  Ouvrez la console
+    2.  Tapez cd /
+    3.  Tapez sudo nano etc/hosts
+    4.  Tapez votre mot de passe
+    5.  Rajoutez la ligne indiquée
+    6.  Enregistrez le fichier avec CONTROL-O et puis Enter, sortez du
+        logiciel avec CONTROL-X et puis Enter
+
+
+
+
+# 30. Intégration de boutons de paiement Paypal
 
 
 Si vous voulez utiliser Paypal dans une application en production vous devez comprendre complètement le système de paiements et savoir très bien ce que vous faites :).
@@ -8012,211 +8220,7 @@ documentation ici :
 
 [https://symfony.com/doc/current/setup.html#creating-symfony-applications](https://symfony.com/doc/current/setup.html%23creating-symfony-applications)
 
-# 5. Symfony avec Apache. Configuration des Virtual Hosts
-
-Cette section explique comment heberger Symfony dans un serveur Apache local. Si vous utilisez le serveur inclut dans Symfony avec la commande **symfony serve**, passez à la section suivante.
-
-Considérez qu'on a une application web qui se trouve dans le dossier
-
-    C:/xampp/htdocs/Symfony5/projet1symfony/web
-
-Normalement on devrait saisir cette URL pour y accéder :
-
-    localhost/Symfony5/projet1symfony/web
-
-Apache permet d'utiliser la technique de réécriture d'URL. Cela nous permettra, par exemple, d'avoir un projet
-qui se trouve dans
-
-    C:/xampp/htdocs/Symfony5/projet1symfony/web
-
-Et en accéder en utilisant tout simplement cette URL :
-
-    projet1symfony.localhost
-
-Nous devons configurer cette correspondance dans le fichier
-
-    /xampp/apache/conf/extra/httpd-vhosts.conf
-
-(en Windows. Si on utilise OSX ou Linux le fichier se trouve ailleurs. Les indications pour ces systèmes se trouvent dans les sections qui suivent)
-
-Le nom vhosts vient du fait qu'on est en train de créer un **serveur virtuel**.
-
-C'est Apache qui transforme une URL dans autre, mais toujours selon nos
-règles.
 <br>
-
-Création d'un serveur virtuel (virtual host) en Windows
---------------------------------------------------------
-
-**Pour créer et utiliser un serveur virtual suivez ces pas** :
-
-1.  Activez d'abord la réécriture de l'URL dans la configuration
-    d'Apache ainsi que la lecture des serveurs virtuels dans
-    httpd-vhosts. Juste ouvrez le fichier
-    **c:/xampp/apache/conf/httpd.conf** et effacez les commentaires
-    de ces deux lignes (si elles sont commentées)
-
-```apache
-LoadModule rewrite_module modules/mod_rewrite.so
-Include conf/extra/httpd-vhosts.conf
-````
-
-2.  Modifiez (ou créez) le fichier
-    **c:xampp\apacheconf\extra\vhosts.conf** en rajoutant :
-
-```apache
-<VirtualHost *:80>
-
-ServerName projet1Symfony.localhost
-DocumentRoot "C:/xampp/htdocs/Symfony5/projet1/Symfony/public"
-
-<Directory "C:/xampp/htdocs/Symfony5/projet1/Symfony/public">
-    AllowOverride All
-    Order Allow,Deny
-    Allow from All
-</Directory>
-
-<Directory "C:/xampp/htdocs/Symfony5/projet1/Symfony">
-    Options FollowSymlinks
-</Directory>
-
-</VirtualHost>
-
-
-```
-
-Pour chaque nouveau projet vous devez rajouter la première section en
-modifiant le ServerName, DocumentRoot et Directory.
-
-Pour pouvoir continuer à utiliser le serveur **localhost** normalement
-vous devez rajouter sa **configuration** :
-
-```apache
-<VirtualHost *:80>
-    ServerName localhost
-    DocumentRoot "C:/xampp/htdocs"
-    <Directory "C:/xampp/htdocs">
-        AllowOverride All
-        Require all granted
-    </Directory>
-</VirtualHost>
-```
-
-3.  Installez **l'apache-pack** qui créera les règles d'écriture d'url
-    pour le projet (Apache en aura besoin). Dans le dossier du projet,
-    tapez :
-
-
-        composer require symfony/apache-pack
-
-(Répondez "y" pour accepter l'installation)
-
-4.  Rajoutez, dans le fichier **hosts**
-    
-        c:/Windows/System32/drivers/etc/hosts
-
-    la ligne suivante:
-
-        127.0.0.1 projet1Symfony.localhost
-
-(Vous devez démarrer notepad comme administrateur)
-
-5.  Redémarrez le serveur Apache et allez sur le site :
-
-http://projet1symfony.localhost/
-
-Une page de bienvenue devrait s'afficher
-
-#### Exercice : création d'un projet contenant l'application skeleton
-
-Créez un deuxième projet projet2Symfony selon la procédure précédente
-
-<br>
-
-Création d'un serveur virtuel (virtual host) en OSX
-----------------------------------------------------
-
-1.  Activez la lecture de httpd-vhosts dans le fichier httpd.conf:
-    ouvrez **xampp** et cliquez sur le bouton Config pour ouvrir ce
-    fichier de configuration d'Apache.
-
-    Note: Le fichier se trouve dans Applications/xampp/xamppfiles/etc
-
-    Une fois le fichier ouvert, effacez les commentaires de ces deux
-    lignes (si elles sont commentées)
-
-Include conf/extra/httpd-vhosts.conf
-
-Activez aussi la réécriture de l'URL dans la configuration d'Apache e
-
-LoadModule rewrite_module modules/mod_rewrite.so
-
-2.  Modifiez (ou créez) le fichier
-    **/Applications/XAMPP/xamppfiles/etc/extra/httpd-vhosts.conf** en
-    rajoutant :
-
-```Apache
-<VirtualHost *:80>
-
-ServerName projet1Symfony.localhost
-
-DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/public"
-
-<Directory "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/public">
-    AllowOverride All
-    Order Allow,Deny
-    Allow from All
-</Directory>
-
-<Directory "/Applications/XAMPP/xamppfiles/htdocs/Symfony5/projet1Symfony/Symfony">
-    Options FollowSymlinks
-</Directory>
-
-</VirtualHost>
-
-```
-
-
-
-
-
-Pour chaque nouveau projet vous devez rajouter la première section en
-modifiant le ServerName, DocumentRoot et Directory.
-
-Pour pouvoir continuer à utiliser le serveur **localhost** normalement (pas seulement avec de virtual hosts pour Symfony!)
-vous devez rajouter cette **configuration** :
-
-```apache
-<VirtualHost *:80>
-    ServerName localhost
-    DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs"
-    <Directory "/Applications/XAMPP/xamppfiles/htdocs">
-    AllowOverride All
-    Require all granted
-</Directory>
-</VirtualHost>
-```
-
-3.  Dans le dossier de votre projet, installez **l'apache-pack** qui créera les règles d'écriture d'url pour le projet (Apache en aura besoin). Dans le dossier du projet, tapez :
-
-        php composer.phar require symfony/apache-pack
-
-(Répondez "y" pour accepter l'installation)
-
-4.  Rajoutez dans cette ligne dans le fichier **hosts** :
-
-        127.0.0.1 projet1Symfony.localhost localhost
-
-Pour éditer le fichier hosts :
-
-    1.  Ouvrez la console
-    2.  Tapez cd /
-    3.  Tapez sudo nano etc/hosts
-    4.  Tapez votre mot de passe
-    5.  Rajoutez la ligne indiquée
-    6.  Enregistrez le fichier avec CONTROL-O et puis Enter, sortez du
-        logiciel avec CONTROL-X et puis Enter
-
 
 
 # (En cours, cette doc. appartient à Symfony 4) Traduction des messages de succès/erreur
