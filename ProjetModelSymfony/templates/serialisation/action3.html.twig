@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SerialisationController!{% endblock %}
+
+{% block body %}
+
+{# afficher chaîne JSON dans la variable PHP #}
+{{ dump (jsonLivres) }}
+Voici mon JSON! On va l'utiliser dans le script juste après.
+
+{{ jsonLivres }}
+
+<script>
+// Regardez la console. heavy metal... incrusté directement avec twig!!
+let livresJSONString = "{{ jsonLivres }}"; // Ceci est qu'un string. Il y a le contenu mais ça nous sert à rien
+console.log (typeof(livresJSONString));
+// console.log (livresJSONString);
+
+</script>
+
+<script>
+// On deserialise (passer du JSON à PHP). 
+
+let livresJSONString2 = "{{ jsonLivres }}"; // Ceci est qu'un string. Il y a le contenu mais ça nous sert à rien
+console.log (livresJSONString2);
+let livres2 = JSON.parse(livresJSONString2); // maintenant on a un array d'objets
+console.log (typeof(livres2));
+console.log( livres2);
+
+// Encore incrusté dans le twig... possera de problèmes 
+// si on essaie de mettre le script dans un fichier js externe, qui ne peut pas contenir du twig!!
+// Dans le script ci-dessous on va faire plus propre.
+</script>
+
+{% endblock %}
+

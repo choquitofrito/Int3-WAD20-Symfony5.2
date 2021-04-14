@@ -85,7 +85,7 @@
 - [12. Le modèle : accès à la BD avec Doctrine](#12-le-modèle--accès-à-la-bd-avec-doctrine)
   - [12.1. SELECT](#121-select)
     - [12.1.1. SELECT: findOneBy](#1211-select-findoneby)
-    - [12.1.2. Serialization! (faire)](#1212-serialization-faire)
+    - [12.1.2. Serialisation](#1212-serialisation)
     - [12.1.3. SELECT: findBy](#1213-select-findby)
     - [12.1.4. SELECT: find](#1214-select-find)
     - [12.1.5. SELECT: findAll](#1215-select-findall)
@@ -1321,10 +1321,16 @@ public function exemple2 (){
     return $this->render ('exemples_twig_boucles/exemple_2.html.twig', $vars);
 }
 
+
 ```
 
+**Note:** Cette solution n'est pas terrible car la transformation en array ne se fera pas proprement dans plein de cas (ex: si on a un objet qui contient d'autres objets, tel que dans le cas de Livre et Exemplaires). 
+En plus on ne peut pas utiliser les objets PHP dans les scripts JS, et si on utilise tout simplement json_encode (pour créer le JSON pour le client) on aura pas mal de problèmes (le plus important est que **json_encode encode uniquement les propriétés publiques des entités**).
+
+Heureusement on a de composants de Symfony consacrés à la **Serialisation**.  Regardez le chapitre consacré à ce sujer pour voir une solution propre.
+
 Pour lancer ce code la classe livre doit exister (juste pour cet
-exemple, créez la classe juste après la classe du controller :
+exemple, créez la classe juste après la classe du controller) :
 
 ```php
 // une classe ne devra jamais être ici, c'est juste pour l'exemple!!
@@ -2924,7 +2930,7 @@ Les opérations réalisées ont généré ce code dans les entités
 Observez aussi que **les méthodes spécifient les types de retour**.
 **Collection** est une interface de PHP qui assure que les objets qui
 l'implémentent soient Countables, Transversables et qu'on puisse les
-encoder en JSON avec json_encode.
+encoder en JSON avec json_encode (bien que de fois la seule solution est de **serialiser** les objets et les arrays avec les composants fournis par Symfony - voir chapitre )
 
 **self** est une manière d'accéder au nom de la classe (ça aurait pu
 être remplacé par le nom de la classe dans chaque cas où il apparait
@@ -3386,26 +3392,31 @@ dans nos repository pour réaliser des requêtes plus complexes**.
 
 <br>
 
-### 12.1.2. Serialization! (faire)
+### 12.1.2. Serialisation
 
-Add doc
+**Projet : ProjetModelSymfony**
+**Controller : SerialisationController**
 
-```php
-$json = $serializer->serialize(
-    $user,
-    'json', ['groups' => ['user','entreprise' /* if you add "user_detail" here you get circular reference */]
-);
+Tout le code est commenté.
 
-// choisir quoi ignorer dans la serialisation
+On sait qu'**on ne peut pas envoyer des objets PHP et les traiter dans les scripts de JS**.
 
-$json_pacientes = $serializer->serialize($arr_pacientes, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['visitas']]);
+La transformation en **array avec le casting** (même pas utilisable en JS, car ça reste du PHP) ou un simple **json_encode** (chaîne json) va nous poser de problèmes soiuvent, spécialement si on a des structures imbriquées (*Repertoire* qui contient de *Contacts*, par exemple).
 
-```
-https://symfony.com/doc/current/components/serializer.html#attributes-groups
+La serialisation est tout un sujet, car ce n'est pas si bête que **transformer en JSON** (on pourrait serialiser en xml, par exemple). Serialiser consiste à transformer un objet dans une chaîne de bytes... mais nous utilisons souvent le format de json. 
 
-Eviter référence circulaire:
+On peut créer nos propres serialisateurs pour encoder-decoder les objets de n'importe quelle manière, **mais ici on se comptente de pouvoir les encoder en JSON, les envoyer à la vue et les traiter en JS**. **C'est carrement sufissant pour la plupart de cas**.
 
-https://stackoverflow.com/questions/59268438/a-circular-reference-has-been-detected-when-serializing-the-object-of-class-app
+La doc. genérale se trouve ici: 
+
+https://symfony.com/doc/current/components/serializer.html
+
+
+La solution propre est de sérialiser les objets, les arrays et les arrays d'objets. 
+Dans notre cas de figure, **serialiser** sera crée une chaîne JSON contenant toutes les données de l'objet.
+
+
+
 
 <br>
 
