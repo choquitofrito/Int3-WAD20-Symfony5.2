@@ -4001,7 +4001,7 @@ On va créer et lancer une fixture pour l'entité **Livre** dans le projet **Pro
 1.  Installez le **support** pour les **fixtures**
 
 ```console
-composer require --dev doctrine/doctrine-fixtures-bundle
+composer require --dev orm-fixtures
 ```
 
 2.  **Créez la classe fixture** (nom: LivreFixtures)
