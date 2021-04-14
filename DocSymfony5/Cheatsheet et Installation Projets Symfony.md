@@ -219,3 +219,35 @@ Pour git reset:
 
 https://medium.com/charlottes-digital-web/how-and-when-to-use-git-reset-ec8088e0c811
 
+
+composer global symfony/
+
+https://docs.github.com/en/github/authenticating-to-github/updating-your-github-access-credentials
+
+
+
+## Composer et github:
+
+Pour effacer user-pass dans git:
+
+
+git config --global --unset user.password 
+
+
+Composer a besoin d'avoir accès à Github.
+
+- La config de composer pour s'authentifier dans github se trouve dans :
+
+C:\Users\YourUser\AppData\Roaming\Composer\auth.json
+
+Obtenir un token dans Github->Settings->Developer Settings->Personal access Tokens
+(selectionner au moins Repo, et donner un nom au token)
+
+{
+    "github-oauth": {
+        "github.com": "ici le token"
+    }
+}
+
+
+
