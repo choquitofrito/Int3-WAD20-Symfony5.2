@@ -7,9 +7,9 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Exemplaire;
 use App\Entity\Livre;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use App\DataFixtures\LivreFixture;
+use App\DataFixtures\LivreFixtures;
 
-class ExemplaireFixture extends Fixture implements DependentFixtureInterface
+class ExemplaireFixtures extends Fixture implements DependentFixtureInterface
 {
     
     public function load(ObjectManager $manager) 
@@ -34,7 +34,7 @@ class ExemplaireFixture extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            LivreFixture::class
+            LivreFixtures::class
         ];
     }    
 

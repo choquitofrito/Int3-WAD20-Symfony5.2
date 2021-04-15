@@ -8,7 +8,7 @@ use App\Entity\Client;
 use App\Entity\Adresse;
 use Faker;
 
-class ClientAdresseFixture extends Fixture
+class ClientAdresseFixtures extends Fixture
 {
     // on peux complexifier la création des fixtures mais on va le faire très simple ici
     public function load(ObjectManager $manager)
