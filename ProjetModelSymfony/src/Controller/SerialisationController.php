@@ -67,8 +67,7 @@ class SerialisationController extends AbstractController
                 [AbstractNormalizer::IGNORED_ATTRIBUTES => ['exemplaires']]
             );
 
-            dd ($jsonLivres);
-
+            
             
             // Les deux lignes qui suivent sont une sorte de hack car le format de JSON crée par le serializer ne nous convient pas tout à fait
             // Ces deux lignes créent un format JSON propre, car ce serializer utilises de "" 
@@ -88,16 +87,21 @@ class SerialisationController extends AbstractController
     }
 
 
-    // Serialisation avec AJAX
+
+    ///////////////////////////////////////////
+
+
+
+    // Serialisation avec AJAX. Action qui affiche un bouton: quand on clique on fait une requête AXIOS au serveur
+    // Le serveur envoie une JSonResponse qu'on parse et on affiche en JS.
+    // Voici la façon de "passer des objets de PHP à JS" 
     #[Route('/serialisation/affiche/boutons/div/ajax', name: 'affiche_boutons_div_ajax')]
     public function afficheBoutonsDivAjax(): Response
     {
         return $this->render('serialisation/affiche_boutons_div_ajax.html.twig');
     }
 
-
-
-    // Envoyer les livres encodés en JSON serialisés
+    // Envoyer les livres encodés en JSON serialisés. TRÈS SIMPLE avec JSonResponse
     #[Route('/serialisation/action4', name: 'action4')]
     public function action4(SerializerInterface $serializer): Response
     {
