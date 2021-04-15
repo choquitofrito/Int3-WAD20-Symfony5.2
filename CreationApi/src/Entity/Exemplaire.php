@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ExemplaireRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Livre;
+use App\Entity\Emprunt;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ExemplaireRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ExemplaireRepository::class)
@@ -21,9 +24,10 @@ class Exemplaire
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("livre:read")
      */
     private $etat;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="exemplaires")
      */

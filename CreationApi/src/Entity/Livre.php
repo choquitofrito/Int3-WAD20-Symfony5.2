@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\LivreRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LivreRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
@@ -34,6 +36,9 @@ class Livre
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("livre:read")
+     * @Assert\NotBlank()
+     * @Assert\Length(min=3, minMessage="Titre trop court!")
      */
     private $titre;
 
@@ -59,6 +64,7 @@ class Livre
 
     /**
      * @ORM\OneToMany(targetEntity=Exemplaire::class, mappedBy="livre",cascade={"persist","remove"})
+     * @Groups("livre:read")
      */
     private $exemplaires;
 

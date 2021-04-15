@@ -7,7 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Exemplaire;
 use App\Entity\Livre;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use App\DataFixtures\LivresFixture;
+use App\DataFixtures\LivreFixtures;
 
 class ExemplaireFixtures extends Fixture implements DependentFixtureInterface
 {

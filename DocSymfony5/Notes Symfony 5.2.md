@@ -3394,17 +3394,16 @@ dans nos repository pour réaliser des requêtes plus complexes**.
 
 ### 12.1.2. Serialisation
 
-**Projet : ProjetModelSymfony** <br>
-
-**Controller : SerialisationController**
-
-Tout le code est commenté.
 
 On sait qu'**on ne peut pas envoyer des objets PHP et les traiter dans les scripts de JS**.
 
-La transformation en **array avec le casting** (même pas utilisable en JS, car ça reste du PHP) ou un simple **json_encode** (chaîne json) va nous poser de problèmes soiuvent, spécialement si on a des structures imbriquées (*Repertoire* qui contient de *Contacts*, par exemple).
+La transformation en **array avec le casting** (même pas utilisable en JS, car ça reste du PHP) ou un simple **json_encode** (chaîne json) va nous poser de problèmes souvent, spécialement si on a des structures imbriquées (*Repertoire* qui contient de *Contacts*, par exemple). En plus, **json_encode n'encode pas les propriétés privates**
 
-La serialisation est tout un sujet, car ce n'est pas si bête que **transformer en JSON** (on pourrait serialiser en xml, par exemple). Serialiser consiste à transformer un objet dans une chaîne de bytes... mais nous utilisons souvent le format de json. 
+La serialisation est un sujet large. Serialiser consiste **à transformer un objet dans une chaîne de bytes**. Normalement on prend un array d'objets (où un objet) et on crée une chaîne JSON (bytes qui représentent de caractères)
+
+**Array d'objets -> Arrays Simples (associatifs) -> Chaîne JSON**
+
+Le prémier pas est la **Normalisation** et le deuxième est **l'encodage JSON**. L'ensemble des deux est la **Serialisation**
 
 On peut créer nos propres serialisateurs pour encoder-decoder les objets de n'importe quelle manière, **mais ici on se comptente de pouvoir les encoder en JSON, les envoyer à la vue et les traiter en JS**. **C'est carrement sufissant pour la plupart de cas**.
 
@@ -3412,10 +3411,19 @@ La doc. genérale se trouve ici:
 
 https://symfony.com/doc/current/components/serializer.html
 
+Vous avez des exemples dans les projets:
 
-La solution propre est de sérialiser les objets, les arrays et les arrays d'objets. 
+* CreationApi - controller LivresController, annotations dans l'entité Livre (@Groups)
+
+Ici on utilise la fonction **$this->json** qui serialise (normalise et encode) d'un coup
+
+* ProjetModel - controller : LivresController
+
+Ici on voit les deux pas de la serialisation. Tout le code est commenté (normalisation et encodage)
+
 Dans notre cas de figure, **serialiser** sera crée une chaîne JSON contenant toutes les données de l'objet.
 
+Le serveur enverra en général un objet JSonResponse au client, qui sera souvent traité en JS.
 
 
 
@@ -6003,7 +6011,10 @@ public function exempleAjaxAxiosFormEntiteTraiter(Request $req, SerializerInterf
     
     // Note: Si on avait besoin de l'entité en JSON on doit la serialiser avant de l'envoyer: 
     $livreJson = $serializer->serialize($livre, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['exemplaires']]);
-    
+    // Important: nous pourrions utiliser un système équivalent pour la serialisation: 
+    // Projet CreationApi, controller LivresController, annotations entité Livre (Groups)
+
+
     return new JsonResponse([
         'message' => 'Tout ok!',
         'noms' => ['Lola', 'Iza'],

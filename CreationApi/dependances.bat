@@ -6,3 +6,4 @@ composer require symfony/apache-pack
 composer require symfony/maker-bundle --dev
 composer require --dev orm-fixtures
 composer require --dev doctrine/doctrine-fixtures-bundle
+composer require fzaninotto/faker
