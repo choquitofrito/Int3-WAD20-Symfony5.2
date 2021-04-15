@@ -45,26 +45,11 @@ La version sera toujours **64-bits** sauf si vous avez installé XAMPP dans une 
  Créez la section **\[XDebug\]** contenant les lignes suivantes (à la fin du fichier php.ini, par exemple). Le fichier **php\_xdebug.dll** est le fichier que vous avez téléchargé :
 
 ```apache
-[XDebug]
 zend_extension = "C:\xampp\php\ext\php_xdebug.dll"
-xdebug.remote_host = "127.0.0.1"
-xdebug.remote_enable = 1
-xdebug.remote_handler = "dbgp"
-xdebug.idekey = netbeans-xdebug
-xdebug.profiler_append = 0
-xdebug.profiler_enable = 0
-xdebug.profiler_enable_trigger = 0
-xdebug.profiler_output_dir = "c:/xampp/tmp/xdebug"
-xdebug.profiler_output_name = "cachegrind.out.%t-%s"
-xdebug.remote_autostart = 0
-xdebug.remote_connect_back = 0
-xdebug.remote_host = "127.0.0.1"
-xdebug.remote_port = 9000
-xdebug.remote_handler = "dbgp"
-xdebug.remote_mode = req
-xdebug.remote_log = "c:/xampp/tmp/xdebug/xdebug_remot.log"
-xdebug.show_local_vars = 9
-xdebug.trace_output_dir = "c:/xampp/tmp"
+;xdebug.mode = debug
+;xdebug.start_with_request = yes
+;xdebug.client_port = 9090
+;xdebug.remote_host = "127.0.0.1"
 ```
  **Note** : cette section peut exister déjà. Si c'est le cas, mettez-la à
  jour. Rajustez les chemins selon vos besoins
