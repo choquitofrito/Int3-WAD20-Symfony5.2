@@ -3394,7 +3394,8 @@ dans nos repository pour réaliser des requêtes plus complexes**.
 
 ### 12.1.2. Serialisation
 
-**Projet : ProjetModelSymfony**
+**Projet : ProjetModelSymfony** <br>
+
 **Controller : SerialisationController**
 
 Tout le code est commenté.

@@ -183,7 +183,15 @@ Faire un commit
 git commit -m "navbar rajoutée"
 ```
 
-
+Rétablir des fichiers modifiés (avant commit)
+= Enlever du Stage
+```
+git restore .
+```
+ou
+```
+git restore nomDuFichier
+```
 
 Lister les remotes:
 ```console
