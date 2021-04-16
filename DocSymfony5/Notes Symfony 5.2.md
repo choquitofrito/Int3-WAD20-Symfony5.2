@@ -145,7 +145,7 @@
       - [Exercices : Ajax avec Axios](#exercices--ajax-avec-axios)
   - [21.17. Ajax et Axios avec script externe au Twig (sans Webpack)](#2117-ajax-et-axios-avec-script-externe-au-twig-sans-webpack)
   - [21.18. AJAX en Symfony (Vanilla JS)](#2118-ajax-en-symfony-vanilla-js)
-  - [21.19. Utilisation de blocs dans twig avec AJAX](#2119-utilisation-de-blocs-dans-twig-avec-ajax)
+  - [21.19. Utilisation de blocs dans twig avec AJAX (Vanilla)](#2119-utilisation-de-blocs-dans-twig-avec-ajax-vanilla)
       - [Exercices : utilisation d'AJAX Vanilla](#exercices--utilisation-dajax-vanilla)
   - [21.20. DateTime et datepicker (Bootstrap)](#2120-datetime-et-datepicker-bootstrap)
 - [22. Response JSON en Symfony](#22-response-json-en-symfony)
@@ -6042,6 +6042,7 @@ Ce champ pourra ou pas être caché. Le but est de l'envoyer sans que ça soit v
 
 Dans **AnnexeAxiosController** du **ProjetFormulairesSymfony** vous avez plusieurs exemples d'utilisation d'Axios, pour de situations différentes.
 
+**(EN COURS: Action qui remplace le contenu d'un div avec le contenu complet d'une autre vue (ex: les filtres dans un site WEB))**
 
 
 ## 21.16. Utilisation de blocs dans twig avec AJAX
@@ -6285,7 +6286,7 @@ public function exemple1Traitement(Request $requeteAjax)
 <br>
 
 
-## 21.19. Utilisation de blocs dans twig avec AJAX
+## 21.19. Utilisation de blocs dans twig avec AJAX (Vanilla)
 
 Il s'agit juste d'une combinaison de master page + AJAX, rien de
 nouveau.
