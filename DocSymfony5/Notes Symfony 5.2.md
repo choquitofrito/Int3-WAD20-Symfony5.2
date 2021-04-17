@@ -178,6 +178,7 @@
   - [29.2. Création d'un serveur virtuel (virtual host) pour un projet en Windows](#292-création-dun-serveur-virtuel-virtual-host-pour-un-projet-en-windows)
       - [Exercice : création d'un projet contenant l'application skeleton](#exercice--création-dun-projet-contenant-lapplication-skeleton)
 - [30. Intégration de boutons de paiement Paypal](#30-intégration-de-boutons-de-paiement-paypal)
+- [31. (EN COURS, A NE PAS SUIVRE) Deserialization (transformation de JSON, CSV... en objets)](#31-en-cours-a-ne-pas-suivre-deserialization-transformation-de-json-csv-en-objets)
 - [END](#end)
   - [jQuery](#jquery)
 - [4. Installation de packages dans un projet Symfony Flex](#4-installation-de-packages-dans-un-projet-symfony-flex)
@@ -8135,6 +8136,357 @@ Vous devez :
 7.  Cliquez en bas de la page sur "Add a Smart Payment Buttons
     integration to your website"
 8.  Suivez les instructions. Conseil : quand vous allez devoir cliquez dans **Log into the Developer Dashboard**, faites-le dans une nouvelle fenêtre (clic droit). Le code proposé par Paypal sera intégré dans la vue (voir exemple dans le le projet)
+
+
+
+# 31. (EN COURS, A NE PAS SUIVRE) Deserialization (transformation de JSON, CSV... en objets)
+
+Lisez le chapitre consacré à la Serialisation. On va réaliser l'opération inverse: transformer du JSON en objets.
+
+Serialiser et deserialiser nos propres objets n'est pas tout le temps une tâche compliquée, mais quand on reçoit une chaîne JSON d'un API et on doit créer nos propres entités ... ça peut devenir très difficil. Et souvent la structure de l'API n'a rien à voir avec celle de nos entités...
+
+Ici on montre un exemple de ces difficultés et de comment les surmonter, car cette situation (adapter la reponse d'un API aux entités)
+ arrive dans plein de cas!! 
+
+**Exemple**: adaptation d'un résultat de l'API **countriesnow**
+(https://www.countriesnow.com/) à un modèle contenant deux entités liées.
+
+
+Nous avons :
+
+- un modèle avec deux entités: **Country** et **City**. Les deux ont un nom et une description comme propriétés. Il y a une relation OneToMany (une **Country** a plusieurs **City**)
+
+- une API qui nous envoie du JSON contenant des noms de pays et de villes
+
+https://countriesnow.space/api/v0.1/countries
+
+nous donne : 
+
+```json
+"error": false,
+    "msg": "countries and cities retrieved",
+    "data": [
+        {
+            "country": "Afghanistan",
+            "cities": [
+                "Herat",
+                "Kabul",
+                "Kandahar",
+                "Molah",
+                "Rana",
+                "Shar",
+                "Sharif",
+                "Wazir Akbar Khan"
+            ]
+        },
+        {
+            "country": "Albania",
+            "cities": [
+                "Elbasan",
+                "Petran",
+                "Pogradec",
+                "Shkoder",
+                "Tirana",
+                "Ura Vajgurore"
+            ]
+        },
+ .
+.
+.
+```
+
+
+Nous voulons, pour quelque raison que ce soit (ex: stocker dans une BD), obtenir les données de l'API et remplir les entités Country et City. 
+
+Nous devons **désérialiser** mais lorsque nous vérifions les données JSON on voit :
+
+- une clé **erreur** (à ignorer pour le moment)
+- une clé **msg** (à ignorer pour le moment)
+- une clé **data**:
+
+  * data contient un tableau d'objets (pas n'importe quelle classe, c'est juste JSON)
+  * chaque objet contient un string (nom du pays) et un tableau (dont chaque élément est le nom d'une ville de ce pays)
+
+Ouff ... nous voulons juste un tableau d'objets Country, chacun contenant une collection (tableau ou vecteur ou autre) d'objets City, mais notre JSON n'est pas du tout adapté!
+
+**On veut lancer l'action de deserialiser mais c'est impossible car on n'a aucune classe dont la structure corresponde à la structure de la chaîne JSON!**
+
+```php
+$countries = $serializer->deserialize($response->getContent(),QuelleClasseIci??::class,"json");
+```
+
+Il est donc clair que la désérialisation nécessitera une certaine personnalisation.
+On doit créer des entités et un mapping (correspondance) entre le JSON et nos entités. Le but final est de pouvoir faire: 
+
+```php
+$countries = $serializer->deserialize($response->getContent(),ResponseContainerCountry::class,"json");
+```
+
+et avoir tout à l'interieur! (un array de Country dont chaque objet contient des objets City).
+
+Allons-y!
+
+
+**1. Les entités** (assistant)
+
+**L'entité Country** 
+
+<details>
+  <summary>
+  App\Entity\Country.php
+  </summary>
+
+```php
+<?php
+
+namespace App\Entity;
+
+use App\Repository\CountryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass=CountryRepository::class)
+ */
+class Country
+{
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\OneToMany(targetEntity=City::class, mappedBy="country")
+     */
+    private $cities;
+
+    public function __construct()
+    {
+        $this->cities = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|City[]
+     */
+    public function getCities(): Collection
+    {
+        return $this->cities;
+    }
+
+    public function addCity(City $city): self
+    {
+        if (!$this->cities->contains($city)) {
+            $this->cities[] = $city;
+            $city->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCity(City $city): self
+    {
+        if ($this->cities->removeElement($city)) {
+            // set the owning side to null (unless already changed)
+            if ($city->getCountry() === $this) {
+                $city->setCountry(null);
+            }
+        }
+
+        return $this;
+    }
+}
+```
+</details>
+
+**L'entité City:**
+
+<details>
+  <summary>
+  App\Entity\City.php
+  </summary>
+
+```php
+<?php
+
+namespace App\Entity;
+
+use App\Repository\CityRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass=CityRepository::class)
+ */
+class City
+{
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="cities")
+     */
+    private $country;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+}
+
+
+```
+</details>
+
+
+**2. Création d'une classe Container**
+
+Puisque nous avons un tableau externe (**data**) qui contient un tableau de pays, nous allons créer une classe simple (non liée à Doctrine) qui contiendra tous les pays: **ResponseContainerCountry**. 
+
+
+
+<details>
+  <summary>
+  App\Responses\ResponseContainerCountry.php
+  </summary>
+
+```php
+<?php
+
+namespace ReponsesAPI;
+
+use App\Entity\Country;
+
+class ResponseContainerCountry {
+
+    private $countryArray;
+
+    
+    public function getCountryArray()
+    {
+        return $this->countryArray;
+    }
+
+    
+    public function setCountryArray($countryArray)
+    {
+        $this->countryArray = $countryArray;
+
+        return $this;
+    }
+}
+
+
+```
+</details>
+
+**3. Correspondance entre le JSON et les entités:**
+
+Nous faisons les mapping en utilisant des annotations :
+
+**@SerializedName**
+
+**@var**
+
+**@param**
+
+**@return**
+
+* Prémier mapping : **data** vers un array d'objets **Country**
+  
+  data est un array d'objets, $countryArray aussi. On s'inquietera plus tard sur la structure interne.
+
+```php
+.
+.
+use Symfony\Component\Serializer\Annotation\SerializedName;
+.
+.
+
+```
+
+
+
+
+```php
+
+```
+
+
+
 
 
 
