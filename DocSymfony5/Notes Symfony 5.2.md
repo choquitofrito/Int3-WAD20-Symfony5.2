@@ -3619,13 +3619,24 @@ Documentation :
 
     L'entité devient "gérée" (**"managed"**)
 
+
 -   Quand **on fait un select de la BD, les entités obtenues se trouvent directement dans l'unité** **de** **travail** et on n'a pas besoin de faire **persist**. Par contre, si on crée une entité juste avec new, elle fera partie de l'unité de travail uniquement quand on lancera **persist** pour la mettre dans l'unités de travail
 
 -   Si on veut **enlever les entités de l'unité de travail** et les rendre indépendantes, on utilise **clear**. L'unité de travail sera vidée. Les objets deviennent indépendants de l'entity manager et les modifications n'auront pas d'effet sur la BD même si on lance **flush**
 
 -   **persist** rajoute une entité à l'unité de travail et rend cette instance "gérée" (c'est-à-dire que les futures mises à jour de l'entité seront suivies et la BD sera modifié quand on fera **flush**).
 
--   **refresh** recharge le contenu de l'entité de la BD. Si on obtient une entité de la BD et on la modifie, en lançant refresh l'entité sera à nouveau lue de la BD
+**Attention**: si une entité 'contient' d'autres entités (ex: un Livre que contient des Exemplaires), le persist de la prèmiere (persist du Livre) ne fera automatiquement le persist des autres (persist des Exemplaires). 
+On a deux choix: faire persist de chaque entité (persist du Livre et de chaque Exemplaire... trop de lignes de code!) ou rajouter **cascade-persist** dans la définition de l'entité (l'opération est expliquée dans la section 14 est elle **très simple** ):
+
+```php
+/**
+  * @ORM\OneToMany(targetEntity=Exemplaire::class, mappedBy="livre",cascade={"persist"})
+  */
+```
+
+
+-   **refresh** (pas indispensable si vous n'avez pas le temps) recharge le contenu de l'entité de la BD. Si on obtient une entité de la BD et on la modifie, en lançant refresh l'entité sera à nouveau lue de la BD
 
 -   Chaque fois qu'on appelle **flush**, Doctrine vérifie l'unité de travail et synchronise les objets avec la BD (change la BD en fonction du contenu des objets qui se trouvent dans l'unité de travail).
 
@@ -3686,7 +3697,7 @@ On travaillera sur un nouveau controller: **ExempleCascadeController**.
 
 Nous avons plusieurs possibilités :
 
-**cascade-persist** : Si on a une entité qui contient de références à d'autres entités, et nous modifions/rajoutons ces dernières, nous allons devoir faire uniquement **persist** sur la première et Doctrine fera persist sur toutes les entités associées.
+**cascade-persist** : Si on a une entité qui contient des objets d'autres entités (ex: un Livre qui contient des Exemplaires), et nous modifions/rajoutons ces dernières (ex: on rajoute un Exemplaire au Livre, on modifie un des Exemplaires du Livre), nous allons devoir faire uniquement **persist** **sur la première** et Doctrine fera persist sur toutes les entités associées.
 
 Exemple : nous obtenons un Livre auquel on rajoute des exemplaires. Si nous faisons **persist** sur le Livre, l'opération sera transmise en cascade à tous les exemplaires. Autrement on devrait lancer **persist** sur chaque exemplaire.
 
