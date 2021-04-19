@@ -63,7 +63,7 @@ class SerialisationGroupsController extends AbstractController
         ]);
 
         
-        $personneJsonBase = $serializer->serialize($personneObjet, 'csv', ['groups'=>'info_base']);
+        $personneJsonBase = $serializer->serialize($personneObjet, 'json', ['groups'=>'info_base']);
         dump ($personneJsonBase);
         $personneJsonComplete = $serializer->serialize($personneObjet, 'json', ['groups'=>'info_complete']);
         dump ($personneJsonComplete);
