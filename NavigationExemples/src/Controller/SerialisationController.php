@@ -65,7 +65,7 @@ class SerialisationController extends AbstractController
         // pour encoder/decoder : passer du JSON à array et à l'invers (ici on va pouvoir choisir entre Json et Xml)                          
         $encoders = [new JsonEncoder(), new XmlEncoder()];
 
-        $serialiser = new Serializer($normalizers, $encoders);
+        $serializer = new Serializer($normalizers, $encoders);
 
         $film1 = new Film([
             'titre' => 'La Haut',
@@ -78,9 +78,9 @@ class SerialisationController extends AbstractController
         dump($film1);
         // 1. Serialisation
         dump("1. Film objet en JSON et en XML:");
-        $filmJson = $serialiser->serialize($film1, 'json');
+        $filmJson = $serializer->serialize($film1, 'json');
         dump($filmJson);
-        $filmXML = $serialiser->serialize($film1, 'xml');
+        $filmXML = $serializer->serialize($film1, 'xml');
         dump($filmXML);
 
 
@@ -88,21 +88,21 @@ class SerialisationController extends AbstractController
     }
 
 
-    // route qui affiche un bouton: appel AJAX et affichage du résultat de "serialiser_traitement"
+    // route qui affiche un bouton: appel AJAX et affichage du résultat de "serializer_traitement"
     #[Route('/useSerialiserAffichage')]
     public function useSerialiserAffichage()
     {
-        return $this->render("serialisation/use_serialiser_affichage.html.twig");
+        return $this->render("serialisation/use_serializer_affichage.html.twig");
     }
 
     // action qui serialise un objet (avec un Serializer) et le renvoie en JSON
     // LISEZ ATTENTIVEMENT LES COMMENTAIRES 
-    #[Route('/useSerialiserTraitement', name: 'serialiser_traitement')]
+    #[Route('/useSerialiserTraitement', name: 'serializer_traitement')]
     public function useSerialiserTraitement()
     {
         $normalizers = [new ObjectNormalizer()];
         $encoders = [new JsonEncoder(), new XmlEncoder()];
-        $serialiser = new Serializer($normalizers, $encoders);
+        $serializer = new Serializer($normalizers, $encoders);
 
         $film1 = new Film([
             'titre' => 'La Haut',
@@ -111,11 +111,11 @@ class SerialisationController extends AbstractController
         ]);
 
         // ces deux lignes: 
-        $filmJson = $serialiser->serialize($film1, 'json');
+        $filmJson = $serializer->serialize($film1, 'json');
         return new Response($filmJson);
 
         // auront le même effet que:
-        // return $this->json ($film1); // appel au serialiser avec ObjectNormalizer + json_encode (params. par défaut)
+        // return $this->json ($film1); // appel au serializer avec ObjectNormalizer + json_encode (params. par défaut)
 
         // mais pas le même effet que:
         // return new JsonResponse($film1); // car new JsonResponse appelle uniquement à json_encode. Dans la vue on obtient un objet vide, car 
@@ -166,7 +166,7 @@ class SerialisationController extends AbstractController
         dump("Json de départ (car. extra à cause du dump) :");
         dump($filmJson);
 
-        // La config. est la même que pour serialiser
+        // La config. est la même que pour serializer
 
         // pour normalizer/denormalizer : passer d'array à objet et à l'invers 
         $normalizers = [new ObjectNormalizer()];
@@ -174,8 +174,8 @@ class SerialisationController extends AbstractController
         $encoders = [new JsonEncoder(), new XmlEncoder()];
 
         // à la fin ce sont juste deux lignes de code!
-        $serialiser = new Serializer($normalizers, $encoders);
-        $filmObject = $serialiser->deserialize($filmJson, Film::class, 'json');
+        $serializer = new Serializer($normalizers, $encoders);
+        $filmObject = $serializer->deserialize($filmJson, Film::class, 'json');
 
         dump("Objet d'arrivée:");
         dump($filmObject);

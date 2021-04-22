@@ -1,0 +1,8 @@
+Je n'hérite pas du base.html.twig.
+
+Je suis juste une vue incrustée ici qu'utilise les données reçues du controller.
+
+{% for film in films %}
+    <h6>{{ film.titre }}</h6>
+    <h6>{{ film.duree }}</h6>
+{% endfor %}
