@@ -73,7 +73,7 @@ class ExemplesAjaxAxiosController extends AbstractController
     #[Route("/exemples/ajax/axios/form/entite/traiter", name: "exemple_axios_form_entite_traiter")]
     public function exempleAjaxAxiosFormEntiteTraiter(Request $req, SerializerInterface $serializer)
     {
-         // ATTENTION à comment créer l'entité à partir du FormData!!!
+        // ATTENTION à comment créer l'entité à partir du FormData!!!
         // Quand on utilise un FormData on doit passer par handleRequest, car FormData envoie tout en string
         // et nous avons besoin de DateTime pour le Dates. HandleRequest fait l'hydrate proprement pour nous
         // C'est le même code que quand on traite un form sans Ajax, juste qu'ici l'affichage
@@ -92,28 +92,39 @@ class ExemplesAjaxAxiosController extends AbstractController
         );
 
         $formulaireLivre->handleRequest($req);
-        
+
         // Maintenant il faut envoyer quoi qui ce soit à la page qui appelle. Deux cas de figures standards,
         // où le controller renvoie: 
-        
+
         // 1. Juste de données: un simple JSON (messages, objets....) à incruster dans un div de form_entite_afficher.html.twig. 
         // Pas de recharge d'URL
-        
+
         // Note: Si on avait besoin de l'entité en JSON on doit la serialiser avant de l'envoyer: 
         $livreJson = $serializer->serialize($livre, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['exemplaires']]);
-        
+        // On rajoute les exemplaires dans IGNORED_ATTRIBUTES pour éviter les références circulaires
+        // (livre->exemplaires->livre->exemplaires...)
+        // Important: nous pourrions utiliser un système équivalent pour la serialisation avec des annotations, ou utiliser ATTRIBUTES au lieu d'IGNORED_ATTRIBUTES et sélectionner ce qu'on veut serialiser : 
+        // Projet CreationApi, controller LivresController, annotations entité Livre (Groups)
+
+        // ici on a envoyé une JsonResponse où on inclut une clé-valeur livre. 
+        // $livreJson est déjà du JSON. Le fait de le renvoyer dans 
+        // une JSonResponse l'encodera encore une fois! 
+        // on devra alors lancer JSON.parse dans la vue pour revertir ce changement (voir code du "then") 
+
+        // On aurait pu renvoyer juste new Response ($livreJson) mais on doit envoyer aussi message et noms alors on a envoyé une JSonReponse.
+        // Le ré-encodage du json du livre est défait dans la vue (JSON.parse)
         return new JsonResponse([
             'message' => 'Tout ok!',
             'noms' => ['Lola', 'Iza'],
-            'livre'=> $livreJson
-            ]);
-            
+            'livre' => $livreJson // attention au code du "then" dans la vue
+        ]);
+
         // 2. Le rendu d'une autre view, à incruster dans un div de form_entite_afficher.html.twig. 
         // Pas de recharge d'URL non plus!
         // return $this->renderView ("/exemples_ajax_axios/autre.html.twig", $vars) 
-            
-        }
-        
+
+    }
+
 
     // exemple d'utilisation d'AJAX avec de blocs ("master page")
     #[Route("/exemples/ajax/axios/exemple1/affichage/master/page")]

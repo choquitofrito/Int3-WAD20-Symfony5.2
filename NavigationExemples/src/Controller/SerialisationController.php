@@ -83,13 +83,13 @@ class SerialisationController extends AbstractController
         $filmXML = $serializer->serialize($film1, 'xml');
         dump($filmXML);
 
-
+        // ici vous envoyer une réponse au serveur.
         dd();
     }
 
 
     // route qui affiche un bouton: appel AJAX et affichage du résultat de "serializer_traitement"
-    #[Route('/useSerialiserAffichage')]
+    #[Route('/useSerialiserAffichage', name: 'serializer_affichage')]
     public function useSerialiserAffichage()
     {
         return $this->render("serialisation/use_serializer_affichage.html.twig");
@@ -112,6 +112,7 @@ class SerialisationController extends AbstractController
 
         // ces deux lignes: 
         $filmJson = $serializer->serialize($film1, 'json');
+        // on ne doit plus envoyer une JSonResponse car le serialiser a crée déjà du JSON
         return new Response($filmJson);
 
         // auront le même effet que:

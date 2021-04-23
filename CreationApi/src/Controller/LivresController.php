@@ -27,6 +27,7 @@ class LivresController extends AbstractController
     {
         $livres = $rep->findAll();
 
+        // $this->json est expliqué dans SerialisationController (projet NavigationExemples)
         $response = $this->json($livres, 200, [], ['groups' => 'livre:read']);
 
         return $response;

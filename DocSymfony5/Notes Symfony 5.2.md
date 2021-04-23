@@ -3412,19 +3412,27 @@ La doc. genérale se trouve ici:
 
 https://symfony.com/doc/current/components/serializer.html
 
-Vous avez des exemples dans les projets:
 
-* CreationApi - controller LivresController, annotations dans l'entité Livre (@Groups)
+Vous avez des exemples dans le projet **NavigationExemples** (SerialisationController). 
 
-Ici on utilise la fonction **$this->json** qui serialise (normalise et encode) d'un coup
+Il y a déjà une explication qui fonctionne pour les cas normaux (probablement tous vos cas).
+
+Si vous voulez directement l'utiliser, suivez l'exemple des actions : 
+
+**serializer_affichage** et **serializer_traitement** (names)
+
+On verra en cours le projet **NavigationExemples** pour l'explication totale de la serialisation et la déserialisation.
+
 
 * ProjetModel - controller : LivresController
+
+Le projet CreationApi est en cours, ignorez-le pour le moment.
+
 
 Ici on voit les deux pas de la serialisation. Tout le code est commenté (normalisation et encodage)
 
 Dans notre cas de figure, **serialiser** sera crée une chaîne JSON contenant toutes les données de l'objet.
 
-Le serveur enverra en général un objet JSonResponse au client, qui sera souvent traité en JS.
 
 
 
@@ -6023,10 +6031,18 @@ public function exempleAjaxAxiosFormEntiteTraiter(Request $req, SerializerInterf
     
     // Note: Si on avait besoin de l'entité en JSON on doit la serialiser avant de l'envoyer: 
     $livreJson = $serializer->serialize($livre, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['exemplaires']]);
-    // Important: nous pourrions utiliser un système équivalent pour la serialisation: 
-    // Projet CreationApi, controller LivresController, annotations entité Livre (Groups)
+    // On rajoute les exemplaires dans IGNORED_ATTRIBUTES pour éviter les références circulaires
+    // (livre->exemplaires->livre->exemplaires...)
+    // Important: nous pourrions utiliser un système équivalent pour la serialisation avec des annotations, ou utiliser ATTRIBUTES au lieu d'IGNORED_ATTRIBUTES et sélectionner ce qu'on veut serialiser : 
+    
 
+    // ici on a envoyé une JsonResponse où on inclut une clé-valeur livre. 
+    // $livreJson est déjà du JSON. Le fait de le renvoyer dans 
+    // une JSonResponse l'encodera encore une fois! 
+    // on devra alors lancer JSON.parse dans la vue pour revertir ce changement (voir code du "then") 
 
+    // On aurait pu renvoyer juste new Response ($livreJson) mais on doit envoyer aussi message et noms alors on a envoyé une JSonReponse.
+    // Le ré-encodage du json du livre est défait dans la vue (JSON.parse)
     return new JsonResponse([
         'message' => 'Tout ok!',
         'noms' => ['Lola', 'Iza'],
@@ -6034,13 +6050,60 @@ public function exempleAjaxAxiosFormEntiteTraiter(Request $req, SerializerInterf
         ]);
         
     // 2. Le rendu d'une autre view, à incruster dans un div de form_entite_afficher.html.twig. 
-    // Pas de recharge d'URL non plus!
+    // Pas de recharge d'URL non plus! Exemple dans le projet NavigationExemples -> NavigationController
     // return $this->renderView ("/exemples_ajax_axios/autre.html.twig", $vars) 
         
     }
-
+}
 ```
+La vue : form_entite_afficher.html.twig (attention au "then")
+```twig
+{% extends 'base.html.twig' %}
 
+{% block body %}
+
+{{ form_start (formulaireLivre)}}
+<button id="envoyer">Envoyer</button>
+{{ form_end (formulaireLivre)}}
+
+<div id="divContenu"></div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+envoyer.addEventListener ("click", (event) => {
+    event.preventDefault ();
+
+    axios ({
+        url : '{{ path ("exemple_axios_form_entite_traiter") }}',
+        method : 'POST',
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: new FormData (formulaireLivre)
+    })
+    .then (function (response){
+        console.log (response.data);
+        // on affiche le resultat dans le div
+        donnees = response.data;
+        console.log (donnees.livre);
+        // On doit parser l'objet Livre car il a été serialisé (transformé en JSON)
+        // et puis encore encodé à cause de l'appel à JSonResponse (qui ré-encode en JSON)
+        divContenu.innerHTML = donnees.message + " " + donnees.noms[1] + " " + JSON.parse(donnees.livre).titre;
+
+    })
+    .catch (function (error){
+        console.log (error);
+    });
+});
+</script>
+
+
+
+{% endblock %}
+```
 
 <br>
 

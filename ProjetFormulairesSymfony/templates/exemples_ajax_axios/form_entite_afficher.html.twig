@@ -29,7 +29,8 @@ envoyer.addEventListener ("click", (event) => {
         // on affiche le resultat dans le div
         donnees = response.data;
         console.log (donnees.livre);
-        // attention à parser le JSON si on le reçoit du controller (ex: objet serialisé)
+        // On doit parser l'objet Livre car il a été serialisé (transformé en JSON)
+        // et puis encore encodé à cause de l'appel à JSonResponse (qui ré-encode en JSON)
         divContenu.innerHTML = donnees.message + " " + donnees.noms[1] + " " + JSON.parse(donnees.livre).titre;
 
     })
