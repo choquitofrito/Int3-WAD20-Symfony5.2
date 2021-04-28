@@ -13,21 +13,21 @@ use Symfony\Component\HttpFoundation\Request;
 
 
 
-
-class NavigationPaginationController extends AbstractController
+// En cours
+class NavigationPaginationAjaxController extends AbstractController
 {
 
 
     // lancez cette route pour commencer. Elle contient une nav
-    #[Route('/navigation/pagination', name: 'navigation_pagination')]
+    #[Route('/navigation/pagination/ajax', name: 'navigation_pagination_ajax')]
     public function index(): Response
     {
    
-        return $this->render('navigation_pagination/index.html.twig');
+        return $this->render('navigation_pagination_ajax/index.html.twig');
     }
 
     // lancez cette route pour commencer. Elle contient une nav
-    #[Route('/contenu/base', name: 'contenu_base')] // on peut injecter un repo si on le veut
+    #[Route('/contenu/base/ajax', name: 'contenu_base_ajax')] // on peut injecter un repo si on le veut
     public function contenuBase(FilmRepository $rep, Request $req): Response
     {
         $data = new SearchData(); // c'est une classe qui représente le form, pas une entité
@@ -50,7 +50,7 @@ class NavigationPaginationController extends AbstractController
         $vars = ['filmsFiltres' => $filmsFiltres,
                 'form' => $form->createView()];
 
-        return $this->render('navigation_pagination/contenu_base.html.twig', $vars);
+        return $this->render('navigation_pagination_ajax/contenu_base.html.twig', $vars);
     }
 
 }
