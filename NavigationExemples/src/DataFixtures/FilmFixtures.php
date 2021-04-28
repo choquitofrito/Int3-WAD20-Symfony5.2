@@ -25,7 +25,7 @@ class FilmFixtures extends Fixture implements DependentFixtureInterface
 
         for ($i=0;$i<100;$i++){
             $film = new Film([
-                'titre'=>strtoupper($faker->word . " ". $faker->word),
+                'titre'=>ucfirst($faker->word . " ". $faker->word),
                 'duree'=>rand(60,200),
                 'annee'=>rand (1900,2050)
             ]);
