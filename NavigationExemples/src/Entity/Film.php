@@ -32,6 +32,11 @@ class Film
      */
     private $annee;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="films")
+     */
+    private $genre;
+
 
 
     // crée par nous mêmes, ainsi que le constructeur (vérifiez!)
@@ -88,6 +93,18 @@ class Film
     public function setAnnee(?int $annee): self
     {
         $this->annee = $annee;
+
+        return $this;
+    }
+
+    public function getGenre(): ?Genre
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(?Genre $genre): self
+    {
+        $this->genre = $genre;
 
         return $this;
     }

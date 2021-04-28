@@ -9,7 +9,7 @@
 			{% endblock %}
 		</title>
 		{# Run `composer require symfony/webpack-encore-bundle`
-										           and uncomment the following Encore helpers to start using Symfony UX #}
+												           and uncomment the following Encore helpers to start using Symfony UX #}
 		{% block stylesheets %}
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		{% endblock %}
@@ -21,7 +21,7 @@
 		{% endblock %}
 	</head>
 	<body>
-			{# Navbar de bootstrap  #}
+		{# Navbar de bootstrap  #}
 		{% block body %}
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 				<a class="navbar-brand" href="#">Navbar</a>
@@ -34,12 +34,16 @@
 							<a class="nav-link" href="{{ path ('recherche_vue_partielle') }}">Recherche AJAX avec vue partielle (renderView)</a>
 						</li>
 						<li class="nav-item">
+							<a class="nav-link" href="{{ path ('contenu_base') }}">Recherche avec pagination (no AJAX)</a>
+						</li>
+						
+						<li class="nav-item">
 							<a class="nav-link" href="{{ path ('pays_api') }}">Lien accès API (no AJAX, api call)
 								<span class="sr-only">(current)</span>
 							</a>
 						</li>
-						
 					</ul>
+
 
 				</div>
 				<nav class="navbar navbar-light bg-light">
@@ -49,9 +53,7 @@
 					</form>
 				</nav>
 			</nav>
-            {% block contenu %}
-            
-            {% endblock %}
+			{% block contenu %}{% endblock %}
 		{% endblock %}
 
 	</body>

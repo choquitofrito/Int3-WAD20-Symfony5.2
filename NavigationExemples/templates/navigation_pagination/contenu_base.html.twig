@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block contenu %}
+
+
+{# // ici le formulaire #}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{{ form_start(form,{'action': path('contenu_base'), 'method': 'GET'}) }}
+
+<h3>Filtres de Recherche</h3><input type="submit">
+{{ form_end(form) }}
+
+
+<div id="contenuRecherche">
+<h1>Div Contenu Recherche</h1>
+{# {{ dump (filmsFiltres) }} #}
+
+{% for film in filmsFiltres %}
+    {# ici les données de chaque produit  (card bootstrap ou quoi qui ce soit #}
+    {# {{ dump (item) }} #}
+    <br>
+    <h6>Id: {{film.id }}</h6>
+    <h5>Titre du film : {{ film.titre }} - <strong>{{ film.getGenre.nom }}</strong></h5> 
+    </h5>Duree du film : {{ film.duree }} min. </h5>
+{% endfor %}
+</div>
+
+<div>
+{{ knp_pagination_render(filmsFiltres) }}
+</div>
+
+</div>
+
+
+
+
+
+
+{% endblock %}

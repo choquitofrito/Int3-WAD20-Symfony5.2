@@ -73,6 +73,15 @@ class NavigationController extends AbstractController
     }
 
 
+
+
+
+
+////////////////////////////////
+
+
+
+
     // actions liées au deuxième lien (API, deserialisation...)
     #[Route('/navigation/pays', name: 'pays_api')]
     public function getPays(HttpClientInterface $client, SerializerInterface $serializer): Response
