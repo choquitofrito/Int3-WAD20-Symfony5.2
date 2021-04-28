@@ -26,7 +26,7 @@ class NavigationPaginationAjaxController extends AbstractController
         return $this->render('navigation_pagination_ajax/index.html.twig');
     }
 
-    // on crée le form et un contenu de base à afficher
+    // on crée le form et un contenu de base à afficher. Cette action ne traite pas le form
     #[Route('/contenu/base/generique', name: 'contenu_base_generique')] // on peut injecter un repo si on le veut
     public function contenuBaseAjax(FilmRepository $rep, Request $req): Response
     {
@@ -60,6 +60,7 @@ class NavigationPaginationAjaxController extends AbstractController
     }
 
 
+    // action qui traite le form
     #[Route('/contenu/base/ajax/traitement', name: 'contenu_base_ajax_traitement')] // on peut injecter un repo si on le veut
     public function contenuBaseAjaxTraitement(FilmRepository $rep, Request $req): Response
     {

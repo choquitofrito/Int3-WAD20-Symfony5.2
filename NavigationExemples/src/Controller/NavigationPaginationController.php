@@ -28,7 +28,7 @@ class NavigationPaginationController extends AbstractController
 
     }
 
-    // lancez cette route pour commencer. Elle contient une nav
+    // Cette route affiche et traite le form
     #[Route('/contenu/base', name: 'contenu_base')] // on peut injecter un repo si on le veut
     public function contenuBase(FilmRepository $rep, Request $req): Response
     {
@@ -36,10 +36,11 @@ class NavigationPaginationController extends AbstractController
                                     // on aurait pu utiliser un form indépendant aussi au lieu d'une classe
         $form = $this->createForm(SearchType::class,$data);
         $data->numeroPage = $req->get ('page',1); // c'est le paginator qui rajoute page=X dans l'URL. Notre proprieté dans SearchData peut s'appeler comment on veut...
-                                                // on met la valeur 1 par défaut
+                                                // on met la valeur 1 au cas où on ne reçoit pas de page dans $req (la première fois qu'on charge on sera dans ce cas)
 
-        // traiter le form (
-        // premiere fois qu'on charge cette action, vide sauf la page
+        // traiter le form.
+        // premiere fois qu'on charge cette action, $data ser vide (sauf pour la page
+        // qu'on vient d'incruster)
         // Quand on fera submit, $data contiendra les données remplies
         // dans le form de recherche (voir avec dd)
         $form->handleRequest($req);
