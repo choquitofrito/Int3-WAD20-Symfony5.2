@@ -15,9 +15,28 @@
 {{ form_end(form) }}
 </div>
 
-<div id="contenu_recherche">
-    On incruste ici le contenu de la recherche
-    Ce div se modifie aussi quand on change de page
+{# ce DIV a un contenu generique qui sera remplacé quand on fait une recherche ajax #}
+<div id="contenu_recherche"> 
+    
+    <h3>On incruste ici le contenu de la recherche<h3>
+    <h4>Ce div se modifie aussi quand on fait une recherche avec le form ou quand on utilise le paginator APRÈS une recherche (tout se fera en AJAX)<h4>
+    <h4>La pagination dans le generique (la prèmiere fois qu'on charge la page) recharge completement la page, n'est pas AJAX</h4>
+    {% if filmsFiltres is defined %}
+    <h1>Div Contenu Recherche Generique</h1>
+        {% for film in filmsFiltres %}
+            <br>
+            <h6>Id: {{film.id }}</h6>
+            <h5>Titre du film : {{ film.titre }} - <strong>{{ film.getGenre.nom }}</strong></h5> 
+            </h5>Duree du film : {{ film.duree }} min. </h5>
+
+            
+        {% endfor %}    
+    
+    {% endif %}
+    <div>
+    {{ knp_pagination_render(filmsFiltres) }}
+    </div>
+
     {# renderview ici #}
 </div>
 
@@ -35,6 +54,7 @@
         // C'est la même recherche (action) qu'on lance quand on fait click sur 
         // la pagination, mais ici on envoie toujours la page 1 
         // (car après filtrer il faut montrer les prémiers résultats de la recherche) 
+
         event.preventDefault(); // éviter le submit propre au form
 
 
@@ -63,10 +83,13 @@
 <script>
 // PAGINATION
 document.addEventListener ('click', function (event){
+    console.log (event.target.nodeName);
     // Ce script doit rester dans l'index 
     // Event delegation: cibler et voir si on clique sur le paginator: 
     // Un <a href> du paginator
-    if (event.target.nodeName ==="A"  && event.target.href.includes ("page=")){
+
+
+    if (event.target.nodeName ==="A"  && event.target.href.includes ("page=") &&  event.target.href.includes ("ajax")){
         // empecher le lien de fonctionner
         event.preventDefault();
         event.stopPropagation();
@@ -80,10 +103,10 @@ document.addEventListener ('click', function (event){
         // l'appel renvoie le form tel qu'il est, avec le numero de page à charger
         // rajouter un couple clé-val au form (POST). L'action a besoin de la page pour le paginator,
         // qui renverra les éléments à afficher (pareil que sans AJAX)
-        let myFormData = new FormData(document.getElementById("find_dancer_form"));
+        let myFormData = new FormData(document.getElementById("form_recherche"));
         myFormData.append ('page', page);
         axios({
-            url: '{{ path ("contenu_base_ajax") }}',
+            url: '{{ path ("contenu_base_ajax_traitement") }}',
             method:'POST',
             headers: {'Content-type' : 'multipart/form-data'},
             data: myFormData

@@ -55,7 +55,7 @@ class FilmRepository extends ServiceEntityRepository
         // // on peut rajouter autant de filtres - de toute sorte - qu'on veut (durée min, max etc...)
         if (!empty($objFiltres->minDuree)){
             $reqQB = $reqQB->andWhere('film.duree >= :minDuree')  
-            ->setParameter ('duree', $objFiltres->minDuree); 
+            ->setParameter ('minDuree', $objFiltres->minDuree); 
         }
 
         // dd($objFiltres->genre);

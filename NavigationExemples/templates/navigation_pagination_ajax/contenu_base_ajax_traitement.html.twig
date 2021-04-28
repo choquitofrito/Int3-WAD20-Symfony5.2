@@ -1,6 +1,5 @@
-<h1>Div Contenu Recherche</h1>
+<h1>Div Contenu Recherche (AJAX)</h1>
 {% for film in filmsFiltres %}
-    {# ici les données de chaque produit  (card bootstrap ou quoi qui ce soit #}
     <br>
     <h6>Id: {{film.id }}</h6>
     <h5>Titre du film : {{ film.titre }} - <strong>{{ film.getGenre.nom }}</strong></h5> 

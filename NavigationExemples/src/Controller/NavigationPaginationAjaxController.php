@@ -26,9 +26,11 @@ class NavigationPaginationAjaxController extends AbstractController
         return $this->render('navigation_pagination_ajax/index.html.twig');
     }
 
-    #[Route('/contenu/base/ajax', name: 'contenu_base_ajax')] // on peut injecter un repo si on le veut
+    // on crée le form et un contenu de base à afficher
+    #[Route('/contenu/base/generique', name: 'contenu_base_generique')] // on peut injecter un repo si on le veut
     public function contenuBaseAjax(FilmRepository $rep, Request $req): Response
     {
+
         $data = new SearchData(); // c'est une classe qui représente le form, pas une entité
         // on aurait pu utiliser un form indépendant aussi au lieu d'une classe
         $form = $this->createForm(
@@ -37,14 +39,23 @@ class NavigationPaginationAjaxController extends AbstractController
             ['method' => 'POST'] // traiter le form comme un post, ajax envoie un post
         );
 
-        $vars = [
-            'form' => $form->createView()
-        ];
+        
+        // nous allons montrer le formulaire et quelque données d'exemple en plus. Ici on fait un findall de tous les films
+        $searchData = new SearchData();
+        $searchData->numeroPage = $req->get ('page'); // obtenir la page du paginator (cas générique, pas ajax)
 
+        $filmsFiltres = $rep->obtenirResultatsFiltres($searchData); // sans envoyer de filtres (objet vide) on obtient les 5 prémieres films de la BD.
+        // Il faut juste faire une méthode qui renvoie déjà la pagination (tel que obtenirResultatsFiltres)
+
+        // on peut customiser notre repo pour obtenir qui qui ce soit avec autant de méthodes qu'on veut
+        
+        // Si on n'envoie pas de films ici, le div sera vide initiellement.
+        $vars = [
+            'form' => $form->createView(),
+            'filmsFiltres' => $filmsFiltres
+        ];
         return $this->render('navigation_pagination_ajax/contenu_base.html.twig', $vars);
     }
-
-
 
 
     #[Route('/contenu/base/ajax/traitement', name: 'contenu_base_ajax_traitement')] // on peut injecter un repo si on le veut
@@ -55,7 +66,7 @@ class NavigationPaginationAjaxController extends AbstractController
         $form = $this->createForm(
             SearchType::class,
             $data,
-            ['method' => 'POST']// traiter le form comme un post, ajax envoie un post. Indispensable pour handleRequest
+            ['method' => 'POST'] // traiter le form comme un post, ajax envoie un post. Indispensable pour handleRequest
         );
 
         $data->numeroPage = $req->get('page', 1); // c'est le paginator qui rajoute page=X dans l'URL. Notre proprieté dans SearchData peut s'appeler comment on veut...
@@ -64,14 +75,12 @@ class NavigationPaginationAjaxController extends AbstractController
         // traiter le form
         $form->handleRequest($req);
 
-
         // voici l'avantage de la classe: on peut envoyer à la méthode du Repo 
         // un objet au lieu d'un tas de string...
         // Le repo fera la pagination à l'interieur (voir code). On aura pu juste recevoir un array
         // d'objets et paginer ici (ex. des notes). Question de choix (simplifier ou pas le controller)
-        dd ($data);
-        $filmsFiltres = $rep->obtenirResultatsFiltres($data);
 
+        $filmsFiltres = $rep->obtenirResultatsFiltres($data);
 
         $vars = [
             'filmsFiltres' => $filmsFiltres,
@@ -81,4 +90,8 @@ class NavigationPaginationAjaxController extends AbstractController
         // maintenant il faut renvoyer un contenu, pas rendre une page
         return new Response($this->renderView('navigation_pagination_ajax/contenu_base_ajax_traitement.html.twig', $vars));
     }
+
+
+
+
 }
