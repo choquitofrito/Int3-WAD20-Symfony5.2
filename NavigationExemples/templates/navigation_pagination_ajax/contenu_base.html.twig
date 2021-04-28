@@ -19,10 +19,10 @@
 <div id="contenu_recherche"> 
     
     <h3>On incruste ici le contenu de la recherche<h3>
-    <h4>Ce div se modifie aussi quand on fait une recherche avec le form ou quand on utilise le paginator APRÈS une recherche (tout se fera en AJAX)<h4>
-    <h4>La pagination dans le generique (la prèmiere fois qu'on charge la page) recharge completement la page, n'est pas AJAX</h4>
+    <h5>Ce div se modifie aussi quand on fait une recherche avec le form ou quand on utilise le paginator APRÈS une recherche (tout se fera en AJAX)<h5>
+    <h5>La pagination dans le generique (la prèmiere fois qu'on charge la page) recharge completement la page (voir url), n'est pas AJAX</h5>
     {% if filmsFiltres is defined %}
-    <h1>Div Contenu Recherche Generique</h1>
+    <h1>Div Contenu Recherche Accueil (Génerique à personnaliser)</h1>
         {% for film in filmsFiltres %}
             <br>
             <h6>Id: {{film.id }}</h6>
@@ -33,8 +33,10 @@
         {% endfor %}    
     
     {% endif %}
+    {# paginator original #}
     <div>
-    {{ knp_pagination_render(filmsFiltres) }}
+    {{ knp_pagination_render(filmsFiltres, 
+        'templates_pagination/twitter_bootstrap_v4_pagination.html.twig') }}
     </div>
 
     {# renderview ici #}

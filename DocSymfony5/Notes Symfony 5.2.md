@@ -166,7 +166,9 @@
   - [26.3. Gestion de l'erreur "Access Denied" (exception) en utilisant une classe propre](#263-gestion-de-lerreur-access-denied-exception-en-utilisant-une-classe-propre)
   - [26.4. Fenêtre modale pour le login (Ajax)](#264-fenêtre-modale-pour-le-login-ajax)
     - [Adaptation à Ajax et fenêtre modale](#adaptation-à-ajax-et-fenêtre-modale)
-- [27. Pagination](#27-pagination)
+- [27. Pagination (sans AJAX)](#27-pagination-sans-ajax)
+  - [27.1. Installation et exemple pratique](#271-installation-et-exemple-pratique)
+  - [27.2. Filtres et pagination](#272-filtres-et-pagination)
 - [28. JS et CSS avec Webpack encore (à reviser)](#28-js-et-css-avec-webpack-encore-à-reviser)
   - [28.1. Installation de Webpack Encore et de Node](#281-installation-de-webpack-encore-et-de-node)
   - [28.2. Configurer Webpack Encore](#282-configurer-webpack-encore)
@@ -7689,7 +7691,9 @@ logged: {{ app.user.username }}
 <br>
 
 
-# 27. Pagination
+# 27. Pagination (sans AJAX)
+
+## 27.1. Installation et exemple pratique
 
 Exemple pratique : projet **ProjetPaginatorNoWebpack**
 
@@ -7796,6 +7800,41 @@ class ExemplePaginationController extends AbstractController {
 ```
 
 <br>
+
+
+## 27.2. Filtres et pagination
+
+
+NavigationController: exemple de controller avec un form contenant de filtres. NO AJAX
+
+Routes et éléments à observer :
+
+1. **/navigation/pagination** : charger le page d'accueil et la barre de navigation
+   
+2. **/contenu/base** (click sur *Recherche avec Pagination (no Ajax)*: route qui **affiche** et **traite** le form. On crée **le contenu à afficher grâce au repo**. 
+ 
+Le repo **renvoie déjà un objet PaginationInterface** (au lieu d'un array d'objet) qu'on peut passer au paginator.
+Cet objet est parcourable avec une boucle for (voir code navigation_pagination/contenu_base.html.twig)
+
+Lisez attentivement le code de l'action.
+
+On a choisi, par défaut, d'envoyer déjà un ensemble de résultats à la vue (une recherche sans filtres car 'data' contient que la page pour le paginator, pas d'autres valeurs du form)
+
+
+```
+{% for film in filmsFiltres %}
+.
+.
+.
+
+{{ knp_pagination_render(filmsFiltres) }}
+```
+
+
+3. **Repository\FilmRepository**: lire tous le commentaires. 
+4. **Form\FilmType**: lire tous les commentaires
+
+
 
 # 28. JS et CSS avec Webpack encore (à reviser)
 

@@ -8,6 +8,8 @@
     
 {% endfor %}
 
+{# paginator qui appelle ajax  #}
 <div>
-{{ knp_pagination_render(filmsFiltres) }}
+{{ knp_pagination_render(filmsFiltres, 
+        'templates_pagination/twitter_bootstrap_v4_pagination.html.twig') }}
 </div>

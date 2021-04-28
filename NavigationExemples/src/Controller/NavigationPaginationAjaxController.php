@@ -42,7 +42,9 @@ class NavigationPaginationAjaxController extends AbstractController
         
         // nous allons montrer le formulaire et quelque données d'exemple en plus. Ici on fait un findall de tous les films
         $searchData = new SearchData();
-        $searchData->numeroPage = $req->get ('page'); // obtenir la page du paginator (cas générique, pas ajax)
+        $searchData->numeroPage = $req->get ('page',1); // obtenir la page du paginator (cas générique, pas ajax)
+                                                        // si vide, 1
+
 
         $filmsFiltres = $rep->obtenirResultatsFiltres($searchData); // sans envoyer de filtres (objet vide) on obtient les 5 prémieres films de la BD.
         // Il faut juste faire une méthode qui renvoie déjà la pagination (tel que obtenirResultatsFiltres)
