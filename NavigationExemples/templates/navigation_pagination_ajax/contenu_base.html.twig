@@ -7,33 +7,102 @@
 
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
-{{ form_start(form,{'action': path('contenu_base'), 'method': 'GET'}) }}
 
-<h3>Filtres de Recherche</h3><input type="submit">
-{{ form_end(form) }}
-
-
-<div id="contenuRecherche">
-<h1>Div Contenu Recherche</h1>
-{# {{ dump (filmsFiltres) }} #}
-
-{% for film in filmsFiltres %}
-    {# ici les données de chaque produit  (card bootstrap ou quoi qui ce soit #}
-    {# {{ dump (item) }} #}
-    <br>
-    <h6>Id: {{film.id }}</h6>
-    <h5>Titre du film : {{ film.titre }} - <strong>{{ film.getGenre.nom }}</strong></h5> 
-    </h5>Duree du film : {{ film.duree }} min. </h5>
-{% endfor %}
-</div>
-
+{# div du formulaire #}
 <div>
-{{ knp_pagination_render(filmsFiltres) }}
+{{ form_start(form,{'action': path('contenu_base_ajax_traitement'), 'method': 'POST', 'attr' : { 'id' : 'form_recherche'} }) }}
+<h3>Filtres de Recherche</h3><input id="envoyer" type="submit">
+{{ form_end(form) }}
 </div>
 
+<div id="contenu_recherche">
+    On incruste ici le contenu de la recherche
+    Ce div se modifie aussi quand on change de page
+    {# renderview ici #}
 </div>
 
 
+{% block customJS %}
+
+
+
+<script>
+    // RECHERCHE
+    document.getElementById('envoyer').addEventListener('click', (event)=>{
+        // console.log ("changement dans un select! " + event.target.value);
+
+        // Si on click il faut faire la recherche du contenu du form.
+        // C'est la même recherche (action) qu'on lance quand on fait click sur 
+        // la pagination, mais ici on envoie toujours la page 1 
+        // (car après filtrer il faut montrer les prémiers résultats de la recherche) 
+        event.preventDefault(); // éviter le submit propre au form
+
+
+        let myFormData = new FormData(document.getElementById("form_recherche")); // l'id est rajouté dans la création, ici dans le twig plus haut. On aurait pu le rajouter ailleurs aussi (controller ou classe du form)
+        myFormData.append ('page',1); // on rajoute un champ au formulaire POST. L'action le reçoit en faisant $request->get ('page')
+        axios({
+            url: '{{ path ("contenu_base_ajax_traitement") }}',
+            method:'POST', 
+            headers: {'Content-type' : 'multipart/form-data'},
+            data: myFormData 
+        })
+        .then ( function (response) {
+            document.getElementById("contenu_recherche").innerHTML = response.data;
+            console.log (response.data);
+        })
+        .catch( function (error)  {
+            console.log ("error:");
+            console.log (error);
+        })
+    });
+
+
+</script>
+
+
+<script>
+// PAGINATION
+document.addEventListener ('click', function (event){
+    // Ce script doit rester dans l'index 
+    // Event delegation: cibler et voir si on clique sur le paginator: 
+    // Un <a href> du paginator
+    if (event.target.nodeName ==="A"  && event.target.href.includes ("page=")){
+        // empecher le lien de fonctionner
+        event.preventDefault();
+        event.stopPropagation();
+
+        // obtenir le lien du paginator
+        let lien = event.target.href;
+        // extraire du lien le nombre de page
+        let page = lien.split('=')[1]; // position 1 de l'array crée par split contient le text après le =
+        console.log ("page du lien (inspectez pour le voir): " + page);
+        
+        // l'appel renvoie le form tel qu'il est, avec le numero de page à charger
+        // rajouter un couple clé-val au form (POST). L'action a besoin de la page pour le paginator,
+        // qui renverra les éléments à afficher (pareil que sans AJAX)
+        let myFormData = new FormData(document.getElementById("find_dancer_form"));
+        myFormData.append ('page', page);
+        axios({
+            url: '{{ path ("contenu_base_ajax") }}',
+            method:'POST',
+            headers: {'Content-type' : 'multipart/form-data'},
+            data: myFormData
+        })
+        .then ( function (response) {
+            document.getElementById("contenu_recherche").innerHTML = response.data;
+            // console.log (response.data);
+        })
+        .catch( function (error)  {
+            console.log ("error:");
+            console.log (error);
+        });
+    };
+});
+</script>
+
+
+
+{% endblock %}
 
 
 

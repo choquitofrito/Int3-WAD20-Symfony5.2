@@ -16,13 +16,6 @@ class SearchData {
      */
     public $query = '';
 
-
-
-    /**
-     * @var string
-     */
-    public $titre;
-
     
     /**
      * @var null|integer

@@ -38,7 +38,11 @@ class NavigationPaginationController extends AbstractController
 
         // traiter le form
         $form->handleRequest($req);
-
+        
+        // if ($form->isSubmitted()){
+        //     dump ($data);
+        //     dd($req);
+        // }    
 
         // voici l'avantage de la classe: on peut envoyer à la méthode du Repo 
         // un objet au lieu d'un tas de string...
