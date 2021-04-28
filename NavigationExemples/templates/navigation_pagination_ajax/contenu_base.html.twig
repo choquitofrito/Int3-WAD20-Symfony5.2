@@ -88,7 +88,10 @@ document.addEventListener ('click', function (event){
     // Event delegation: cibler et voir si on clique sur le paginator: 
     // Un <a href> du paginator
 
-
+    // si le lien charge AJAX on charge AJAX. Autrement on est en train de cliquer sur le paginator
+    // généré pour le contenu générique (quand on charge la page par la première fois, avant de faire de recherches)
+    // Le lien, dans le prèmier cas, est vers "/contenu/base/generique?page=9" 
+    // dans le cas d'AJAX, les liens vont vers "/contenu/base/ajax/traitement?page=4"
     if (event.target.nodeName ==="A"  && event.target.href.includes ("page=") &&  event.target.href.includes ("ajax")){
         // empecher le lien de fonctionner
         event.preventDefault();
