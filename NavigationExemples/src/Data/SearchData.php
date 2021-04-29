@@ -1,6 +1,4 @@
 <?php
-
-
 namespace App\Data;
 
 
@@ -24,9 +22,10 @@ class SearchData {
     
 
     /**
-     * @var Genre[]
+     * @var Genre
      */
     public $genre;
 
 
+    
 }

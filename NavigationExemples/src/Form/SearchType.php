@@ -33,7 +33,11 @@ class SearchType extends AbstractType
                 'placeholder' => 'Choix...',
                 'required' => false
             ])
-            ->add('minDuree', NumberType::class, ['required' => false]);
+            ->add(
+                'minDuree',
+                NumberType::class,
+                ['required' => false]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

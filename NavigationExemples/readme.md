@@ -31,3 +31,9 @@ On a choisi, par défaut, d'envoyer déjà un ensemble de résultats à la vue (
 4. **Form\FilmType**: lire tous les commentaires
 
 
+
+
+NOTES:
+
+  - nouvelle version avec onchange-> submit
+  

@@ -2,9 +2,10 @@
 
 {% block contenu %}
 
-{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
 
 {# ici le formulaire. Vous pouvez le rendre avec form_row ou quoi qui vous vouliez #}
+
 <div class ="text-primary">
 {{ form_start(form,{'action': path('contenu_base'), 'method': 'GET'}) }}
 <h3>Filtres de Recherche</h3><input type="submit">
