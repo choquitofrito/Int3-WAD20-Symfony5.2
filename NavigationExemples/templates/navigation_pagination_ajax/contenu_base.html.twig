@@ -150,8 +150,7 @@ document.getElementById("form_recherche").addEventListener ('input', (event) => 
     // https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/input_event
     // L'évènement DOM input (entrée) est déclenché de façon synchrone quand la valeur 
     // d'un élément <input> (entrée), <select> (sélection) ou <textarea> (zone de texte) est modifiée
-
-    console.log ("change dans un élément du formulaire"); // si quelque chose change dans le form
+    // console.log ("change dans un élément du formulaire"); // si quelque chose change dans le form
     document.getElementById('envoyer').click(); // on lance le click de l'input à la main
 });
 
@@ -159,9 +158,10 @@ document.getElementById("form_recherche").addEventListener ('input', (event) => 
 
 
 
+{% endblock %} 
+{# endblock customjs #}
+
+
+
 {% endblock %}
-
-
-
-
-{% endblock %}
+{# endblock contenu #}
