@@ -69,8 +69,9 @@
             data: myFormData 
         })
         .then ( function (response) {
+            // on va recevoir un renderView
             document.getElementById("contenu_recherche").innerHTML = response.data;
-            console.log (response.data);
+            // console.log (response.data); // seulement si vous voulez vérifier que la vue est renvoyée dans la console (vous pouvez aussi regarder dans le Response de Network)
         })
         .catch( function (error)  {
             console.log ("error:");
@@ -94,7 +95,15 @@ document.addEventListener ('click', function (event){
     // généré pour le contenu générique (quand on charge la page par la première fois, avant de faire de recherches)
     // Le lien, dans le prèmier cas, est vers "/contenu/base/generique?page=9" 
     // dans le cas d'AJAX, les liens vont vers "/contenu/base/ajax/traitement?page=4"
+
+    // Mieux faire avec matches, eventuellement (==="A" c'est pour voir si c'est un lien)
+    // Vous pouvez cibler d'une façon plus précise si vous avez besoin
+    
+    // On lance ce code seulement si on clique sur une pagination 
+    // générée avec une action dans AJAX
     if (event.target.nodeName ==="A"  && event.target.href.includes ("page=") &&  event.target.href.includes ("ajax")){
+        
+        console.log ("pagination ajax");
         // empecher le lien de fonctionner
         event.preventDefault();
         event.stopPropagation();
@@ -109,7 +118,9 @@ document.addEventListener ('click', function (event){
         // rajouter un couple clé-val au form (POST). L'action a besoin de la page pour le paginator,
         // qui renverra les éléments à afficher (pareil que sans AJAX)
         let myFormData = new FormData(document.getElementById("form_recherche"));
+        // on rajoute à la main un couple clé=>valeur dans le POST: page: X
         myFormData.append ('page', page);
+
         axios({
             url: '{{ path ("contenu_base_ajax_traitement") }}',
             method:'POST',
@@ -124,8 +135,26 @@ document.addEventListener ('click', function (event){
             console.log ("error:");
             console.log (error);
         });
-    };
+    }
+    else {
+        // rien à faire, le submit aura lieu car nous somme dans
+        // un action qui n'est pas ajax
+        
+    }
+
 });
+
+// Capturer les événements
+document.getElementById("form_recherche").addEventListener ('input', (event) => {
+    // input nous convient:
+    // https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/input_event
+    // L'évènement DOM input (entrée) est déclenché de façon synchrone quand la valeur 
+    // d'un élément <input> (entrée), <select> (sélection) ou <textarea> (zone de texte) est modifiée
+
+    console.log ("change dans un élément du formulaire"); // si quelque chose change dans le form
+    document.getElementById('envoyer').click(); // on lance le click de l'input à la main
+});
+
 </script>
 
 
