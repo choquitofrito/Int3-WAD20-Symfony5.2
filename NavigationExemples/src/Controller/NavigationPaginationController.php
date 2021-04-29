@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
-use App\Repository\FilmRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-
+use App\Entity\Genre;
 use App\Data\SearchData;
 use App\Form\SearchType;
-use Symfony\Component\HttpFoundation\Request;
+use App\Repository\FilmRepository;
 
-use App\Entity\Genre;
+use App\Repository\GenreRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class NavigationPaginationController extends AbstractController
@@ -29,12 +30,12 @@ class NavigationPaginationController extends AbstractController
 
     // Cette route affiche et traite le form
     #[Route('/contenu/base', name: 'contenu_base')] // on peut injecter un repo si on le veut
-    public function contenuBase(FilmRepository $rep, Request $req): Response
+    public function contenuBase(FilmRepository $rep, GenreRepository $repGenre, Request $req): Response
     {
         $data = new SearchData(); // c'est une classe qui représente le form, pas une entité
         // on aurait pu utiliser un form indépendant aussi au lieu d'une classe
         $form = $this->createForm(SearchType::class, $data);
-        $data->numeroPage = $req->get('page', 1); // c'est le paginator qui rajoute page=X dans l'URL. Notre proprieté dans SearchData peut s'appeler comment on veut...
+        $data->numeroPage = $req->get('page',1); // c'est le paginator qui rajoute page=X dans l'URL. Notre proprieté dans SearchData peut s'appeler comment on veut...
         // on met la valeur 1 au cas où on ne reçoit pas de page dans $req (la première fois qu'on charge on sera dans ce cas)
 
       
@@ -52,13 +53,14 @@ class NavigationPaginationController extends AbstractController
         // pour la prémière fois qu'on charge la page
         // on a qu'à regarder si on vient d'un submit ou pas
         
+        $filmsFiltres = [];
         if ($form->isSubmitted()){
             // on vient d'un submit! on va chercher avec les filtres
             $filmsFiltres = $rep->obtenirResultatsFiltres($data);
         }
         else {
             // on ne vient pas d'un submit, on n'a pas fait de recherche
-            // on lance ici la requête du repo qui nous intéresse. Deux cas de figure
+            // on lance ici la requête du repo qui nous intéresse. Deux cas de figure:
 
             // a) requête qui n'a rien à voir
             // $filmsFiltres = $rep->autreRequete($parametre1, $parametre2);// à nous de voir ce qu'on veut envoyer!
@@ -66,21 +68,23 @@ class NavigationPaginationController extends AbstractController
                                                                         // pareille que dans obtenirResultatsFiltres
 
             // b) requête avec de filtres, mais qui ne sont pas reçus dans le form (car on n'a jamais fait submit)
-            //ex : tous les films du genre 2. On ne peut pas just mettre "2", il faut trouver l'entité
-
-            $data->genre = $this->getDoctrine()->getManager()->getRepository(Genre::class)->findBy(['nom'=>'Genre 2']);
+            
+            //ex : tous les films du genre 2 (nom "Genre 2"). On ne peut pas just mettre "2", il faut trouver l'entité
+                // $data->genre = $repGenre->findOneBy(['nom'=>'Genre 3']);
+            // d'autres exemples de filtre custom
+                // $data->minDuree = 180;
+                // $data->query = "ab";
+                
             $filmsFiltres = $rep->obtenirResultatsFiltres($data);
         }
-
-
+    
         // voici l'avantage de la classe: on peut envoyer 
         // à la méthode du Repo 
         // un objet au lieu d'un tas de strings (titre, duree etc...)
 
         // Le repo fera la pagination à l'interieur (voir code). On aura pu juste recevoir un array
         // d'objets et paginer ici (ex. des notes). Question de choix (simplifier ou pas le controller)
-        $filmsFiltres = $rep->obtenirResultatsFiltres($data);
-
+        
         // on reçoit un résultat paginable et parcourable qu'on 
         // envoie à la vue. On renvoie aussi le formulaire pour
         // l'afficher à nouveau

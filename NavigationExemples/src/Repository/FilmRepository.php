@@ -100,11 +100,19 @@ class FilmRepository extends ServiceEntityRepository
         // La différence est qu'au lieu d'envoyer un array d'objets on renvoie un PaginatorInterface
         // qui contient des objets et qu'on peut utiliser directement dans la vue... et on plus le parcourir
         // avec un fort. On a tout!
+
         $reqQBQuery = $reqQB->getQuery();
         return $this->paginator->paginate(
             $reqQBQuery,
-            $objFiltres->numeroPage, // propriété publique dans la classe
+            $objFiltres->numeroPage, // objet $data dans le controller, propriété publique dans la classe
             5
         );
     }
+
+    // d'autres requêtes du repo
+    public function autreRequete(){
+        // obtenir quoi qui ce soit
+    
+    }
 }
+
