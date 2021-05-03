@@ -19,7 +19,6 @@ class CustomFixtures extends Fixture
         $finder = new Finder();
         $finder->files()->in('src/DataFixtures/sql'); // si on veut charger plusieurs fichier sql
         
-        // dump ($finder->files());
         $content = "" ;
         $cnx = $manager->getConnection();
         $cnx->beginTransaction();
@@ -29,11 +28,7 @@ class CustomFixtures extends Fixture
             $content = $file->getContents();
             $cnx->setAutoCommit(false);
             $cnx->exec ($content);
-            // dd();
-            // $cnx->commit();
-            // $manager->flush();
-            // $stmt = $cnx->prepare($content);
-            // $stmt->execute();    
+  
         }
     
     }
