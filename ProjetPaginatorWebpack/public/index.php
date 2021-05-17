@@ -1,5 +1,7 @@
 <?php
 
+umask(0002); // This will let the permissions be 0775
+
 use App\Kernel;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;

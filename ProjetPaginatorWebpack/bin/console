@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+umask(0002); // This will let the permissions be 0775
+
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;

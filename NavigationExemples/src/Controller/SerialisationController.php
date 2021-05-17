@@ -157,7 +157,6 @@ class SerialisationController extends AbstractController
     #[Route('/deserialisationAvecSerialiser')]
     public function deserialisationAvecSerialiser()
     {
-
         // Nous partons d'un json et on aura un objet
 
         // Respectez les guillemets doubles!
@@ -167,7 +166,12 @@ class SerialisationController extends AbstractController
         dump("Json de départ (car. extra à cause du dump) :");
         dump($filmJson);
 
+
+        
         // La config. est la même que pour serializer
+
+
+
 
         // pour normalizer/denormalizer : passer d'array à objet et à l'invers 
         $normalizers = [new ObjectNormalizer()];

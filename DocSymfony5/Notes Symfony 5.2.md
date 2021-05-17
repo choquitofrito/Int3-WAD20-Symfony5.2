@@ -143,7 +143,7 @@
     - [21.15.1. Exemples extra AJAX (Axios)](#21151-exemples-extra-ajax-axios)
   - [21.16. Utilisation de blocs dans twig avec AJAX](#2116-utilisation-de-blocs-dans-twig-avec-ajax)
       - [Exercices : Ajax avec Axios](#exercices--ajax-avec-axios)
-  - [21.17. Ajax et Axios avec script externe au Twig (sans Webpack)](#2117-ajax-et-axios-avec-script-externe-au-twig-sans-webpack)
+  - [21.17. Ajax et Axios dans un script JS. Indispensable si script externe au Twig (sans Webpack)](#2117-ajax-et-axios-dans-un-script-js-indispensable-si-script-externe-au-twig-sans-webpack)
   - [21.18. AJAX en Symfony (Vanilla JS)](#2118-ajax-en-symfony-vanilla-js)
   - [21.19. Utilisation de blocs dans twig avec AJAX (Vanilla)](#2119-utilisation-de-blocs-dans-twig-avec-ajax-vanilla)
       - [Exercices : utilisation d'AJAX Vanilla](#exercices--utilisation-dajax-vanilla)
@@ -5807,8 +5807,8 @@ Attention aux **names** des contrôles car on les utilisera dans le traitement d
 <form id="leFormulaire" method="POST">
     <input type="text" name="nom" />
     <input type="submit" id="envoyerNom" value="Envoyer" />
-    <div id="divMessage"></div>
 </form>
+<div id="divMessage"></div>
 {% endblock %}
 
 {% block javascripts %}
@@ -5853,7 +5853,7 @@ Dans l'appel AXIOS on envoie un objet JS contenant :
 -   Les **donnés (data)** : un objet JS contenant de clés et de valeurs. Ici on envoie un objet FormData (classe de JS) construit à partir du formulaire qui se trouve dans la page web
 
 
-2. Modifiez le template **/templates/base.html.twig** pour que les scripts soient chargés après le body
+1. Modifiez le template **/templates/base.html.twig** pour que les scripts soient chargés après le body
 
 ```twig
 <!DOCTYPE html>
@@ -6242,8 +6242,17 @@ public function exemple1TraitementMasterPage(Request $requeteAjax)
 
 
 
-## 21.17. Ajax et Axios avec script externe au Twig (sans Webpack)
+## 21.17. Ajax et Axios dans un script JS. Indispensable si script externe au Twig (sans Webpack)
 
+**Si vous voulez générer de routes à l'interieur de JS**, vous allez remarquer que vous ne pouvez pas utiliser **path**.
+
+Ex:
+
+```js
+<script>
+    let route = '{{ path ('ma_route') }}'
+</script>>
+```
 
 Si on veut **utiliser un script externe JS dans une vue**, le script lui-même ne pourra pas utiliser la fonction **path** pour générer les routes  cible AJAX. Les fonctions de twig telles que **path** fonctionnent uniquement **dans les fichiers TWIG**. Ceci est un problème typique qu'on peut résoudre en utilisant le module **FOSJsRoutingBundle**.
 
